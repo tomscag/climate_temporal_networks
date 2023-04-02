@@ -1,0 +1,4 @@
+# Ignore ncdf data
+*.nc
+/t2m
+
