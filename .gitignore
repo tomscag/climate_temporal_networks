@@ -1,4 +1,11 @@
 # Ignore ncdf data
-*.nc
-/t2m
+/data/*.nc
+/data/t2m
+/data/total_precipitation
 
+/Analysis/Output/*.txt
+/Analysis/Output/Violinplot
+/Analysis/__pycache__
+
+*.profile
+*.gif

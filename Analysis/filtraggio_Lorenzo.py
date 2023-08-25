@@ -3,7 +3,7 @@ from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 
 # DATA
-data = Dataset('./data/t2m_1970_2022_2grid.nc', 'r')
+data = Dataset('./data/t2m_1970_2022_4grid.nc', 'r')
 lat  = data.variables['lat']          #len(lat)=91
 lon  = data.variables['lon']          #len(lon)=180
 temp = data.variables['t2m']         #len(temp)=365

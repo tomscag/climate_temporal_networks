@@ -1,0 +1,586 @@
+2023-06-06 10:06:34,020 INFO Welcome to the CDS
+2023-06-06 10:06:34,020 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-20e607cccfb94be7aaabd688a69ae247
+2023-06-06 10:06:34,020 INFO Welcome to the CDS
+2023-06-06 10:06:34,020 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-fd759f3c24654ca09ba7b785080fcffa
+2023-06-06 10:06:34,022 INFO Welcome to the CDS
+2023-06-06 10:06:34,022 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-4482ff9a801b41c9ba994eecdf511279
+2023-06-06 10:06:34,026 INFO Welcome to the CDS
+2023-06-06 10:06:34,026 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-f5f15501c53e46cdaf875d7569cdfcea
+2023-06-06 10:06:34,032 INFO Welcome to the CDS
+2023-06-06 10:06:34,032 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-dc00fc95c9564ba7a3669c2cd9d8a250
+2023-06-06 10:06:34,034 INFO Welcome to the CDS
+2023-06-06 10:06:34,034 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-58d9717a5a9f4a3881459937bde9d628
+2023-06-06 10:06:34,035 INFO Welcome to the CDS
+2023-06-06 10:06:34,036 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-cfa13559b24f4923b823f1fe39b9a876
+2023-06-06 10:06:34,038 INFO Welcome to the CDS
+2023-06-06 10:06:34,039 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-d5143fbb65cd4e26b4abc8af1874286c
+2023-06-06 10:06:34,040 INFO Welcome to the CDS
+2023-06-06 10:06:34,040 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-f0949351e5e54a74983f69e2f8bcbc7e
+2023-06-06 10:06:34,046 INFO Welcome to the CDS
+2023-06-06 10:06:34,046 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-3bd8a6f6d7404fc59c1aa0ffd5eb6008
+2023-06-06 10:06:34,048 INFO Welcome to the CDS
+2023-06-06 10:06:34,048 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-1f878afac31a4473a274efe28dd33a88
+2023-06-06 10:06:34,050 INFO Welcome to the CDS
+2023-06-06 10:06:34,050 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-3cae23f449e44503a6042c9cd681f090
+2023-06-06 10:06:34,052 INFO Welcome to the CDS
+2023-06-06 10:06:34,052 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-2ef7005dc5e14cabad122cb2e8a1c9b3
+2023-06-06 10:06:34,055 INFO Welcome to the CDS
+2023-06-06 10:06:34,055 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-b61ca90e6bf04a019f8f177edfaa419d
+2023-06-06 10:06:34,075 INFO Welcome to the CDS
+2023-06-06 10:06:34,075 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-37e5f3f6c78a40c6a342e42b3bcc4515
+2023-06-06 10:06:34,083 INFO Welcome to the CDS
+2023-06-06 10:06:34,083 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-e78c5e3b2d67445f880f584c4ea2ca0e
+2023-06-06 10:06:34,098 INFO Welcome to the CDS
+2023-06-06 10:06:34,098 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-13c48041cb9743ab8b869648ced01b2b
+2023-06-06 10:06:34,103 INFO Request is queued
+2023-06-06 10:06:34,105 INFO Request is queued
+2023-06-06 10:06:34,105 INFO Request is queued
+2023-06-06 10:06:34,108 INFO Request is queued
+2023-06-06 10:06:34,110 INFO Request is queued
+2023-06-06 10:06:34,110 INFO Request is queued
+2023-06-06 10:06:34,111 INFO Request is queued
+2023-06-06 10:06:34,109 INFO Request is queued
+2023-06-06 10:06:34,118 INFO Welcome to the CDS
+2023-06-06 10:06:34,118 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-895f5da54b8d4c139f0a8db4054a8813
+2023-06-06 10:06:34,120 INFO Request is queued
+2023-06-06 10:06:34,130 INFO Welcome to the CDS
+2023-06-06 10:06:34,130 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-3b59cf25e41c4086bd0c2042725d6408
+2023-06-06 10:06:34,131 INFO Request is queued
+2023-06-06 10:06:34,136 INFO Request is queued
+2023-06-06 10:06:34,137 INFO Request is queued
+2023-06-06 10:06:34,152 INFO Request is queued
+2023-06-06 10:06:34,155 INFO Welcome to the CDS
+2023-06-06 10:06:34,156 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-510aa61683874f67912291eb1101d0cf
+2023-06-06 10:06:34,157 INFO Welcome to the CDS
+2023-06-06 10:06:34,158 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-b59eb78d0c1b4595af241c9df42c7848
+2023-06-06 10:06:34,159 INFO Request is queued
+2023-06-06 10:06:34,170 INFO Request is queued
+2023-06-06 10:06:34,179 INFO Request is queued
+2023-06-06 10:06:34,185 INFO Request is queued
+2023-06-06 10:06:34,216 INFO Request is queued
+2023-06-06 10:06:34,219 INFO Request is queued
+2023-06-06 10:06:34,228 INFO Request is queued
+2023-06-06 10:06:34,272 INFO Welcome to the CDS
+2023-06-06 10:06:34,272 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-4e21bfcd58b54f0aa602d93ea9ad93d9
+2023-06-06 10:06:34,299 INFO Welcome to the CDS
+2023-06-06 10:06:34,299 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-df5a0004e2b24b17bcbc3a67553bb848
+2023-06-06 10:06:34,304 INFO Welcome to the CDS
+2023-06-06 10:06:34,304 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-819af959d4984077afedb2b4f5e46d24
+2023-06-06 10:06:34,313 INFO Request is queued
+2023-06-06 10:06:34,315 INFO Request is queued
+2023-06-06 10:06:34,324 INFO Welcome to the CDS
+2023-06-06 10:06:34,325 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-a96871bd635b487daf3fb7f448009faa
+2023-06-06 10:06:34,333 INFO Request is queued
+2023-06-06 10:06:34,335 INFO Welcome to the CDS
+2023-06-06 10:06:34,335 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-51aa83496438472e9ad4cb32386caf1f
+2023-06-06 10:06:34,344 INFO Welcome to the CDS
+2023-06-06 10:06:34,344 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-b7315855f1cc4eb68fca2b5ddcec1d6a
+2023-06-06 10:06:34,358 INFO Request is queued
+2023-06-06 10:06:34,380 INFO Request is queued
+2023-06-06 10:06:34,387 INFO Welcome to the CDS
+2023-06-06 10:06:34,387 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-e730e779ca894db8886ee27068957811
+2023-06-06 10:06:34,390 INFO Request is queued
+2023-06-06 10:06:34,399 INFO Welcome to the CDS
+2023-06-06 10:06:34,399 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-f51bb730cb6d43bd88d116ca5d801a66
+2023-06-06 10:06:34,410 INFO Welcome to the CDS
+2023-06-06 10:06:34,411 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-3852ef9e88a2444e823e1eb2d6066940
+2023-06-06 10:06:34,423 INFO Welcome to the CDS
+2023-06-06 10:06:34,423 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-5721d8757ac246269457b6a885f15331
+2023-06-06 10:06:34,435 INFO Welcome to the CDS
+2023-06-06 10:06:34,436 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-ee16733cc2984290b2c73f3f40066a38
+2023-06-06 10:06:34,440 INFO Request is queued
+2023-06-06 10:06:34,448 INFO Request is queued
+2023-06-06 10:06:34,470 INFO Request is queued
+2023-06-06 10:06:34,474 INFO Welcome to the CDS
+2023-06-06 10:06:34,474 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-9465acb8f30f494e8fffde65bb3c4f53
+2023-06-06 10:06:34,480 INFO Request is queued
+2023-06-06 10:06:34,508 INFO Welcome to the CDS
+2023-06-06 10:06:34,508 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-cad2c519a1304a96af7c74edafefe28b
+2023-06-06 10:06:34,518 INFO Request is queued
+2023-06-06 10:06:34,520 INFO Request is queued
+2023-06-06 10:06:34,525 INFO Welcome to the CDS
+2023-06-06 10:06:34,525 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-819d65998be840bca1582ae142b26df4
+2023-06-06 10:06:34,534 INFO Request is queued
+2023-06-06 10:06:34,537 INFO Welcome to the CDS
+2023-06-06 10:06:34,538 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-229c786fd41745adb251437d5b22d716
+2023-06-06 10:06:34,539 INFO Welcome to the CDS
+2023-06-06 10:06:34,540 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-2ae30e8103cc48529dc4c72a115f2443
+2023-06-06 10:06:34,548 INFO Welcome to the CDS
+2023-06-06 10:06:34,548 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-a01891fb7e634064bdd22a42db5bfccd
+2023-06-06 10:06:34,552 INFO Welcome to the CDS
+2023-06-06 10:06:34,553 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-1a6d37e6e3c940d4964bb2247d669f32
+2023-06-06 10:06:34,553 INFO Welcome to the CDS
+2023-06-06 10:06:34,553 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-f1721f219fc740228aaa770b7c7f7ef5
+2023-06-06 10:06:34,555 INFO Request is queued
+2023-06-06 10:06:34,555 INFO Welcome to the CDS
+2023-06-06 10:06:34,556 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-11bbb67f25db47b39a779923ba467ead
+2023-06-06 10:06:34,557 INFO Welcome to the CDS
+2023-06-06 10:06:34,558 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-bb7ceafd12b54cd291e8050ba3fd4c72
+2023-06-06 10:06:34,564 INFO Welcome to the CDS
+2023-06-06 10:06:34,564 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-02678f0ec5e340e58dba118fffcce168
+2023-06-06 10:06:34,582 INFO Request is queued
+2023-06-06 10:06:34,585 INFO Welcome to the CDS
+2023-06-06 10:06:34,586 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-dfab17dcf94f4ad08f77aaa3424f7d15
+2023-06-06 10:06:34,590 INFO Request is queued
+2023-06-06 10:06:34,594 INFO Request is queued
+2023-06-06 10:06:34,595 INFO Welcome to the CDS
+2023-06-06 10:06:34,595 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-fc5ceefaa641478a9947e8d482e5249c
+2023-06-06 10:06:34,607 INFO Request is queued
+2023-06-06 10:06:34,610 INFO Welcome to the CDS
+2023-06-06 10:06:34,611 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-9b7b724c6db34f20ba080a972a222263
+2023-06-06 10:06:34,611 INFO Welcome to the CDS
+2023-06-06 10:06:34,611 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-54747a6b081a4dbc8f5fb592fa3f1df6
+2023-06-06 10:06:34,613 INFO Request is queued
+2023-06-06 10:06:34,617 INFO Welcome to the CDS
+2023-06-06 10:06:34,617 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-df20363d3957472aa818b395faee4914
+2023-06-06 10:06:34,619 INFO Welcome to the CDS
+2023-06-06 10:06:34,619 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-544f50bc9f884a858b7021cc1a740cf9
+2023-06-06 10:06:34,621 INFO Welcome to the CDS
+2023-06-06 10:06:34,621 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-e096e23072a84077a07c0903773eaf7e
+2023-06-06 10:06:34,624 INFO Request is queued
+2023-06-06 10:06:34,626 INFO Request is queued
+2023-06-06 10:06:34,636 INFO Request is queued
+2023-06-06 10:06:34,636 INFO Request is queued
+2023-06-06 10:06:34,641 INFO Request is queued
+2023-06-06 10:06:34,645 INFO Welcome to the CDS
+2023-06-06 10:06:34,645 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-fda728e7d5c94557ab0391bbda57a78f
+2023-06-06 10:06:34,645 INFO Request is queued
+2023-06-06 10:06:34,647 INFO Request is queued
+2023-06-06 10:06:34,654 INFO Welcome to the CDS
+2023-06-06 10:06:34,655 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-889940e2c75e48b88c98d939a949f986
+2023-06-06 10:06:34,660 INFO Welcome to the CDS
+2023-06-06 10:06:34,660 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-72cddefd43c744a580aefe90f136122a
+2023-06-06 10:06:34,663 INFO Request is queued
+2023-06-06 10:06:34,681 INFO Request is queued
+2023-06-06 10:06:34,699 INFO Request is queued
+2023-06-06 10:06:34,704 INFO Request is queued
+2023-06-06 10:06:34,716 INFO Request is queued
+2023-06-06 10:06:34,747 INFO Request is queued
+2023-06-06 10:06:34,771 INFO Request is queued
+2023-06-06 10:06:35,147 INFO Request is running
+2023-06-06 10:16:51,952 INFO Request is completed
+2023-06-06 10:16:51,953 INFO Downloading https://download-0000-clone.copernicus-climate.eu/cache-compute-0000/cache/data4/e91f17f4-b1de-43d7-87ef-bef61b82fbb9.nc to e91f17f4-b1de-43d7-87ef-bef61b82fbb9.nc (5.7M)
+2023-06-06 10:16:51,955 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 54%|█████▍    | 3.05M/5.66M [00:00<00:00, 31.5MB/s]                                                    2023-06-06 10:16:52,240 INFO Download rate 19.7M/s
+['e91f17f4-b1de-43d7-87ef-bef61b82fbb9.nc']
+2023-06-06 10:26:52,289 INFO Request is completed
+2023-06-06 10:26:52,289 INFO Downloading https://download-0008-clone.copernicus-climate.eu/cache-compute-0008/cache/data6/60718dbb-37c8-499d-afa6-62efcf7bd0ef.nc to 60718dbb-37c8-499d-afa6-62efcf7bd0ef.nc (5.7M)
+2023-06-06 10:26:52,296 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-06 10:26:52,510 INFO Download rate 25.6M/s
+['60718dbb-37c8-499d-afa6-62efcf7bd0ef.nc']
+2023-06-06 10:34:52,555 INFO Request is completed
+2023-06-06 10:34:52,555 INFO Downloading https://download-0005-clone.copernicus-climate.eu/cache-compute-0005/cache/data8/df1dde9b-5026-40e2-b1f8-e4a997219cd3.nc to df1dde9b-5026-40e2-b1f8-e4a997219cd3.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-06 10:34:52,679 INFO Download rate 45.7M/s
+['df1dde9b-5026-40e2-b1f8-e4a997219cd3.nc']
+2023-06-06 10:34:52,819 INFO Request is running
+2023-06-06 10:44:52,910 INFO Request is running
+2023-06-06 10:44:53,038 INFO Request is completed
+2023-06-06 10:44:53,038 INFO Downloading https://download-0002-clone.copernicus-climate.eu/cache-compute-0002/cache/data3/53d3cdc0-5de5-44f7-8c54-9c1b13a5797d.nc to 53d3cdc0-5de5-44f7-8c54-9c1b13a5797d.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 36%|███▌      | 2.04M/5.66M [00:00<00:00, 21.4MB/s] 88%|████████▊ | 4.98M/5.66M [00:00<00:00, 26.9MB/s]                                                    2023-06-06 10:44:53,294 INFO Download rate 22.1M/s
+['53d3cdc0-5de5-44f7-8c54-9c1b13a5797d.nc']
+2023-06-06 10:52:53,139 INFO Request is running
+2023-06-06 10:52:53,160 INFO Request is completed
+2023-06-06 10:52:53,161 INFO Downloading https://download-0011-clone.copernicus-climate.eu/cache-compute-0011/cache/data8/c8c5e3c9-c939-49f0-8a0f-2a7d5b23db49.nc to c8c5e3c9-c939-49f0-8a0f-2a7d5b23db49.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 54%|█████▍    | 3.07M/5.66M [00:00<00:00, 32.2MB/s]                                                    2023-06-06 10:52:53,419 INFO Download rate 21.9M/s
+['c8c5e3c9-c939-49f0-8a0f-2a7d5b23db49.nc']
+2023-06-06 11:02:53,370 INFO Request is completed
+2023-06-06 11:02:53,379 INFO Downloading https://download-0005-clone.copernicus-climate.eu/cache-compute-0005/cache/data8/8c015f98-759a-475d-beaf-1f3132a31bb3.nc to 8c015f98-759a-475d-beaf-1f3132a31bb3.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]2023-06-06 11:02:53,524 INFO Request is running
+100%|█████████▉| 5.63M/5.66M [00:00<00:00, 59.1MB/s]                                                    2023-06-06 11:02:53,554 INFO Download rate 32.5M/s
+['8c015f98-759a-475d-beaf-1f3132a31bb3.nc']
+2023-06-06 11:12:53,509 INFO Request is running
+2023-06-06 11:12:53,829 INFO Request is completed
+2023-06-06 11:12:53,830 INFO Downloading https://download-0017.copernicus-climate.eu/cache-compute-0017/cache/data8/0928eed7-9c5d-4753-a1b0-43d70796fc38.nc to 0928eed7-9c5d-4753-a1b0-43d70796fc38.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 86%|████████▌ | 4.85M/5.66M [00:00<00:00, 50.9MB/s]                                                    2023-06-06 11:12:54,046 INFO Download rate 26.2M/s
+['0928eed7-9c5d-4753-a1b0-43d70796fc38.nc']
+2023-06-06 11:20:53,682 INFO Request is completed
+2023-06-06 11:20:53,682 INFO Downloading https://download-0011-clone.copernicus-climate.eu/cache-compute-0011/cache/data8/de22cd9d-4583-4c22-a44c-9fdd9029cee0.nc to de22cd9d-4583-4c22-a44c-9fdd9029cee0.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 41%|████▏     | 2.35M/5.68M [00:00<00:00, 24.6MB/s]                                                    2023-06-06 11:20:53,919 INFO Download rate 23.9M/s
+['de22cd9d-4583-4c22-a44c-9fdd9029cee0.nc']
+2023-06-06 11:20:53,951 INFO Request is running
+2023-06-06 11:32:54,025 INFO Request is running
+2023-06-06 11:32:54,206 INFO Request is completed
+2023-06-06 11:32:54,207 INFO Downloading https://download-0005-clone.copernicus-climate.eu/cache-compute-0005/cache/data4/3d37bf72-180b-4b75-a6d0-2b75a044bc67.nc to 3d37bf72-180b-4b75-a6d0-2b75a044bc67.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 71%|███████▏  | 4.04M/5.66M [00:00<00:00, 38.5MB/s]                                                    2023-06-06 11:32:54,421 INFO Download rate 26.4M/s
+['3d37bf72-180b-4b75-a6d0-2b75a044bc67.nc']
+2023-06-06 11:40:54,221 INFO Request is running
+2023-06-06 11:40:54,227 INFO Request is completed
+2023-06-06 11:40:54,227 INFO Downloading https://download-0017.copernicus-climate.eu/cache-compute-0017/cache/data2/ed89d3c9-26bb-4056-9cab-fa625e188474.nc to ed89d3c9-26bb-4056-9cab-fa625e188474.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 58%|█████▊    | 3.30M/5.68M [00:00<00:00, 34.4MB/s]                                                    2023-06-06 11:40:54,441 INFO Download rate 26.5M/s
+['ed89d3c9-26bb-4056-9cab-fa625e188474.nc']
+2023-06-06 11:52:54,581 INFO Request is running
+2023-06-06 11:52:54,583 INFO Request is completed
+2023-06-06 11:52:54,583 INFO Downloading https://download-0003-clone.copernicus-climate.eu/cache-compute-0003/cache/data4/32f6f062-f210-44e4-bbec-a05f95d816ca.nc to 32f6f062-f210-44e4-bbec-a05f95d816ca.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 33%|███▎      | 1.86M/5.66M [00:00<00:00, 19.4MB/s] 75%|███████▌  | 4.27M/5.66M [00:00<00:00, 22.8MB/s]                                                    2023-06-06 11:52:54,895 INFO Download rate 18.1M/s
+['32f6f062-f210-44e4-bbec-a05f95d816ca.nc']
+2023-06-06 12:02:54,921 INFO Request is completed
+2023-06-06 12:02:54,921 INFO Downloading https://download-0020.copernicus-climate.eu/cache-compute-0020/cache/data4/09e6d93a-45e3-4861-a724-ff103a7f76c1.nc to 09e6d93a-45e3-4861-a724-ff103a7f76c1.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 94%|█████████▎| 5.32M/5.68M [00:00<00:00, 55.2MB/s]2023-06-06 12:02:55,198 INFO Request is running
+                                                    2023-06-06 12:02:55,341 INFO Download rate 13.5M/s
+['09e6d93a-45e3-4861-a724-ff103a7f76c1.nc']
+2023-06-06 12:10:55,398 INFO Request is completed
+2023-06-06 12:10:55,398 INFO Downloading https://download-0019.copernicus-climate.eu/cache-compute-0019/cache/data6/00bb453c-13a0-44c2-bd7e-e735dadf1d3d.nc to 00bb453c-13a0-44c2-bd7e-e735dadf1d3d.nc (5.7M)
+2023-06-06 12:10:55,404 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-06 12:10:55,534 INFO Download rate 41.6M/s
+['00bb453c-13a0-44c2-bd7e-e735dadf1d3d.nc']
+2023-06-06 12:20:55,699 INFO Request is running
+2023-06-06 12:20:55,700 INFO Request is completed
+2023-06-06 12:20:55,700 INFO Downloading https://download-0017.copernicus-climate.eu/cache-compute-0017/cache/data6/a806a158-d047-4fd7-98b9-7ad90f34bca2.nc to a806a158-d047-4fd7-98b9-7ad90f34bca2.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 95%|█████████▍| 5.37M/5.66M [00:00<00:00, 56.3MB/s]                                                    2023-06-06 12:20:55,855 INFO Download rate 36.5M/s
+['a806a158-d047-4fd7-98b9-7ad90f34bca2.nc']
+2023-06-06 12:30:55,820 INFO Request is running
+2023-06-06 12:30:55,970 INFO Request is completed
+2023-06-06 12:30:55,970 INFO Downloading https://download-0013-clone.copernicus-climate.eu/cache-compute-0013/cache/data7/84a838e4-ef7e-4790-ab96-6241f66ebcea.nc to 84a838e4-ef7e-4790-ab96-6241f66ebcea.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 22%|██▏       | 1.25M/5.66M [00:00<00:00, 13.0MB/s] 53%|█████▎    | 3.01M/5.66M [00:00<00:00, 16.2MB/s] 88%|████████▊ | 4.96M/5.66M [00:00<00:00, 17.9MB/s]                                                    2023-06-06 12:30:56,402 INFO Download rate 13.1M/s
+['84a838e4-ef7e-4790-ab96-6241f66ebcea.nc']
+2023-06-06 12:40:56,079 INFO Request is completed
+2023-06-06 12:40:56,079 INFO Request is running
+2023-06-06 12:40:56,080 INFO Downloading https://download-0007-clone.copernicus-climate.eu/cache-compute-0007/cache/data9/a5c00064-a3a9-4519-b4ba-9456c491ecd5.nc to a5c00064-a3a9-4519-b4ba-9456c491ecd5.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 86%|████████▌ | 4.84M/5.66M [00:00<00:00, 50.5MB/s]                                                    2023-06-06 12:40:56,276 INFO Download rate 28.9M/s
+['a5c00064-a3a9-4519-b4ba-9456c491ecd5.nc']
+2023-06-06 12:50:56,365 INFO Request is completed
+2023-06-06 12:50:56,365 INFO Downloading https://download-0006-clone.copernicus-climate.eu/cache-compute-0006/cache/data5/4eb7848f-a9f1-468f-a795-6f9b5313f219.nc to 4eb7848f-a9f1-468f-a795-6f9b5313f219.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]2023-06-06 12:50:56,448 INFO Request is running
+                                           2023-06-06 12:50:56,506 INFO Download rate 40.1M/s
+['4eb7848f-a9f1-468f-a795-6f9b5313f219.nc']
+2023-06-06 12:58:56,701 INFO Request is completed
+2023-06-06 12:58:56,702 INFO Downloading https://download-0020.copernicus-climate.eu/cache-compute-0020/cache/data5/1bcebbdb-6408-497c-bbc5-0ff3f7656070.nc to 1bcebbdb-6408-497c-bbc5-0ff3f7656070.nc (5.7M)
+2023-06-06 12:58:56,704 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 41%|████      | 2.31M/5.66M [00:00<00:00, 24.3MB/s]                                                    2023-06-06 12:58:56,929 INFO Download rate 24.9M/s
+['1bcebbdb-6408-497c-bbc5-0ff3f7656070.nc']
+2023-06-06 13:10:56,984 INFO Request is running
+2023-06-06 13:10:57,002 INFO Request is completed
+2023-06-06 13:10:57,002 INFO Downloading https://download-0013-clone.copernicus-climate.eu/cache-compute-0013/cache/data1/8ba12e25-5bf6-473b-9d01-d78f6763435c.nc to 8ba12e25-5bf6-473b-9d01-d78f6763435c.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 29%|██▊       | 1.62M/5.66M [00:00<00:00, 16.7MB/s] 62%|██████▏   | 3.53M/5.66M [00:00<00:00, 18.6MB/s] 97%|█████████▋| 5.51M/5.66M [00:00<00:00, 19.3MB/s]                                                    2023-06-06 13:10:57,370 INFO Download rate 15.4M/s
+['8ba12e25-5bf6-473b-9d01-d78f6763435c.nc']
+2023-06-06 13:20:57,302 INFO Request is completed
+2023-06-06 13:20:57,302 INFO Downloading https://download-0004-clone.copernicus-climate.eu/cache-compute-0004/cache/data4/584d6b87-da1c-4f57-b3d6-1c6cac2feb8f.nc to 584d6b87-da1c-4f57-b3d6-1c6cac2feb8f.nc (5.7M)
+2023-06-06 13:20:57,308 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 61%|██████▏   | 3.47M/5.66M [00:00<00:00, 36.4MB/s]                                                    2023-06-06 13:20:57,542 INFO Download rate 23.6M/s
+['584d6b87-da1c-4f57-b3d6-1c6cac2feb8f.nc']
+2023-06-06 13:28:57,512 INFO Request is completed
+2023-06-06 13:28:57,512 INFO Downloading https://download-0005-clone.copernicus-climate.eu/cache-compute-0005/cache/data8/b5ce3a42-7d96-443e-ac9a-5fb358d9159f.nc to b5ce3a42-7d96-443e-ac9a-5fb358d9159f.nc (5.7M)
+2023-06-06 13:28:57,516 INFO Request is running
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 69%|██████▊   | 3.90M/5.68M [00:00<00:00, 40.8MB/s]                                                    2023-06-06 13:28:57,694 INFO Download rate 31.2M/s
+['b5ce3a42-7d96-443e-ac9a-5fb358d9159f.nc']
+2023-06-06 13:38:57,725 INFO Request is completed
+2023-06-06 13:38:57,725 INFO Downloading https://download-0005-clone.copernicus-climate.eu/cache-compute-0005/cache/data8/80dc2a98-4383-4ff7-8cb2-60e44ab35900.nc to 80dc2a98-4383-4ff7-8cb2-60e44ab35900.nc (5.7M)
+2023-06-06 13:38:57,729 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 50%|████▉     | 2.81M/5.66M [00:00<00:00, 29.0MB/s]                                                    2023-06-06 13:38:58,006 INFO Download rate 20.2M/s
+['80dc2a98-4383-4ff7-8cb2-60e44ab35900.nc']
+2023-06-06 13:48:57,992 INFO Request is running
+2023-06-06 13:48:57,995 INFO Request is completed
+2023-06-06 13:48:57,995 INFO Downloading https://download-0010-clone.copernicus-climate.eu/cache-compute-0010/cache/data2/8bb316f7-b1c7-4b68-a99b-ece33b6b35ed.nc to 8bb316f7-b1c7-4b68-a99b-ece33b6b35ed.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s]                                           2023-06-06 13:48:58,154 INFO Download rate 35.7M/s
+['8bb316f7-b1c7-4b68-a99b-ece33b6b35ed.nc']
+2023-06-06 13:58:58,313 INFO Request is completed
+2023-06-06 13:58:58,313 INFO Downloading https://download-0019.copernicus-climate.eu/cache-compute-0019/cache/data6/1f9b06c9-5f09-4b7e-9521-a89eab6106bf.nc to 1f9b06c9-5f09-4b7e-9521-a89eab6106bf.nc (5.7M)
+2023-06-06 13:58:58,330 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-06 13:58:58,452 INFO Download rate 40.6M/s
+['1f9b06c9-5f09-4b7e-9521-a89eab6106bf.nc']
+2023-06-06 14:10:58,595 INFO Request is completed
+2023-06-06 14:10:58,597 INFO Request is running
+2023-06-06 14:10:58,605 INFO Downloading https://download-0021.copernicus-climate.eu/cache-compute-0021/cache/data1/9e14193e-e57b-467e-89c7-b0c7965499f3.nc to 9e14193e-e57b-467e-89c7-b0c7965499f3.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 80%|████████  | 4.56M/5.68M [00:00<00:00, 47.6MB/s]                                                    2023-06-06 14:10:58,788 INFO Download rate 31.1M/s
+['9e14193e-e57b-467e-89c7-b0c7965499f3.nc']
+2023-06-06 14:18:58,735 INFO Request is running
+2023-06-06 14:18:58,738 INFO Request is completed
+2023-06-06 14:18:58,744 INFO Downloading https://download-0001-clone.copernicus-climate.eu/cache-compute-0001/cache/data7/c4e1ce1b-48f8-40e9-ac43-3d82ffdab9bf.nc to c4e1ce1b-48f8-40e9-ac43-3d82ffdab9bf.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 65%|██████▍   | 3.66M/5.66M [00:00<00:00, 38.0MB/s]                                                    2023-06-06 14:18:59,168 INFO Download rate 13.3M/s
+['c4e1ce1b-48f8-40e9-ac43-3d82ffdab9bf.nc']
+2023-06-06 14:30:59,011 INFO Request is completed
+2023-06-06 14:30:59,011 INFO Downloading https://download-0017.copernicus-climate.eu/cache-compute-0017/cache/data1/9dc70de1-d664-4ae1-8502-532701a777ce.nc to 9dc70de1-d664-4ae1-8502-532701a777ce.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 37%|███▋      | 2.07M/5.66M [00:00<00:00, 21.7MB/s]2023-06-06 14:30:59,218 INFO Request is running
+ 78%|███████▊  | 4.39M/5.66M [00:00<00:00, 23.1MB/s]                                                    2023-06-06 14:30:59,284 INFO Download rate 20.8M/s
+['9dc70de1-d664-4ae1-8502-532701a777ce.nc']
+2023-06-06 14:40:59,425 INFO Request is running
+2023-06-06 14:40:59,478 INFO Request is completed
+2023-06-06 14:40:59,478 INFO Downloading https://download-0001-clone.copernicus-climate.eu/cache-compute-0001/cache/data9/b1f3757c-94f4-455b-8094-6eaeda5a8f8a.nc to b1f3757c-94f4-455b-8094-6eaeda5a8f8a.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 23%|██▎       | 1.28M/5.66M [00:00<00:00, 13.2MB/s] 60%|█████▉    | 3.39M/5.66M [00:00<00:00, 18.4MB/s]                                                    2023-06-06 14:40:59,815 INFO Download rate 16.8M/s
+['b1f3757c-94f4-455b-8094-6eaeda5a8f8a.nc']
+2023-06-06 14:48:59,605 INFO Request is completed
+2023-06-06 14:48:59,605 INFO Downloading https://download-0021.copernicus-climate.eu/cache-compute-0021/cache/data7/4bb67f7d-ca78-4dce-bf6e-39e6b11fb822.nc to 4bb67f7d-ca78-4dce-bf6e-39e6b11fb822.nc (5.7M)
+2023-06-06 14:48:59,693 INFO Request is running
+  0%|          | 0.00/5.68M [00:00<?, ?B/s]  4%|▎         | 208k/5.68M [00:00<00:02, 2.08MB/s]  9%|▉         | 520k/5.68M [00:00<00:01, 2.72MB/s] 17%|█▋        | 995k/5.68M [00:00<00:01, 3.62MB/s] 28%|██▊       | 1.58M/5.68M [00:00<00:00, 4.65MB/s] 41%|████      | 2.31M/5.68M [00:00<00:00, 5.64MB/s] 57%|█████▋    | 3.24M/5.68M [00:00<00:00, 6.91MB/s] 75%|███████▍  | 4.23M/5.68M [00:00<00:00, 7.93MB/s] 92%|█████████▏| 5.25M/5.68M [00:00<00:00, 8.68MB/s]                                                    2023-06-06 14:49:00,558 INFO Download rate 6M/s
+['4bb67f7d-ca78-4dce-bf6e-39e6b11fb822.nc']
+2023-06-06 15:00:59,745 INFO Request is running
+2023-06-06 15:01:00,007 INFO Request is completed
+2023-06-06 15:01:00,007 INFO Downloading https://download-0017.copernicus-climate.eu/cache-compute-0017/cache/data7/825681ee-8c84-4c00-9d73-ce476c61ef5d.nc to 825681ee-8c84-4c00-9d73-ce476c61ef5d.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 18%|█▊        | 1.04M/5.66M [00:00<00:00, 10.8MB/s] 40%|████      | 2.27M/5.66M [00:00<00:00, 11.9MB/s] 65%|██████▍   | 3.67M/5.66M [00:00<00:00, 13.1MB/s] 95%|█████████▌| 5.40M/5.66M [00:00<00:00, 14.9MB/s]                                                    2023-06-06 15:01:00,493 INFO Download rate 11.6M/s
+['825681ee-8c84-4c00-9d73-ce476c61ef5d.nc']
+2023-06-06 15:10:59,979 INFO Request is completed
+2023-06-06 15:10:59,979 INFO Downloading https://download-0019.copernicus-climate.eu/cache-compute-0019/cache/data1/203b727d-64d6-4ed2-bd0b-328a62fc2458.nc to 203b727d-64d6-4ed2-bd0b-328a62fc2458.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 82%|████████▏ | 4.63M/5.66M [00:00<00:00, 48.5MB/s]                                                    2023-06-06 15:11:00,183 INFO Download rate 27.7M/s
+['203b727d-64d6-4ed2-bd0b-328a62fc2458.nc']
+2023-06-06 15:11:00,212 INFO Request is running
+2023-06-06 15:21:00,446 INFO Request is running
+2023-06-06 15:21:00,460 INFO Request is completed
+2023-06-06 15:21:00,460 INFO Downloading https://download-0009-clone.copernicus-climate.eu/cache-compute-0009/cache/data7/517fe769-a7db-4e3d-817d-85b997ee1f9d.nc to 517fe769-a7db-4e3d-817d-85b997ee1f9d.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 85%|████████▌ | 4.85M/5.68M [00:00<00:00, 46.2MB/s]                                                    2023-06-06 15:21:00,644 INFO Download rate 30.8M/s
+['517fe769-a7db-4e3d-817d-85b997ee1f9d.nc']
+2023-06-06 15:33:00,728 INFO Request is running
+2023-06-06 15:33:00,736 INFO Request is completed
+2023-06-06 15:33:00,736 INFO Downloading https://download-0000-clone.copernicus-climate.eu/cache-compute-0000/cache/data1/d9bbc9a7-86d9-4351-9164-8967b2967b98.nc to d9bbc9a7-86d9-4351-9164-8967b2967b98.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-06 15:33:00,913 INFO Download rate 32.1M/s
+['d9bbc9a7-86d9-4351-9164-8967b2967b98.nc']
+2023-06-06 15:43:00,830 INFO Request is running
+2023-06-06 15:43:00,959 INFO Request is completed
+2023-06-06 15:43:00,959 INFO Downloading https://download-0019.copernicus-climate.eu/cache-compute-0019/cache/data4/e876972f-1662-4536-a000-c2101ddbe9e7.nc to e876972f-1662-4536-a000-c2101ddbe9e7.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s]                                           2023-06-06 15:43:01,100 INFO Download rate 40.3M/s
+['e876972f-1662-4536-a000-c2101ddbe9e7.nc']
+2023-06-06 15:53:01,059 INFO Request is completed
+2023-06-06 15:53:01,059 INFO Downloading https://download-0017.copernicus-climate.eu/cache-compute-0017/cache/data1/d4eceb67-c6f9-45e4-921f-8a29d1333c99.nc to d4eceb67-c6f9-45e4-921f-8a29d1333c99.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]2023-06-06 15:53:01,170 INFO Request is running
+ 19%|█▉        | 1.07M/5.66M [00:00<00:00, 11.0MB/s] 50%|█████     | 2.86M/5.66M [00:00<00:00, 15.3MB/s] 96%|█████████▌| 5.41M/5.66M [00:00<00:00, 20.5MB/s]                                                    2023-06-06 15:53:01,464 INFO Download rate 14M/s
+['d4eceb67-c6f9-45e4-921f-8a29d1333c99.nc']
+2023-06-06 16:01:01,373 INFO Request is completed
+2023-06-06 16:01:01,373 INFO Downloading https://download-0011-clone.copernicus-climate.eu/cache-compute-0011/cache/data8/f5424be5-e839-4cb3-ac2e-725b5c9e52d8.nc to f5424be5-e839-4cb3-ac2e-725b5c9e52d8.nc (5.7M)
+2023-06-06 16:01:01,382 INFO Request is running
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 30%|███       | 1.70M/5.66M [00:00<00:00, 17.9MB/s] 73%|███████▎  | 4.14M/5.66M [00:00<00:00, 22.2MB/s]                                                    2023-06-06 16:01:01,674 INFO Download rate 18.8M/s
+['f5424be5-e839-4cb3-ac2e-725b5c9e52d8.nc']
+2023-06-06 16:11:01,491 INFO Request is running
+2023-06-06 16:11:01,581 INFO Request is completed
+2023-06-06 16:11:01,581 INFO Downloading https://download-0002-clone.copernicus-climate.eu/cache-compute-0002/cache/data0/a85fb9bc-86c7-4668-ac36-769b48ba343d.nc to a85fb9bc-86c7-4668-ac36-769b48ba343d.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 19%|█▉        | 1.07M/5.66M [00:00<00:00, 11.2MB/s] 43%|████▎     | 2.43M/5.66M [00:00<00:00, 12.9MB/s] 80%|███████▉  | 4.52M/5.66M [00:00<00:00, 17.0MB/s]                                                    2023-06-06 16:11:01,972 INFO Download rate 14.5M/s
+['a85fb9bc-86c7-4668-ac36-769b48ba343d.nc']
+2023-06-06 16:21:01,766 INFO Request is completed
+2023-06-06 16:21:01,767 INFO Downloading https://download-0010-clone.copernicus-climate.eu/cache-compute-0010/cache/data2/d8873455-1f94-4aa0-94d0-4a9622dcdc0f.nc to d8873455-1f94-4aa0-94d0-4a9622dcdc0f.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]2023-06-06 16:21:01,839 INFO Request is running
+ 23%|██▎       | 1.31M/5.66M [00:00<00:00, 13.7MB/s] 59%|█████▉    | 3.34M/5.66M [00:00<00:00, 18.2MB/s]                                                    2023-06-06 16:21:02,109 INFO Download rate 16.5M/s
+['d8873455-1f94-4aa0-94d0-4a9622dcdc0f.nc']
+2023-06-06 16:29:02,024 INFO Request is completed
+2023-06-06 16:29:02,025 INFO Downloading https://download-0010-clone.copernicus-climate.eu/cache-compute-0010/cache/data6/5518611f-6d6b-4386-949c-6ce21ab8475c.nc to 5518611f-6d6b-4386-949c-6ce21ab8475c.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 14%|█▎        | 786k/5.66M [00:00<00:00, 7.93MB/s] 32%|███▏      | 1.79M/5.66M [00:00<00:00, 9.33MB/s] 57%|█████▋    | 3.25M/5.66M [00:00<00:00, 11.9MB/s] 97%|█████████▋| 5.47M/5.66M [00:00<00:00, 16.3MB/s]                                                    2023-06-06 16:29:02,504 INFO Download rate 11.8M/s
+['5518611f-6d6b-4386-949c-6ce21ab8475c.nc']
+2023-06-06 16:29:02,929 INFO Request is running
+2023-06-06 16:37:02,146 INFO Request is running
+2023-06-06 16:37:03,126 INFO Request is completed
+2023-06-06 16:37:03,126 INFO Downloading https://download-0002-clone.copernicus-climate.eu/cache-compute-0002/cache/data7/68340086-7300-4764-b2bd-2ecf5a343cfe.nc to 68340086-7300-4764-b2bd-2ecf5a343cfe.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 18%|█▊        | 0.99M/5.66M [00:00<00:00, 10.4MB/s] 36%|███▌      | 2.03M/5.66M [00:00<00:00, 10.7MB/s] 60%|██████    | 3.41M/5.66M [00:00<00:00, 12.3MB/s] 85%|████████▍ | 4.79M/5.66M [00:00<00:00, 13.1MB/s]                                                    2023-06-06 16:37:03,663 INFO Download rate 10.5M/s
+['68340086-7300-4764-b2bd-2ecf5a343cfe.nc']
+2023-06-06 16:45:02,351 INFO Request is running
+2023-06-06 16:45:02,353 INFO Request is completed
+2023-06-06 16:45:02,353 INFO Downloading https://download-0010-clone.copernicus-climate.eu/cache-compute-0010/cache/data0/3921fac1-23b2-4596-b75b-1ee45b211fe9.nc to 3921fac1-23b2-4596-b75b-1ee45b211fe9.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 22%|██▏       | 1.25M/5.68M [00:00<00:00, 13.1MB/s] 48%|████▊     | 2.72M/5.68M [00:00<00:00, 14.4MB/s] 77%|███████▋  | 4.37M/5.68M [00:00<00:00, 15.7MB/s]                                                    2023-06-06 16:45:02,781 INFO Download rate 13.3M/s
+['3921fac1-23b2-4596-b75b-1ee45b211fe9.nc']
+2023-06-06 16:55:02,629 INFO Request is running
+2023-06-06 16:55:02,640 INFO Request is completed
+2023-06-06 16:55:02,640 INFO Downloading https://download-0006-clone.copernicus-climate.eu/cache-compute-0006/cache/data5/74aa6b42-5e63-470e-a4f4-65374dfa0181.nc to 74aa6b42-5e63-470e-a4f4-65374dfa0181.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 81%|████████▏ | 4.62M/5.68M [00:00<00:00, 48.4MB/s]                                                    2023-06-06 16:55:02,848 INFO Download rate 27.3M/s
+['74aa6b42-5e63-470e-a4f4-65374dfa0181.nc']
+2023-06-06 17:03:02,876 INFO Request is running
+2023-06-06 17:03:02,876 INFO Request is completed
+2023-06-06 17:03:02,877 INFO Downloading https://download-0000-clone.copernicus-climate.eu/cache-compute-0000/cache/data6/1f6a75bc-246c-4a8d-b110-eaa2cb8f8311.nc to 1f6a75bc-246c-4a8d-b110-eaa2cb8f8311.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 78%|███████▊  | 4.43M/5.66M [00:00<00:00, 46.3MB/s]                                                    2023-06-06 17:03:03,053 INFO Download rate 32.1M/s
+['1f6a75bc-246c-4a8d-b110-eaa2cb8f8311.nc']
+2023-06-06 17:13:03,097 INFO Request is running
+2023-06-06 17:13:03,100 INFO Request is completed
+2023-06-06 17:13:03,100 INFO Downloading https://download-0013-clone.copernicus-climate.eu/cache-compute-0013/cache/data1/a45743f3-6335-4a5d-8e5b-0d2883394433.nc to a45743f3-6335-4a5d-8e5b-0d2883394433.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 45%|████▍     | 2.54M/5.66M [00:00<00:00, 26.7MB/s]                                                    2023-06-06 17:13:03,356 INFO Download rate 22.2M/s
+['a45743f3-6335-4a5d-8e5b-0d2883394433.nc']
+2023-06-06 17:23:03,331 INFO Request is completed
+2023-06-06 17:23:03,332 INFO Downloading https://download-0001-clone.copernicus-climate.eu/cache-compute-0001/cache/data1/13efe26b-e20d-493b-98c0-13c910b5f2ef.nc to 13efe26b-e20d-493b-98c0-13c910b5f2ef.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-06 17:23:03,514 INFO Download rate 31M/s
+['13efe26b-e20d-493b-98c0-13c910b5f2ef.nc']
+2023-06-06 17:23:03,554 INFO Request is running
+2023-06-06 17:31:03,743 INFO Request is completed
+2023-06-06 17:31:03,743 INFO Downloading https://download-0007-clone.copernicus-climate.eu/cache-compute-0007/cache/data4/eb4015e0-2888-4730-8412-e46470ca70eb.nc to eb4015e0-2888-4730-8412-e46470ca70eb.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 17%|█▋        | 0.98M/5.66M [00:00<00:00, 10.2MB/s] 50%|████▉     | 2.81M/5.66M [00:00<00:00, 15.5MB/s] 90%|████████▉ | 5.08M/5.66M [00:00<00:00, 19.3MB/s]                                                    2023-06-06 17:31:04,110 INFO Download rate 15.4M/s
+['eb4015e0-2888-4730-8412-e46470ca70eb.nc']
+2023-06-06 17:31:04,492 INFO Request is running
+2023-06-06 17:41:03,764 INFO Request is running
+2023-06-06 17:41:04,715 INFO Request is completed
+2023-06-06 17:41:04,716 INFO Downloading https://download-0013-clone.copernicus-climate.eu/cache-compute-0013/cache/data4/d55968d6-9b2b-4c45-8a8e-6fdc5de360ba.nc to d55968d6-9b2b-4c45-8a8e-6fdc5de360ba.nc (5.7M)
+  0%|          | 0.00/5.68M [00:00<?, ?B/s] 19%|█▉        | 1.08M/5.68M [00:00<00:00, 11.2MB/s] 49%|████▉     | 2.80M/5.68M [00:00<00:00, 14.8MB/s] 92%|█████████▏| 5.19M/5.68M [00:00<00:00, 19.2MB/s]                                                    2023-06-06 17:41:05,125 INFO Download rate 13.9M/s
+['d55968d6-9b2b-4c45-8a8e-6fdc5de360ba.nc']
+2023-06-06 17:51:03,990 INFO Request is completed
+2023-06-06 17:51:03,990 INFO Downloading https://download-0005-clone.copernicus-climate.eu/cache-compute-0005/cache/data8/aed17c35-bb03-4d33-9519-486c50f438ea.nc to aed17c35-bb03-4d33-9519-486c50f438ea.nc (5.7M)
+2023-06-06 17:51:03,991 INFO Request is running
+  0%|          | 0.00/5.68M [00:00<?, ?B/s]                                           2023-06-06 17:51:04,160 INFO Download rate 33.5M/s
+['aed17c35-bb03-4d33-9519-486c50f438ea.nc']
+2023-06-06 17:57:04,111 INFO Request is running
+2023-06-06 17:57:04,113 INFO Request is completed
+2023-06-06 17:57:04,113 INFO Downloading https://download-0007-clone.copernicus-climate.eu/cache-compute-0007/cache/data5/8aefc7ed-2cca-4786-aecd-884f1516647a.nc to 8aefc7ed-2cca-4786-aecd-884f1516647a.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 21%|██        | 1.17M/5.66M [00:00<00:00, 12.3MB/s] 57%|█████▋    | 3.24M/5.66M [00:00<00:00, 17.7MB/s]                                                    2023-06-06 17:57:04,438 INFO Download rate 17.4M/s
+['8aefc7ed-2cca-4786-aecd-884f1516647a.nc']
+2023-06-06 18:03:04,246 INFO Request is running
+2023-06-06 18:03:04,256 INFO Request is completed
+2023-06-06 18:03:04,256 INFO Downloading https://download-0001-clone.copernicus-climate.eu/cache-compute-0001/cache/data1/052f0783-65e8-4720-ab75-2c8da75f4a95.nc to 052f0783-65e8-4720-ab75-2c8da75f4a95.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 24%|██▍       | 1.37M/5.66M [00:00<00:00, 14.3MB/s] 64%|██████▍   | 3.62M/5.66M [00:00<00:00, 19.8MB/s]                                                    2023-06-06 18:03:04,580 INFO Download rate 17.5M/s
+['052f0783-65e8-4720-ab75-2c8da75f4a95.nc']
+2023-06-06 18:13:34,469 WARNING HTTP error: [500 Internal Server Error]. Attempt 1 of 500.
+2023-06-06 18:13:34,469 WARNING Retrying in 120 seconds
+2023-06-06 18:13:34,484 WARNING HTTP error: [500 Internal Server Error]. Attempt 1 of 500.
+2023-06-06 18:13:34,484 WARNING Retrying in 120 seconds
+2023-06-06 18:13:34,485 WARNING HTTP error: [500 Internal Server Error]. Attempt 1 of 500.
+2023-06-06 18:13:34,485 WARNING Retrying in 120 seconds
+2023-06-06 18:15:34,470 INFO Retrying now...
+2023-06-06 18:15:34,484 INFO Retrying now...
+2023-06-06 18:15:34,485 INFO Retrying now...
+2023-06-06 18:16:04,521 WARNING HTTP error: [500 Internal Server Error]. Attempt 2 of 500.
+2023-06-06 18:16:04,521 WARNING Retrying in 120 seconds
+2023-06-06 18:16:04,529 WARNING HTTP error: [500 Internal Server Error]. Attempt 2 of 500.
+2023-06-06 18:16:04,529 WARNING Retrying in 120 seconds
+2023-06-06 18:16:04,531 WARNING HTTP error: [500 Internal Server Error]. Attempt 2 of 500.
+2023-06-06 18:16:04,531 WARNING Retrying in 120 seconds
+2023-06-06 18:18:04,522 INFO Retrying now...
+2023-06-06 18:18:04,530 INFO Retrying now...
+2023-06-06 18:18:04,531 INFO Retrying now...
+2023-06-06 18:18:34,572 WARNING HTTP error: [500 Internal Server Error]. Attempt 3 of 500.
+2023-06-06 18:18:34,573 WARNING Retrying in 120 seconds
+2023-06-06 18:18:34,575 WARNING HTTP error: [500 Internal Server Error]. Attempt 3 of 500.
+2023-06-06 18:18:34,575 WARNING Retrying in 120 seconds
+2023-06-06 18:18:34,579 WARNING HTTP error: [500 Internal Server Error]. Attempt 3 of 500.
+2023-06-06 18:18:34,579 WARNING Retrying in 120 seconds
+2023-06-06 18:20:34,573 INFO Retrying now...
+2023-06-06 18:20:34,576 INFO Retrying now...
+2023-06-06 18:20:34,579 INFO Retrying now...
+2023-06-06 18:21:04,618 WARNING HTTP error: [500 Internal Server Error]. Attempt 4 of 500.
+2023-06-06 18:21:04,619 WARNING Retrying in 120 seconds
+2023-06-06 18:21:04,621 WARNING HTTP error: [500 Internal Server Error]. Attempt 4 of 500.
+2023-06-06 18:21:04,621 WARNING Retrying in 120 seconds
+2023-06-06 18:21:04,624 WARNING HTTP error: [500 Internal Server Error]. Attempt 4 of 500.
+2023-06-06 18:21:04,624 WARNING Retrying in 120 seconds
+2023-06-06 18:23:04,619 INFO Retrying now...
+2023-06-06 18:23:04,621 INFO Retrying now...
+2023-06-06 18:23:04,624 INFO Retrying now...
+2023-06-06 18:23:34,674 WARNING HTTP error: [500 Internal Server Error]. Attempt 5 of 500.
+2023-06-06 18:23:34,674 WARNING Retrying in 120 seconds
+2023-06-06 18:23:34,677 WARNING HTTP error: [500 Internal Server Error]. Attempt 5 of 500.
+2023-06-06 18:23:34,678 WARNING Retrying in 120 seconds
+2023-06-06 18:23:34,681 WARNING HTTP error: [500 Internal Server Error]. Attempt 5 of 500.
+2023-06-06 18:23:34,681 WARNING Retrying in 120 seconds
+2023-06-06 18:25:34,674 INFO Retrying now...
+2023-06-06 18:25:34,678 INFO Retrying now...
+2023-06-06 18:25:34,681 INFO Retrying now...
+2023-06-06 18:26:04,720 WARNING HTTP error: [500 Internal Server Error]. Attempt 6 of 500.
+2023-06-06 18:26:04,720 WARNING Retrying in 120 seconds
+2023-06-06 18:26:04,725 WARNING HTTP error: [500 Internal Server Error]. Attempt 6 of 500.
+2023-06-06 18:26:04,725 WARNING Retrying in 120 seconds
+2023-06-06 18:26:04,728 WARNING HTTP error: [500 Internal Server Error]. Attempt 6 of 500.
+2023-06-06 18:26:04,729 WARNING Retrying in 120 seconds
+2023-06-06 18:28:04,720 INFO Retrying now...
+2023-06-06 18:28:04,725 INFO Retrying now...
+2023-06-06 18:28:04,729 INFO Retrying now...
+2023-06-06 18:28:34,758 WARNING HTTP error: [500 Internal Server Error]. Attempt 7 of 500.
+2023-06-06 18:28:34,759 WARNING Retrying in 120 seconds
+2023-06-06 18:28:34,770 WARNING HTTP error: [500 Internal Server Error]. Attempt 7 of 500.
+2023-06-06 18:28:34,770 WARNING Retrying in 120 seconds
+2023-06-06 18:28:35,767 WARNING HTTP error: [500 Internal Server Error]. Attempt 7 of 500.
+2023-06-06 18:28:35,767 WARNING Retrying in 120 seconds
+2023-06-06 18:30:34,759 INFO Retrying now...
+2023-06-06 18:30:34,770 INFO Retrying now...
+2023-06-06 18:30:35,767 INFO Retrying now...
+2023-06-06 18:31:04,796 WARNING HTTP error: [500 Internal Server Error]. Attempt 8 of 500.
+2023-06-06 18:31:04,796 WARNING Retrying in 120 seconds
+2023-06-06 18:31:04,815 WARNING HTTP error: [500 Internal Server Error]. Attempt 8 of 500.
+2023-06-06 18:31:04,815 WARNING Retrying in 120 seconds
+2023-06-06 18:31:05,808 WARNING HTTP error: [500 Internal Server Error]. Attempt 8 of 500.
+2023-06-06 18:31:05,808 WARNING Retrying in 120 seconds
+2023-06-06 18:33:04,796 INFO Retrying now...
+2023-06-06 18:33:04,815 INFO Retrying now...
+2023-06-06 18:33:05,808 INFO Retrying now...
+2023-06-06 18:33:15,949 WARNING Connection error: [('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))]. Attempt 9 of 500.
+2023-06-06 18:33:15,949 WARNING Connection error: [('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))]. Attempt 9 of 500.
+2023-06-06 18:33:15,949 WARNING Retrying in 120 seconds
+2023-06-06 18:33:15,950 WARNING Retrying in 120 seconds
+2023-06-06 18:33:15,965 WARNING Connection error: [('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))]. Attempt 9 of 500.
+2023-06-06 18:33:15,966 WARNING Retrying in 120 seconds
+2023-06-06 18:35:15,950 INFO Retrying now...
+2023-06-06 18:35:15,950 INFO Retrying now...
+2023-06-06 18:35:15,966 INFO Retrying now...
+2023-06-06 18:35:45,985 WARNING HTTP error: [500 Internal Server Error]. Attempt 10 of 500.
+2023-06-06 18:35:45,986 WARNING Retrying in 120 seconds
+2023-06-06 18:35:45,997 WARNING HTTP error: [500 Internal Server Error]. Attempt 10 of 500.
+2023-06-06 18:35:45,997 WARNING Retrying in 120 seconds
+2023-06-06 18:35:46,006 WARNING HTTP error: [500 Internal Server Error]. Attempt 10 of 500.
+2023-06-06 18:35:46,006 WARNING Retrying in 120 seconds
+2023-06-06 18:37:45,986 INFO Retrying now...
+2023-06-06 18:37:45,998 INFO Retrying now...
+2023-06-06 18:37:46,006 INFO Retrying now...
+2023-06-06 18:38:16,031 WARNING HTTP error: [500 Internal Server Error]. Attempt 11 of 500.
+2023-06-06 18:38:16,031 WARNING Retrying in 120 seconds
+2023-06-06 18:38:16,035 WARNING HTTP error: [500 Internal Server Error]. Attempt 11 of 500.
+2023-06-06 18:38:16,035 WARNING Retrying in 120 seconds
+2023-06-06 18:38:16,052 WARNING HTTP error: [500 Internal Server Error]. Attempt 11 of 500.
+2023-06-06 18:38:16,052 WARNING Retrying in 120 seconds
+2023-06-06 18:40:16,032 INFO Retrying now...
+2023-06-06 18:40:16,035 INFO Retrying now...
+2023-06-06 18:40:16,052 INFO Retrying now...
+2023-06-06 18:40:46,100 WARNING HTTP error: [500 Internal Server Error]. Attempt 12 of 500.
+2023-06-06 18:40:46,100 WARNING Retrying in 120 seconds
+2023-06-06 18:40:46,101 WARNING HTTP error: [500 Internal Server Error]. Attempt 12 of 500.
+2023-06-06 18:40:46,101 WARNING Retrying in 120 seconds
+2023-06-06 18:40:46,110 WARNING HTTP error: [500 Internal Server Error]. Attempt 12 of 500.
+2023-06-06 18:40:46,110 WARNING Retrying in 120 seconds
+2023-06-06 18:42:46,100 INFO Retrying now...
+2023-06-06 18:42:46,101 INFO Retrying now...
+2023-06-06 18:42:46,110 INFO Retrying now...
+2023-06-06 18:43:16,144 WARNING HTTP error: [500 Internal Server Error]. Attempt 13 of 500.
+2023-06-06 18:43:16,144 WARNING Retrying in 120 seconds
+2023-06-06 18:43:16,147 WARNING HTTP error: [500 Internal Server Error]. Attempt 13 of 500.
+2023-06-06 18:43:16,147 WARNING Retrying in 120 seconds
+2023-06-06 18:43:16,155 WARNING HTTP error: [500 Internal Server Error]. Attempt 13 of 500.
+2023-06-06 18:43:16,155 WARNING Retrying in 120 seconds
+2023-06-06 18:45:16,145 INFO Retrying now...
+2023-06-06 18:45:16,147 INFO Retrying now...
+2023-06-06 18:45:16,155 INFO Retrying now...
+2023-06-06 18:45:21,787 INFO Request is failed
+2023-06-06 18:45:21,787 ERROR Message: Killed by CDS admin due to internal error
+2023-06-06 18:45:21,787 ERROR Reason:  Internal error
+Traceback (most recent call last):
+  File "/home/tomsc/Desktop/Climate/src/get_data/2009.py", line 12, in <module>
+    import cdstoolbox as ct
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdstoolbox/__init__.py", line 11, in <module>
+    print(c.download(c.workflow(code)))
+                     ^^^^^^^^^^^^^^^^
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdsapi/api.py", line 392, in workflow
+    return self.service("tool.toolbox.orchestrator.run_workflow", params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdsapi/api.py", line 382, in service
+    result = self._api(
+             ^^^^^^^^^^
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdsapi/api.py", line 519, in _api
+    raise Exception(
+Exception: Killed by CDS admin due to internal error. Internal error.
+2023-06-06 18:47:21,907 INFO Request is running
+2023-06-06 18:51:21,949 INFO Request is failed
+2023-06-06 18:51:21,949 ERROR Message: Killed by CDS admin due to internal error
+2023-06-06 18:51:21,949 ERROR Reason:  Internal error
+Traceback (most recent call last):
+  File "/home/tomsc/Desktop/Climate/src/get_data/2022.py", line 12, in <module>
+    import cdstoolbox as ct
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdstoolbox/__init__.py", line 11, in <module>
+    print(c.download(c.workflow(code)))
+                     ^^^^^^^^^^^^^^^^
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdsapi/api.py", line 392, in workflow
+    return self.service("tool.toolbox.orchestrator.run_workflow", params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdsapi/api.py", line 382, in service
+    result = self._api(
+             ^^^^^^^^^^
+  File "/home/tomsc/miniconda3/envs/climate_env/lib/python3.11/site-packages/cdsapi/api.py", line 519, in _api
+    raise Exception(
+Exception: Killed by CDS admin due to internal error. Internal error.
+2023-06-06 18:51:21,989 INFO Request is queued
+2023-06-06 18:53:22,031 INFO Request is running
+2023-06-06 19:01:22,260 INFO Request is completed
+2023-06-06 19:01:22,261 INFO Downloading https://download-0021.copernicus-climate.eu/cache-compute-0021/cache/data8/4d09c103-d0a7-46c7-9a0c-8b1b867a9950.nc to 4d09c103-d0a7-46c7-9a0c-8b1b867a9950.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-06 19:01:22,619 INFO Download rate 15.8M/s
+['4d09c103-d0a7-46c7-9a0c-8b1b867a9950.nc']
+2023-06-07 10:13:06,646 INFO Welcome to the CDS
+2023-06-07 10:13:06,647 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-42208a1f1cf24cb5bf7c181ffee65e05
+2023-06-07 10:13:06,757 INFO Request is queued
+2023-06-07 10:13:07,771 INFO Request is running
+2023-06-07 10:13:39,081 INFO Welcome to the CDS
+2023-06-07 10:13:39,081 INFO Sending request to https://cds.climate.copernicus.eu/api/v2/tasks/services/tool/toolbox/orchestrator/run_workflow/clientid-9f788a5920fc400eb02c6ee006e9399d
+2023-06-07 10:13:39,132 INFO Request is queued
+2023-06-07 10:14:11,387 INFO Request is running
+2023-06-07 10:14:21,749 INFO Request is completed
+2023-06-07 10:14:21,749 INFO Downloading https://download-0009-clone.copernicus-climate.eu/cache-compute-0009/cache/data1/cea15da0-dd53-48bf-8d5c-bfc8fde1d82e.nc to cea15da0-dd53-48bf-8d5c-bfc8fde1d82e.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s] 50%|████▉     | 2.83M/5.66M [00:00<00:00, 29.7MB/s]                                                    2023-06-07 10:14:22,212 INFO Download rate 12.2M/s
+['cea15da0-dd53-48bf-8d5c-bfc8fde1d82e.nc']
+2023-06-07 10:19:56,862 INFO Request is completed
+2023-06-07 10:19:56,863 INFO Downloading https://download-0019.copernicus-climate.eu/cache-compute-0019/cache/data5/6c975703-b5d3-4973-bf24-ceeb4c032230.nc to 6c975703-b5d3-4973-bf24-ceeb4c032230.nc (5.7M)
+  0%|          | 0.00/5.66M [00:00<?, ?B/s]                                           2023-06-07 10:19:57,008 INFO Download rate 39M/s
+['6c975703-b5d3-4973-bf24-ceeb4c032230.nc']

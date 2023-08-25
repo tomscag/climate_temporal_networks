@@ -1,8 +1,8 @@
 
-for file in $(find ./get_data/*.nc -type f);
+for file in $(find ./*.nc -type f);
 do
 	echo ${file}
 	var=$(ncdump -t -v time $file | grep -o 'time = "\w\w\w\w' | grep -o '[^"]*$')
-	mv $file ./src/$var.nc
+	mv $file ./$var.nc
 
 done
