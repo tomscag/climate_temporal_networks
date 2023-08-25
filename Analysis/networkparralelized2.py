@@ -148,14 +148,13 @@ def analyze(indi, nodes):
             ddd = haversine_distance(lat[Ai], lon[Aj], lat[Bi], lon[Bj])
 
             for dec in range(periods):
-                # print(Ai, '\t', Aj, '\t',Bi, '\t', Bj, '\t', dec)
     
                 Zsmx, lagmx  = zscore_lag(temp[start_days[dec]:start_days[dec+1],Ai,Aj], temp[start_days[dec]:start_days[dec+1], Bi, Bj], numiaaft, max_lag)
                 prob = probabilityfrom(Zsmx, ddd)
 
                 nome_file = f"{foutpath}/network_period{dec}.txt"
                 with open(nome_file, "a+") as file:
-                    file.write(f"{indi}\t{indj}\t{prob}\t({Ai} {Aj})\t({Bi} {Bj})\t{lagmx}\n") 
+                    file.write(f"{indi}\t{indj}\t{prob}\t({lat[Ai]},{lon[Aj]})\t({lat[Bi]},{lon[Bj]})\t{lagmx}\n")
 
                 nome_file2 = f"{foutpath2}/violin_period{dec}.txt"
                 with open(nome_file2, "a+") as file:
