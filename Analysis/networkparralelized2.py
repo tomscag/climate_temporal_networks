@@ -140,7 +140,7 @@ def haversine_distance(lat1, lon1, lat2, lon2):
 
 def analyze(indi, nodes):
     Ai,Aj = nodes[indi]
-    for indj,node in enumerate(nodes):
+    for indj,_ in enumerate(nodes):
         (Bi, Bj) = nodes[indj]
         
         if indi < indj: # Undirected network
@@ -149,7 +149,7 @@ def analyze(indi, nodes):
 
             for dec in range(periods):
     
-                Zsmx, lagmx  = zscore_lag(temp[start_days[dec]:start_days[dec+1],Ai,Aj], temp[start_days[dec]:start_days[dec+1], Bi, Bj], numiaaft, max_lag)
+                Zsmx, lagmx = zscore_lag(temp[start_days[dec]:start_days[dec+1],Ai,Aj], temp[start_days[dec]:start_days[dec+1], Bi, Bj], numiaaft, max_lag)
                 prob = probabilityfrom(Zsmx, ddd)
 
                 nome_file = f"{foutpath}/network_period{dec}.txt"
@@ -178,11 +178,11 @@ lon  = data.variables['lon']
 temp = data.variables['t2m']
 
 # DATA OUTPUT
-foutpath = "../Analysis/Output"
+foutpath = "./Output"
 if not os.path.exists(foutpath):
     os.makedirs(foutpath)
 
-foutpath2 = "../Analysis/Output/Violinplot"
+foutpath2 = "./Output/Violinplot"
 if not os.path.exists(foutpath2):
     os.makedirs(foutpath2)
         
@@ -204,33 +204,33 @@ lon_range = range(0,len(lon), 4)
 lat_range = range(0,len(lat), 4)
 nodes = tuple((i,j) for i in lat_range for j in lon_range)
 
-# nodes = [(2, 0), (2, 30), (2, 60), (7, 0), (20,45)]
-
-if __name__ == "__main__":
-
-    pool = mp.Pool(20)   # Use the number of cores of your PC
-    for indi,nod in enumerate(nodes):
-        
-        pool.apply_async(analyze, args = (indi, nodes, )) # Parallelize
-        #analyze(indi,nodes)   # Uncomment to not parallelize
-    pool.close()
-    pool.join()
-    data.close()
-
+nodes = [(2, 0), (2, 30), (2, 60), (7, 0), (20,45)]
 
 # if __name__ == "__main__":
-#     with cProfile.Profile() as profile:
-#         pool = mp.Pool(7)   # Use the number of cores of your PC
-#         for indi,nod in enumerate(nodes):
+
+#     pool = mp.Pool(8)   # Use the number of cores of your PC
+#     for indi,_ in enumerate(nodes):
+        
+#         pool.apply_async(analyze, args = (indi, nodes, )) # Parallelize
+#         # analyze(indi,nodes)   # Uncomment to not parallelize
+#     pool.close()
+#     pool.join()
+#     data.close()
+
+
+if __name__ == "__main__":
+    with cProfile.Profile() as profile:
+        # pool = mp.Pool(7)   # Use the number of cores of your PC
+        for indi,_ in enumerate(nodes):
             
-#             # pool.apply_async(analyze, args = (indi, nodes, )) # Parallelize
-#             analyze(indi,nodes)   # Uncomment to not parallelize
-#         pool.close()
-#         pool.join()
-#         data.close()
-#         results = pstats.Stats(profile)
-#         results.sort_stats(pstats.SortKey.TIME)
-#         results.print_stats()
-#         results.dump_stats("results4.profile")
+            # pool.apply_async(analyze, args = (indi, nodes, )) # Parallelize
+            analyze(indi,nodes)   # Uncomment to not parallelize
+        # pool.close()
+        # pool.join()
+        data.close()
+        results = pstats.Stats(profile)
+        results.sort_stats(pstats.SortKey.TIME)
+        results.print_stats()
+        results.dump_stats("results4.profile")
 
 

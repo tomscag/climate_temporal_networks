@@ -6,6 +6,7 @@
 /Analysis/Output/*.txt
 /Analysis/Output/Violinplot
 /Analysis/__pycache__
+/Analysis/Deprecated
 
 *.profile
 *.gif

@@ -13,7 +13,7 @@ n_graphs = 50
 
 # COoRDINATES
 nodes_coordinates = {}
-with open(f'./Analysis/Output/network_period0.txt', 'r') as f:
+with open(f'./Output/network_period0.txt', 'r') as f:
     for line in f.readlines():
         parts = line.split("\t")      
         nodeA = parts[0]
@@ -24,7 +24,7 @@ with open(f'./Analysis/Output/network_period0.txt', 'r') as f:
 for p in range(periods):
     edges = []
 
-    with open(f'./Analysis/Output/network_period{p}.txt', 'r') as f:
+    with open(f'./Output/network_period{p}.txt', 'r') as f:
         for line in f.readlines():
             nodoA, nodoB, probability, *_ = line.split()
             edges.append((nodoA, nodoB, float(probability)))           

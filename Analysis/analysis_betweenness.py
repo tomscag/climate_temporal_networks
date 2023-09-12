@@ -10,11 +10,11 @@ import math
 
 #PARAMETERS
 n_periods = 10
-n_graphs = 10
+n_graphs = 100
 
 # COORDINATES
 nodes_coordinates = {}
-with open(f'./Output/network_period0.txt', 'r') as f:
+with open(f'Output/network_period0.txt', 'r') as f:
     for line in f.readlines():
         parts = line.split()      
         nodeA, nodeB = parts[0], parts[1]
@@ -29,7 +29,7 @@ tot_av_deg = []
 tot_stdev_deg = []
 periods = []
 periodsplot =[]
-all_average_degrees = []  # list of lists for violin plot
+all_average_betweenness = []  # list of lists for violin plot
 medians = []  
 lower_quartiles = []  
 upper_quartiles = []  
@@ -48,14 +48,14 @@ for p in range(n_periods):
     print(f'Analysing period {p}')
     edges = []
 
-    with open(f'./Output/network_period{p}.txt', 'r') as f:
+    with open(f'Output/network_period{p}.txt', 'r') as f:
         for line in f.readlines():
             nodoA, nodoB, probability, *_ = line.split()
             edges.append((nodoA, nodoB, float(probability)))           
 
     # GRAPHS GENERATION
     graphs = []
-    for n in range(n_graphs):
+    for _ in range(n_graphs):
         edge_list = []
         for nodoA, nodoB, probability in edges:
             if random.random() < probability:
@@ -63,36 +63,27 @@ for p in range(n_periods):
         graphs.append(edge_list)        #graphs contains (n_graphs) edge lists
 
 
-    total_degrees = {node: 0 for node in nodes_coordinates.keys()}   #dictionary for degrees (it takes the same keys from nodes_coordinates)
-    #print(total_degrees)
+    total_betweenness = {node: 0 for node in nodes_coordinates.keys()}  # dictionary for betweenness
 
     for edge_list in graphs:
         G = nx.Graph()  
         G.add_edges_from(edge_list)  
+        betweenness = nx.betweenness_centrality(G)  # calcola la betweenness centrality per questo grafo
+    
+        # Aggiungi i valori di betweenness centrality al totale
+        for node, value in betweenness.items():
+            total_betweenness[node] += value
 
-        for edge in edge_list:
-            nodoA, nodoB = edge
-            total_degrees[nodoA] += math.cos(math.radians(nodes_coordinates[nodoB][0]))/sum_cos_latitudes
-            total_degrees[nodoB] += math.cos(math.radians(nodes_coordinates[nodoA][0]))/sum_cos_latitudes
 
-    #print(total_degrees)
-
-    # AVAREGE DEGREE
-    average_degrees = {node: total / n_graphs for node, total in total_degrees.items()}
-    #print(average_degrees)
+    # AVAREGE BETWEENNESS
+    average_betweenness = {node: total / n_graphs for node, total in total_betweenness.items()}
 
     # ARRAYs FOR VIOLIN PLOT
-    degrees_list = list(average_degrees.values())
-    all_average_degrees.append(degrees_list)
-    medians.append(np.median(degrees_list))
-    lower_quartiles.append(np.percentile(degrees_list, 25))
-    upper_quartiles.append(np.percentile(degrees_list, 75))
-
-    # TOTAL AVAREGE DEGREE and DEVIATION STANDARD
-    total_average_degree = sum(average_degrees.values()) / len(average_degrees)
-    tot_av_deg.append(total_average_degree)
-    std_dev = np.std(list(average_degrees.values()))
-    tot_stdev_deg.append(std_dev)
+    betweenness_list = list(average_betweenness.values())
+    all_average_betweenness.append(betweenness_list)
+    medians.append(np.median(betweenness_list))
+    lower_quartiles.append(np.percentile(betweenness_list, 25))
+    upper_quartiles.append(np.percentile(betweenness_list, 75))
 
     # BASEMAP
     fig, ax = plt.subplots(figsize=(12, 9))
@@ -106,52 +97,45 @@ for p in range(n_periods):
     m.drawparallels(np.arange(-90., 91., 30.), labels=[True, False, False, False], linewidth=0.5, color='grey')
 
     # HEATMAP
-    colors = [(0, 0, degree/10) for node, degree in average_degrees.items()]
-    max_degree = max(average_degrees.values())
-    min_degree = min(average_degrees.values())
+    colors = [(0, 0, degree/10) for node, degree in average_betweenness.items()]
+    max_degree = max(average_betweenness.values())
+    min_degree = min(average_betweenness.values())
     cmap = plt.cm.Reds
-    norm = plt.Normalize(min_degree, max_degree)
+    min_limit = 0.0040 
+    max_limit = 0.0090
 
+    norm = plt.Normalize(vmin=min_limit, vmax=max_limit)        #choose the limit of the colorbar
+ 
     for node, (lat, lon) in nodes_coordinates.items():
         x, y = m(lon, lat)
-        degree = average_degrees[node]
+        degree = average_betweenness[node]
         color = cmap(norm(degree))
         
         m.plot(x, y, 's', color=color, markersize=10)
 
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
+    sm.set_clim(vmin=min_limit, vmax=max_limit)  
 
     # COLOR BAR
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.05)
-    plt.colorbar(sm, cax=cax, label="Average Weigthed Degree")
-    ax.set_title(f"Average Weighted Degree for Node {periods[p]} - {periods[p]+5}", loc='center', y=1.05)  # y=1.05 sposta il titolo un po' più in alto.
+    plt.colorbar(sm, cax=cax, label="Average Betweenness Centrality")
+    ax.set_title(f"Average Betweenness Centrality for Node {periods[p]} - {periods[p]+5}", loc='center', y=1.05)  # y=1.05 sposta il titolo un po' più in alto.
     #plt.show()
-    plt.savefig(f"./Plot/Weighted Degree/Average Weighted Degree for Node {periods[p]} - {periods[p]+5}.png")
+    plt.savefig(f"Plot/Betweenness/Average Betweenness Centrality for Node {periods[p]} - {periods[p]+5}.png")
     plt.close()
 
 
 
-'''# PLOT TOT AV DEGREE OVER TIME
-plt.errorbar(periods, tot_av_deg, yerr=tot_stdev_deg, marker='o', capsize=5, label='Mean with Standard Deviation', color='red', linestyle='-')
-plt.xlabel('Five years period')
-plt.ylabel('Avarege Tot Degree')
-plt.title('Avarege Total Degrees over Time')
-start, end = plt.xlim()  
-plt.xticks(np.arange(1970, 2020 + 1, 5))
-plt.ylim(0, 0.1)
-plt.legend()  
-plt.grid(True) 
 
-plt.show()'''
 
 
 
 
 
 plt.figure(figsize=(10,6))
-violin_parts = plt.violinplot(all_average_degrees, positions=periodsplot, showmeans=False, widths=4)
+violin_parts = plt.violinplot(all_average_betweenness, positions=periodsplot, showmeans=False, widths=4)
 
 for part in violin_parts['bodies']:
     part.set_facecolor('blue')
@@ -166,11 +150,11 @@ plt.scatter(periodsplot, upper_quartiles, label='Upper Quartile', color='purple'
 #plt.errorbar(periods, tot_av_deg, yerr=tot_stdev_deg, marker='o', capsize=5, ecolor='red', color='red', linestyle='-')
 
 plt.xlabel('Five years period')
-plt.ylabel('Average Degree Distribution')
-plt.title('Average Weighted Degree Distribution of the Nodes over Time')
+plt.ylabel('Average Betweenness Distribution')
+plt.title('Average Betweenness Distribution of the Nodes over Time')
 plt.xticks(np.arange(1970, 2020 + 1, 5))
 plt.legend()
 plt.grid(True)
 #plt.show()
-plt.savefig(f"./Plot/Weighted Degree/Violin plot AvWeDeg.png")
+plt.savefig(f"Plot/Betweenness/Violin plot Betweenness.png")
 plt.close()
