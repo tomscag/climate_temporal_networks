@@ -11,7 +11,7 @@ periods = 1
 n_graphs = 50
 
 
-# COoRDINATES
+# COORDINATES
 nodes_coordinates = {}
 with open(f'./Output/network_period0.txt', 'r') as f:
     for line in f.readlines():

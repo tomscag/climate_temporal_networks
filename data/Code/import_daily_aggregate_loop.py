@@ -45,7 +45,7 @@ def application():
                 '18:00', '19:00', '20:00',
                 '21:00', '22:00', '23:00',
                      ],
-             'grid':'4/4',	# 0.5/0.5
+             'grid':'5/5',	# 0.5/0.5
              }
              )
              day_mean=ct.climate.daily_mean(data,keep_attrs=True)

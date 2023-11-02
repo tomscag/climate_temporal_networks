@@ -4,6 +4,7 @@ import netCDF4 as nc
 from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import xarray as xr
+import os
 
 def plot_anomalies(anomalies,lon=12.0,lat=44.0):
 
@@ -39,11 +40,11 @@ def compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL):
 #################################################
 #################################################
 
-FILENAME_INPUT       = './data/t2m_1970_2022_4grid.nc'
-BASELINE_INTERVAL    = [1970,1990]
 VARIABLE             = 't2m'
-FILENAME_OUTPUT      = './data/filtered_t2m_1970_2022_4grid.nc'
+FILENAME_INPUT       = f'../{VARIABLE}/{VARIABLE}_1970_2022_5grid.nc'
+FILENAME_OUTPUT      = f'../{VARIABLE}/anomalies_{VARIABLE}_1970_2022_5grid.nc'
 
+BASELINE_INTERVAL    = [1970,1989]
 ds        = load_dataset(FILENAME_INPUT)
 anomalies = compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL)
 
@@ -53,64 +54,64 @@ anomalies.to_netcdf(FILENAME_OUTPUT)
 #####
 
 
-# Extract some series
-lon = 12.0
-lat = 44.0
-a = anomalies.t2m.sel(lon=lon,lat=lat)
+# # Extract some series
+# lon = 12.0
+# lat = 44.0
+# a = anomalies.t2m.sel(lon=lon,lat=lat)
 
 
 
-# Test some correlations
-import scipy.stats as ss
-import numpy as np
-start = 2010
-endd  = 2015
+# # Test some correlations
+# import scipy.stats as ss
+# import numpy as np
+# start = 2010
+# endd  = 2015
 
-lon1  = 110.0
-lat1  = -40.0
-lon2  = 110.0
-lat2  = -10.0
-ser1 = anomalies.where( (anomalies['time.year']>=start) & (anomalies['time.year']<=endd) , drop=True).sel(lon=lon1,lat=lat1)
-ser2 = anomalies.where( (anomalies['time.year']>=start) & (anomalies['time.year']<=endd) , drop=True).sel(lon=lon2,lat=lat2)
-
-
-rho, pval = ss.pearsonr(ser1,ser2)
-print("Pearson correlation: %f" %rho)
-print("P-value: %f" %pval)
+# lon1  = 110.0
+# lat1  = -40.0
+# lon2  = 110.0
+# lat2  = -10.0
+# ser1 = anomalies.where( (anomalies['time.year']>=start) & (anomalies['time.year']<=endd) , drop=True).sel(lon=lon1,lat=lat1)
+# ser2 = anomalies.where( (anomalies['time.year']>=start) & (anomalies['time.year']<=endd) , drop=True).sel(lon=lon2,lat=lat2)
 
 
-ser1z = ss.zscore(ser1)
-ser2z = ss.zscore(ser2)
-plt.plot(ser1z,linewidth=1.2)
-plt.plot(ser2z,linewidth=1.2)
-plt.show()
+# rho, pval = ss.pearsonr(ser1,ser2)
+# print("Pearson correlation: %f" %rho)
+# print("P-value: %f" %pval)
 
 
-## Compute cross correlations
-from scipy import signal    
-
-correlation = signal.correlate(ser1z,ser2z, mode="full",method="direct")
-correlation /= len(ser2z)
-lags = signal.correlation_lags(ser1.size, ser2.size, mode="full")
-lag  = lags[np.argmax(correlation)]
+# ser1z = ss.zscore(ser1)
+# ser2z = ss.zscore(ser2)
+# plt.plot(ser1z,linewidth=1.2)
+# plt.plot(ser2z,linewidth=1.2)
+# plt.show()
 
 
-# Test
-N = 300
-x = np.random.rand(N)
-y = [0]*N
-y[2:] = x[1:-1] 
-correlation = signal.correlate(x,y, mode="full",method="direct")
+# ## Compute cross correlations
+# from scipy import signal    
 
-# ''' Python only implementation '''
+# correlation = signal.correlate(ser1z,ser2z, mode="full",method="direct")
+# correlation /= len(ser2z)
+# lags = signal.correlation_lags(ser1.size, ser2.size, mode="full")
+# lag  = lags[np.argmax(correlation)]
 
-# # Pre-allocate correlation array
-# corr = (len(ser1) - len(ser2) + 1) * [0]
 
-# # Go through lag components one-by-one
-# corr = [0,1,2]
-# for l in range(len(corr)):
-#     print(l)
-#     corr[l] = sum([ser1z[i+l] * ser2z[i] for i in range(len(ser2z))])
+# # Test
+# N = 300
+# x = np.random.rand(N)
+# y = [0]*N
+# y[2:] = x[1:-1] 
+# correlation = signal.correlate(x,y, mode="full",method="direct")
 
-# print(corr[0]/len(ser1z))
+# # ''' Python only implementation '''
+
+# # # Pre-allocate correlation array
+# # corr = (len(ser1) - len(ser2) + 1) * [0]
+
+# # # Go through lag components one-by-one
+# # corr = [0,1,2]
+# # for l in range(len(corr)):
+# #     print(l)
+# #     corr[l] = sum([ser1z[i+l] * ser2z[i] for i in range(len(ser2z))])
+
+# # print(corr[0]/len(ser1z))

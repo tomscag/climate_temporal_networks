@@ -6,16 +6,19 @@ from math import e
 import pandas as pd
 import numpy as np
 import statistics
-import iaaft
+from Functions import iaaft
 import random
 import os
 import time
 import multiprocessing as mp
 
-
 import cProfile
 import pstats
 from numpy.lib.stride_tricks import as_strided
+
+
+#####
+
 
 def _check_arg(x, xname):
     x = np.asarray(x)
@@ -204,7 +207,7 @@ lon_range = range(0,len(lon), 4)
 lat_range = range(0,len(lat), 4)
 nodes = tuple((i,j) for i in lat_range for j in lon_range)
 
-nodes = [(2, 0), (2, 30), (2, 60), (7, 0), (20,45)]
+# nodes = [(2, 0), (2, 30), (2, 60), (7, 0), (20,45)]
 
 # if __name__ == "__main__":
 
