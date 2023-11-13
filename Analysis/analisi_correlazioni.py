@@ -190,7 +190,7 @@ data, indices, nodes = import_dataset(size)
 
 max_lag = 150
 years   = range(1970,2022+1)  # from 1970 to 2022
-year    = 3
+year    = 4
 foutput = f'year_{years[year]}_maxlag_{max_lag}.csv'
 
 correlation_all(data[indices[year]:indices[year+1],:],foutput)

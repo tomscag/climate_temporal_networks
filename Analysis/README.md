@@ -1,5 +1,10 @@
-The pipeline of the analysis is the following
+# Climate temporal networks
+This repository contains the code for the analysis of Copernicus Data (ERA5 
+reanalysis) of the daily temperatures.
 
-	1) Cross-Correlation between data
+The main files are 
+
+1. analisi_correlazioni.py: 
+	cross correlation analysis for a specific year
 	
 
