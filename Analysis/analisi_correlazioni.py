@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd 
-import matplotlib.pyplot as plt
 from numpy.lib.stride_tricks import as_strided
 
 from Functions.correlations_climate import _check_arg, crosscorrelation
@@ -186,7 +185,7 @@ years   = range(1970,2022)  # from 1970 to 2022
 
 if __name__ == "__main__":
 
-    pool = mp.Pool(3)   # Use the number of cores of your PC
+    pool = mp.Pool(8)   # Use the number of cores of your PC
 
     for year,y in enumerate(years):
         foutput = f'./Output/year_{years[year]}_maxlag_{max_lag}.csv'    
@@ -194,4 +193,3 @@ if __name__ == "__main__":
         # correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
     pool.close()
     pool.join()
-    data.close()
