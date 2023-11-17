@@ -9,7 +9,7 @@ import statistics
 import math
 
 from netCDF4 import Dataset
-
+import multiprocessing as mp
 
 #############################
 def haversine_distance(lat1, lon1, lat2, lon2):
@@ -69,12 +69,6 @@ def first_day_of_year_index(data):
     '''
     doy = np.array(data['dayofyear']) 
     return np.where( doy == 1)[0]
-
-
-def plot(vec):
-    plt.plot(vec)
-    plt.savefig('test.png')
-
 
 
 
@@ -185,19 +179,19 @@ size = 5    # Size of the grid in degree
 data, indices, nodes = import_dataset(size)
 
 
-
-
-
 max_lag = 150
-years   = range(1970,2022+1)  # from 1970 to 2022
-year    = 4
-foutput = f'year_{years[year]}_maxlag_{max_lag}.csv'
-
-correlation_all(data[indices[year]:indices[year+1],:],foutput)
+years   = range(1970,2022)  # from 1970 to 2022
 
 
 
-# 
-# x = data[indices[year]:indices[year+1],100]
-# y = data[indices[year]:indices[year+1],214]
-# crosscorrelation(x, y, max_lag)
+if __name__ == "__main__":
+
+    pool = mp.Pool(3)   # Use the number of cores of your PC
+
+    for year,y in enumerate(years):
+        foutput = f'./Output/year_{years[year]}_maxlag_{max_lag}.csv'    
+        pool.apply_async(correlation_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
+        # correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
+    pool.close()
+    pool.join()
+    data.close()
