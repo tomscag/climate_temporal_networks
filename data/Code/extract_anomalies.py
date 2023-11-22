@@ -30,8 +30,24 @@ def compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL):
 
     ds          = ds[VARIABLE]
     ds_baseline = ds.where( (ds['time.year'] >= BASELINE_INTERVAL[0]) & (ds['time.year'] <= BASELINE_INTERVAL[1]), drop=True)
-    climatology = ds_baseline.groupby('time.dayofyear').mean('time')
-    anomalies   = ds.groupby('time.dayofyear') - climatology
+
+    # climatology = ds_baseline.groupby('time.dayofyear').mean(dim='time')
+    # std_dev     = ds_baseline.groupby('time.dayofyear').std(dim='time')
+    # climatology = climatology.sel(dayofyear=ds.time.dt.dayofyear)
+    # std_dev     = std_dev.sel(dayofyear=ds.time.dt.dayofyear)
+
+    gb = ds_baseline.groupby('time.dayofyear')
+    clim = gb.mean(dim='time')
+    std_clim = gb.std(dim='time')
+
+    # reindex to full time series
+    clim_time = clim.sel(dayofyear=ds.time.dt.dayofyear)
+    std_clim_time = std_clim.sel(dayofyear=ds.time.dt.dayofyear)
+    
+    anomalies   = ((ds - clim_time)/std_clim_time)
+
+
+
 
     return anomalies
 
@@ -42,7 +58,7 @@ def compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL):
 
 VARIABLE             = 't2m'
 FILENAME_INPUT       = f'../{VARIABLE}/{VARIABLE}_1970_2022_5grid.nc'
-FILENAME_OUTPUT      = f'../{VARIABLE}/anomalies_{VARIABLE}_1970_2022_5grid.nc'
+FILENAME_OUTPUT      = f'../{VARIABLE}/std_anomalies_{VARIABLE}_1970_2022_5grid.nc'
 
 BASELINE_INTERVAL    = [1970,1989]
 ds        = load_dataset(FILENAME_INPUT)
