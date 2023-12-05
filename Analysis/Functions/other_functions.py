@@ -61,3 +61,22 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     distance = radius * c
 
     return distance
+
+
+def generate_coordinates(sizegrid):
+    '''
+    Output:
+        coords (dict):
+            key is the node id, value is a list 
+            in the format [lat,lon]
+    '''
+    lats = np.arange(-90,90+sizegrid,sizegrid,dtype=float)  # 37 
+    lons = np.arange(-180,180,sizegrid,dtype=float)         # 72
+    N = len(lons)*len(lats)
+    coords = {key:None for key in range(N)}
+    node = 0
+    for lat in lats:
+        for lon in lons:
+            coords[node] = [lat,lon]
+            node += 1
+    return coords, lons, lats
