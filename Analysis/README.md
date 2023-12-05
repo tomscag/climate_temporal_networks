@@ -6,5 +6,8 @@ The main files are
 
 1. analisi_correlazioni.py: 
 	cross correlation analysis for a specific year
+	using the bayesian approach
+2. analisi_causality.py:
+	pairwise granger causality 
 	
 
