@@ -2,11 +2,13 @@
 /data/*.nc
 /data/t2m
 /data/total_precipitation
+/data/temperature
 
 /Analysis/Output/*.txt
 /Analysis/Output/Violinplot
 /Analysis/__pycache__
 /Analysis/Deprecated
+/Analysis/Functions/__pycache__
 
 *.profile
 *.gif
