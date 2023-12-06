@@ -4,19 +4,6 @@ import netCDF4 as nc
 from netCDF4 import Dataset
 import matplotlib.pyplot as plt
 import xarray as xr
-import os
-
-def plot_anomalies(anomalies,lon=12.0,lat=44.0):
-
-    ser = anomalies.sel(lon=lon,lat=lat)
-    ser.plot(figsize=(20,4))
-    plt.show()
-
-def plot_global_avg(anomalies):
-
-    global_avg = anomalies.mean(dim=['lon','lat'])  
-    global_avg.plot(figsize=(10,5))
-    plt.show()  
 
 
 
@@ -28,13 +15,9 @@ def load_dataset(FILENAME_INPUT):
 
 def compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL):
 
+    start, end  = BASELINE_INTERVAL
     ds          = ds[VARIABLE]
-    ds_baseline = ds.where( (ds['time.year'] >= BASELINE_INTERVAL[0]) & (ds['time.year'] <= BASELINE_INTERVAL[1]), drop=True)
-
-    # climatology = ds_baseline.groupby('time.dayofyear').mean(dim='time')
-    # std_dev     = ds_baseline.groupby('time.dayofyear').std(dim='time')
-    # climatology = climatology.sel(dayofyear=ds.time.dt.dayofyear)
-    # std_dev     = std_dev.sel(dayofyear=ds.time.dt.dayofyear)
+    ds_baseline = ds.where( (ds['time.year'] >= start) & (ds['time.year'] <= end), drop=True)
 
     gb = ds_baseline.groupby('time.dayofyear')
     clim = gb.mean(dim='time')
@@ -46,9 +29,6 @@ def compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL):
     
     anomalies   = ((ds - clim_time)/std_clim_time)
 
-
-
-
     return anomalies
 
 
@@ -56,12 +36,15 @@ def compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL):
 #################################################
 #################################################
 
-VARIABLE             = 't2m'
-FILENAME_INPUT       = f'../{VARIABLE}/{VARIABLE}_1970_2022_5grid.nc'
-FILENAME_OUTPUT      = f'../{VARIABLE}/std_anomalies_{VARIABLE}_1970_2022_5grid.nc'
+VARIABLE             = 't'    # total_precipitation
+# FILENAME_INPUT       = f'../{VARIABLE}/{VARIABLE}_1970_2022_5grid.nc'
+# FILENAME_OUTPUT      = f'../{VARIABLE}/std_anomalies_{VARIABLE}_1970_2022_5grid.nc'
+FILENAME_INPUT       = f'../temperature/temperature_pressure_500_5grid.nc'
+FILENAME_OUTPUT      = f'../temperature/std_anomalies_temperature_pressure_500_5grid.nc'
 
 BASELINE_INTERVAL    = [1970,1989]
 ds        = load_dataset(FILENAME_INPUT)
+VARIABLE  = 't'
 anomalies = compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL)
 
 

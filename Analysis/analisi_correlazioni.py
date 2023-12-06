@@ -82,7 +82,7 @@ def posterior_link_probability_havlin(cross_corr,dist,max_lag):
     
     # Prior probaility for the null hypothesis
     K = 2000
-    prior = 1 - math.exp(-dist/K)
+    prior = math.exp(-dist/K)
 
     # Posterior probability of link existence
     prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
@@ -123,22 +123,24 @@ def correlation_all(data,foutput):
 if __name__ == "__main__":
 
     # Parameters
-
+    varname  = "total_precipitation"
+    variable = 'tp'
     size = 5    # Size of the grid in degree
 
     # Load data
-    fileinput = f'../data/t2m/anomalies_t2m_1970_2022_{size}grid.nc'
-    data, indices, nodes = import_dataset(fileinput)
+    # fileinput = f'../data/temperature/std_anomalies_temperature_pressure_750_{size}grid.nc'
+    fileinput = f'../data/total_precipitation/std_anomalies_total_precipitation_1970_2022_{size}grid.nc'
+    data, indices, nodes = import_dataset(fileinput,variable)
 
-    max_lag = 150
+    max_lag = 50
     years   = range(1970,2022)  # from 1970 to 2022
 
 
     pool = mp.Pool(8)   # Use the number of cores of your PC
 
     for year,y in enumerate(years):
-        foutput = f'./Output/year_{years[year]}_maxlag_{max_lag}.csv'    
-        # pool.apply_async(correlation_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
-        correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
+        foutput = f'./Output/correlations/{varname}_year_{years[year]}_maxlag_{max_lag}.csv'    
+        pool.apply_async(correlation_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
+        # correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
     pool.close()
     pool.join()

@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def import_dataset(fileinput):
+def import_dataset(fileinput,variable='t2m'):
     
     from netCDF4 import Dataset
     '''
@@ -20,7 +20,7 @@ def import_dataset(fileinput):
     indices = first_day_of_year_index(data)
     lat  = data.variables['lat']        
     lon  = data.variables['lon']            
-    temp = data.variables['t2m']
+    temp = data.variables[variable]
     data = np.array(temp).reshape( temp.shape[0],temp.shape[1]*temp.shape[2]) # time, lat * lon
     
     count = 0

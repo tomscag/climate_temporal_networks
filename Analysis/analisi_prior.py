@@ -1,10 +1,10 @@
 # Analisi prior
 
 import pandas as pd
+import matplotlib.pyplot as plt
 from Functions.other_functions import generate_coordinates, haversine_distance
 
 
-import multiprocessing as mp
 
 
 def analyze_zscore(fileinput):
@@ -19,6 +19,11 @@ def analyze_zscore(fileinput):
                         axis=1)
     return df
 
+
+def plot_distance(df):
+    plt.scatter(df['dist'],df['zscore'],alpha=0.1)
+
+
 ######################################
 
 
@@ -31,17 +36,8 @@ if __name__ == "__main__":
 
     coords, lons, lats = generate_coordinates(size)
 
-    # Load results
-    fileinput = f'./Output_cluster/analisi_5grid/year_1970_maxlag_150.csv'
+    # Load results file
+    fileinput = f'./Output/correlations/plev_750/temperature_press_750_year_1970_maxlag_150.csv'
 
-    years   = range(1970,2022)  # from 1970 to 2022
-
-
-    # pool = mp.Pool(8)   # Use the number of cores of your PC
-
-    for year,y in enumerate(years):
-        foutput = f'./Output/GC/year_{years[year]}_maxlag_{max_lag}.csv'    
-        # pool.apply_async(granger_causality_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
-        granger_causality_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
-    # pool.close()    
-    # pool.join()
+    df = analyze_zscore(fileinput)
+    plot_distance(df)

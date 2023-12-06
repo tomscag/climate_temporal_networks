@@ -17,10 +17,11 @@ def application():
     for yr in YEARS:
         for mn in MONTHS:
              data = ct.catalogue.retrieve(
-             'reanalysis-era5-single-levels',
+             'reanalysis-era5-pressure-levels', # 'reanalysis-era5-pressure-levels'  'reanalysis-era5-single-levels'
              {
              'product_type': 'reanalysis',
-             'variable': '2m_temperature',
+             'variable': 'temperature',
+             'pressure_level': '750',	# delete for single-levels catalogue
              'year': yr,
              'month': mn,
              'day': [

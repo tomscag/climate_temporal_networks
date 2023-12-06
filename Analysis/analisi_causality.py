@@ -59,13 +59,13 @@ def granger_causality_all(data,foutput,test='params_ftest'):
 if __name__ == "__main__":
 
     # Parameters
-
+    variable = 't2m'
     size = 5    # Size of the grid in degree
 
 
     # Load data
-    fileinput = f'../data/t2m/anomalies_t2m_1970_2022_{size}grid.nc'
-    data, indices, nodes = import_dataset(fileinput)
+    fileinput = f'../data/t2m/anomalies_{variable}_1970_2022_{size}grid.nc'
+    data, indices, nodes = import_dataset(fileinput,variable)
 
 
     max_lag = 150
@@ -78,5 +78,5 @@ if __name__ == "__main__":
         foutput = f'./Output/GC/year_{years[year]}_maxlag_{max_lag}.csv'    
         pool.apply_async(granger_causality_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
         # granger_causality_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
-    pool.close()
+    pool.close()    
     pool.join()
