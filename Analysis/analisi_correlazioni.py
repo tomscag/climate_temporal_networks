@@ -15,29 +15,34 @@ import multiprocessing as mp
 
 
 
-
-
-def posterior_link_probability_iaaft(x,y,crossmax,dist,num_surr=50):
+def posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50):
     '''
         We compute the null model using IAAFT surrogates
+
+        INPUT
+            x,y (array):        the original data
+            cross_corr (array): original cross-correlation
+            dist (float):       distance in km between x and y
     '''
+
+    crossmax   = max(abs(cross_corr))
+    the_lagmax = abs(cross_corr).argmax() - (max_lag + 1)
+
 
     surr_x = iaaft.surrogates(x=x, ns= num_surr, verbose=False)
     surr_y = iaaft.surrogates(x=y, ns= num_surr, verbose=False)
 
-    cross_corr_surr = []
+    cross_corr_surr = np.empty(num_surr)
 
     for n in range(0,num_surr):
         serie1_surr = pd.Series(surr_x[n])
         serie2_surr = pd.Series(surr_y[n])
         sh_cross_corr = crosscorrelation(serie1_surr, serie2_surr, max_lag)
         sh_crossmax   = sh_cross_corr.max() 
-        cross_corr_surr.append(sh_crossmax)
-    
-    crosscorr_surr_mean  = statistics.mean(cross_corr_surr)
-    crosscorr_surr_stdev = statistics.pstdev(cross_corr_surr)        
-    zscore = abs(crossmax - crosscorr_surr_mean)/crosscorr_surr_stdev
+        cross_corr_surr[n] = sh_crossmax
 
+
+    zscore = abs(crossmax - cross_corr_surr.mean())/cross_corr_surr.std()
 
     if zscore < 1:
         pval =1
@@ -56,7 +61,7 @@ def posterior_link_probability_iaaft(x,y,crossmax,dist,num_surr=50):
     # Posterior probability of link existence
     prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
 
-    return prob
+    return zscore, prob,crossmax,the_lagmax
 
 
 def posterior_link_probability_havlin(cross_corr,dist,max_lag):
@@ -98,7 +103,7 @@ def save_results(i,j,Z,the_lagmax,prob,foutput):
 def correlation_all(data,foutput):
     T,N = data.shape
 
-    for i in range(N):
+    for i in range(1500,N):
         print(f"Computing node {i}")
         for j in range(i+1,N):
             dist = haversine_distance( nodes[i][0],nodes[i][1], nodes[j][0],nodes[j][1])
@@ -108,8 +113,8 @@ def correlation_all(data,foutput):
             # crossmax   = cross_corr.max()   # Put abs(cross_corr) to consider negative lags too
             # the_lagmax = cross_corr.argmax() - (max_lag + 1)
 
-            # prob = posterior_link_probability_iaaft(x,y,crossmax,dist,num_surr=50)
-            Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
+            Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50)
+            # Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
             if prob > 1e-2:
                 save_results(i,j,Z,the_lagmax,prob,foutput)
 
@@ -124,7 +129,7 @@ if __name__ == "__main__":
 
     # Parameters
     varname  = "total_precipitation"
-    variable = 'tp'
+    variable = 'tp' # t2m tp
     size = 5    # Size of the grid in degree
 
     # Load data
@@ -136,11 +141,11 @@ if __name__ == "__main__":
     years   = range(1970,2022)  # from 1970 to 2022
 
 
-    pool = mp.Pool(8)   # Use the number of cores of your PC
+    # pool = mp.Pool(8)   # Use the number of cores of your PC
 
     for year,y in enumerate(years):
         foutput = f'./Output/correlations/{varname}_year_{years[year]}_maxlag_{max_lag}.csv'    
-        pool.apply_async(correlation_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
-        # correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
-    pool.close()
-    pool.join()
+        # pool.apply_async(correlation_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
+        correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
+    # pool.close()
+    # pool.join()
