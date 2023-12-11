@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 import math
 
-from Functions.causality_functions import grangers_causation_matrix
-from Functions.other_functions import import_dataset, first_day_of_year_index, haversine_distance
+from lib.causality import grangers_causation_matrix
+from lib.misc import import_dataset, first_day_of_year_index, haversine_distance
 
 import multiprocessing as mp
 from statsmodels.tsa.stattools import grangercausalitytests

@@ -2,7 +2,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
-from Functions.other_functions import generate_coordinates, haversine_distance
+from lib.misc import generate_coordinates, haversine_distance
 
 
 
