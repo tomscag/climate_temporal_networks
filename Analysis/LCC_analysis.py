@@ -3,111 +3,30 @@ import networkx as nx
 import igraph as ig
 
 import numpy as np
-import pandas as pd
 import matplotlib.pyplot as plt
 
-import math
-from netCDF4 import Dataset
-####################
+
+from lib.misc import (
+                generate_coordinates, 
+                load_edgelist, 
+                haversine_distance, 
+                filter_network_by_distance,
+                create_fuzzy_network
+                    )
+
+##############################
 
 
-
-def compute_distances_5deg():
-    '''
-    OUTPUT
-        dist: (2d-array)
-            distance matrix between points
-
-        nodes: (dict)
-            label: (lat,lon)
-    '''
-
-    data = Dataset(f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc', 'r')
-    lat  = data.variables['lat']        
-    lon  = data.variables['lon']            
-    # temp = data.variables['t2m']
-    # data = np.array(temp).reshape( temp.shape[0],temp.shape[1]*temp.shape[2]) # time, lat * lon
-    
-    count = 0
-    nodes = dict()
-    for item_lat in enumerate(lat):
-        for item_lon in enumerate(lon):
-            nodes[count] = (float(item_lat[1].data),float(item_lon[1].data))
-            count += 1
-    
-    N = 2664
-    dist = np.zeros((N,N))
-    for i in range(2664):
-        for j in range(i+1,N):
-            dist[i,j] = haversine_distance(nodes[i][0],nodes[i][1],nodes[j][0],nodes[j][1])
-    dist = dist + dist.T    
-
-    return  dist, nodes
-
-
-def haversine_distance(lat1, lon1, lat2, lon2):
-    radius = 6371 #avarege radius
-
-    # degree to radiant
-    lat1_rad = lat1 * math.pi / 180
-    lon1_rad = lon1 * math.pi / 180
-    lat2_rad = lat2 * math.pi / 180
-    lon2_rad = lon2 * math.pi / 180
-
-    d_lat = lat2_rad - lat1_rad
-    d_lon = lon2_rad - lon1_rad
-
-    # haversine formula
-    a = math.sin(d_lat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(d_lon / 2) ** 2
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    distance = radius * c
-
-    return distance
-
-
-def create_fuzzy_network(edgelist):
-    # random_matrix = np.random.rand(*adj_fuzzy.shape)
-    rnd = np.random.rand(*edgelist['prob'].shape)
-    edgelist = edgelist.loc[ rnd < edgelist['prob'] ]
-    
-
-
-
-    # Filter matrix (put to zero points that are close)
-    dist, nodes = compute_distances_5deg()
-    K = 8500
-    # adj = filter_network(adj,dist,K)
-
-    # Filter
-    edgelist['dist'] = edgelist.apply(lambda x: haversine_distance( nodes[x.node1][0],nodes[x.node1][1],nodes[x.node2][0],nodes[x.node2][1]  ), axis=1)
-    edgelist = edgelist.loc[ edgelist.dist > K ]
-
-    # Igraph
-    # G = ig.Graph.Adjacency(adj,mode="upper",diag=False)
-
-    # G = nx.Graph(adj)
-    G = nx.from_pandas_edgelist(edgelist,source="node1",target="node2")
-    # plot_adj(adj,K)
-    return G
-
-
-def filter_network(adj,dist,K):
-    '''
-        Filter network by putting to zero those links with a distance grater than a threshold
-    '''
-    N = 2664
-    for i in range(N):
-        for j in range(i+1,N):
-            if dist[i,j] < K:
-                adj[i,j] = 0
-                adj[j,i] = 0
-
-    return adj
 
 
 def percolation_analysis(G,p):
     '''
-        Return the first and the second size of the largest connected component
+        Input
+            G: networkx instance of a graph
+            p: fraction of nodes to remove
+        Output
+            Return the largest connected component after 
+            removing the p percentile of the nodes
     '''
 
     # rnd = np.random.rand(1,len(G.nodes))
@@ -131,7 +50,6 @@ def plot_gcc(G):
     count = 0
     for p in plist:
         
-        
         components = percolation_analysis(G.copy(),p)
         gcc[count] = components/N
         print(f'nodes removal frac: {p:.3f}, size of gcc: {gcc[count]:.3f}')
@@ -145,6 +63,7 @@ def plot_gcc(G):
     plt.savefig("test_gcc.png")
 
 
+
 def plot_adj(adj,K):
     plt.imshow(adj)
     plt.title(f"Filtered at {K} km")
@@ -156,22 +75,28 @@ def plot_adj(adj,K):
 
 ####################
 
+def main():
+    year  = 2000
+    K =  3000   # Threshold to filter out short link
 
-year  = 1973
-# fpath = f"./Output/prob_numpyarray_year{year}.npy"
-fpath = f"./Output/year_{year}_maxlag_150.csv"
+    # fpath = f"./Output/prob_numpyarray_year{year}.npy"
+    fpath = f"./Output/correlations/plev_750/temperature_press_750_year_{year}_maxlag_150.csv"
 
-# adj_fuzzy = np.load(fpath)
-edgelist = pd.read_csv(fpath,delimiter="\t",names=["node1","node2","zscore","maxlag","prob"])
+    # Load edgelist
+    edgelist = load_edgelist(fpath)
 
+    # Filter edgelist
+    edgelist = filter_network_by_distance(edgelist,K)
 
-G = create_fuzzy_network(edgelist)
-
-
-# gcc = percolation_analysis(G,0.1) 
-
-
-plot_gcc(G)
-
+    # Create network
+    G = create_fuzzy_network(edgelist)
 
 
+    # gcc = percolation_analysis(G,0.1) 
+
+
+    plot_gcc(G)
+
+
+if __name__ == "__main__":
+    main()

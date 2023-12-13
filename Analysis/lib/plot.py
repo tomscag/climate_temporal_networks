@@ -63,21 +63,23 @@ class PlotterEarth():
         self.map.drawparallels(np.arange(-90., 91., 30.), labels=[True, False, False, False], linewidth=0.5, color='grey')
 
 
-    def plot_linemap(self,graph,initnode,fname="linemap_earth.png"):
+    def plot_linemap(self,graph,initnodelist,fname="linemap_earth.png"):
         
-        endnodes = list(graph[initnode])
-        coords, lons, lats = generate_coordinates(sizegrid=5)
-        latinit, loninit =  coords[initnode]
-        lats = [coords[item][0] for item in endnodes ]
-        lons = [coords[item][1] for item in endnodes ]
-        
-        for edges in range(len(endnodes)):
-            alpha = graph[initnode][endnodes[edges]]['prob']
-            self.map.drawgreatcircle(lon1=loninit,lat1=latinit,lon2=lons[edges],lat2=lats[edges],
-                              color=self.colors['blue'],linewidth=self.params['linewidth'],
-                              alpha=alpha       
-                                     )
-        print("saving figure")
+
+        for initnode in initnodelist:
+            print(f"Drawing teleconnections for node {initnode}")
+            endnodes = list(graph[initnode])
+            coords, lons, lats = generate_coordinates(sizegrid=5)
+            latinit, loninit =  coords[initnode]
+            lats = [coords[item][0] for item in endnodes ]
+            lons = [coords[item][1] for item in endnodes ]
+            
+            for edges in range(len(endnodes)):
+                alpha = graph[initnode][endnodes[edges]]['prob']
+                self.map.drawgreatcircle(lon1=loninit,lat1=latinit,lon2=lons[edges],lat2=lats[edges],
+                                color=self.colors['blue'],linewidth=self.params['linewidth'],
+                                alpha=alpha       
+                                        )
         plt.savefig(f"{self.resfolder}linemap_earth_{self.year}.png",dpi=self.params['dpi'])
         plt.close()
 
