@@ -63,8 +63,11 @@ class PlotterEarth():
         self.map.drawparallels(np.arange(-90., 91., 30.), labels=[True, False, False, False], linewidth=0.5, color='grey')
 
 
-    def plot_linemap(self,graph,initnodelist,fname="linemap_earth.png"):
-        
+    def plot_teleconnections(self,graph,initnodelist,fname="teleconnections.png"):
+        '''
+            Draw on a map all the teleconnections in the graph object
+            starting from the nodes stored in initnodelist
+        '''
 
         for initnode in initnodelist:
             print(f"Drawing teleconnections for node {initnode}")
@@ -80,7 +83,7 @@ class PlotterEarth():
                                 color=self.colors['blue'],linewidth=self.params['linewidth'],
                                 alpha=alpha       
                                         )
-        plt.savefig(f"{self.resfolder}linemap_earth_{self.year}.png",dpi=self.params['dpi'])
+        plt.savefig(f"{self.resfolder}telecon_{self.year}.png",dpi=self.params['dpi'])
         plt.close()
 
     def plot_heatmap(self,data,fname="heatmap_earth.png"):

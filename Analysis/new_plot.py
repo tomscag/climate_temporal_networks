@@ -65,7 +65,7 @@ def plot_teleconnections(plote,elist,node=[1050], K = 2000):
     graph = create_full_network(elist)
 
     ## Plot linemap
-    plote.plot_linemap(graph,node)
+    plote.plot_teleconnections(graph,node)
 
 
 
@@ -82,7 +82,7 @@ def main():
     lag_bounds = [-10,20]
     name = folderpath + fnameinput
     resfolder  = "./fig/"
-    proj = "robin"      # Earth projection
+    proj = "robin"      # Earth projection "robin"
     savefig = True
 
     elist = load_edgelist(name,lag_bounds)
@@ -104,7 +104,7 @@ def main():
 
     plote = PlotterEarth(proj,year,resfolder)
 
-    plot_teleconnections(plote,elist,node=list(range(2664)),K=5000)
+    plot_teleconnections(plote,elist,node=[30, 2663, 2300,1300],K=5000)
     
 
     ## Plot heatmap
