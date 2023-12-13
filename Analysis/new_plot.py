@@ -28,7 +28,7 @@ def create_fuzzy_network(edgelist):
     edgelist = edgelist.loc[ rnd < edgelist['prob'] ]
     
 
-    G = nx.from_pandas_edgelist(edgelist,source="node1",target="node2")
+    G = nx.from_pandas_edgelist(edgelist,source="node1",target="node2",edge_attr=True)
     G.add_nodes_from(range(2664)) # In case some nodes are missing in the edgelist
 
     return G
@@ -72,12 +72,14 @@ def load_data(name,lag_bounds = [0,10]):
 ###################################
 ###################################
 
-year       = 2001
-folderpath = "./Output_cluster/"
-fnameinput = f"year_{year}_maxlag_150.csv"
+year       = 1990
+plev       = 750    # Pressure level
+folderpath = f"./Output/correlations/plev_{plev}/"
+fnameinput = f"temperature_press_{plev}_year_{year}_maxlag_150.csv"
 lag_bounds = [-10,20]
 name = folderpath + fnameinput
-proj = "robin"
+resfolder  = "./fig/"
+proj = "robin"      # Earth projection
 savefig = True
 
 df = load_data(name,lag_bounds)
@@ -92,11 +94,12 @@ data_matrix,data_matrix1 = total_degree_nodes(graph)
 
 
 
-plote = PlotterEarth(proj)
+plote = PlotterEarth(proj,year,resfolder)
 
 ## Plot linemap
 node = 1050
 plote.plot_linemap(graph,node)
 
+print("ciao")
 ## Plot heatmap
 # plote.plot_heatmap(data_matrix)

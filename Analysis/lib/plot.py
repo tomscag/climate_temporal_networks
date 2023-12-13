@@ -8,11 +8,13 @@ from lib.misc import generate_coordinates
 
 class PlotterEarth():
 
-    def __init__(self,proj,rows=1,cols=1) -> None:
+    def __init__(self,proj,year,resfolder,rows=1,cols=1) -> None:
         """
             Initialize oject attributes and create figure
         """
         self.proj = proj
+        self.year = str(year)
+        self.resfolder = resfolder
         self.map = Basemap(projection=proj, lat_0=0, lon_0=0)
 
         # misc. figure parameters
@@ -46,7 +48,7 @@ class PlotterEarth():
         self.fig, self.ax = plt.subplots(nrows=rows,
                                  ncols=cols
                                  )
-
+        self.ax.set_title(str(year))
         self.plot_earth_outline()
 
     def plot_earth_outline(self):
@@ -62,6 +64,7 @@ class PlotterEarth():
 
 
     def plot_linemap(self,graph,initnode,fname="linemap_earth.png"):
+        
         endnodes = list(graph[initnode])
         coords, lons, lats = generate_coordinates(sizegrid=5)
         latinit, loninit =  coords[initnode]
@@ -69,10 +72,14 @@ class PlotterEarth():
         lons = [coords[item][1] for item in endnodes ]
         
         for edges in range(len(endnodes)):
+            alpha = graph[initnode][endnodes[edges]]['prob']
             self.map.drawgreatcircle(lon1=loninit,lat1=latinit,lon2=lons[edges],lat2=lats[edges],
-                              color=self.colors['blue'],linewidth=self.params['linewidth']       
+                              color=self.colors['blue'],linewidth=self.params['linewidth'],
+                              alpha=alpha       
                                      )
-        plt.savefig(fname,dpi=self.params['dpi'])
+        print("saving figure")
+        plt.savefig(f"{self.resfolder}linemap_earth_{self.year}.png",dpi=self.params['dpi'])
+        plt.close()
 
     def plot_heatmap(self,data,fname="heatmap_earth.png"):
 
