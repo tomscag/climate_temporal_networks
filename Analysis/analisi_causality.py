@@ -36,11 +36,11 @@ def save_results(i,j,gc,prob,foutput):
         file.write(f"{i}\t{j}\t{gc:.4f}\t{prob:.4f}\n")
 
 def granger_causality_all(data,foutput,test='params_ftest'):
-    maxlag = 10
-    T,N = data.shape
-    for i in range(N):
+    maxlag = 30
+    _,N = data.shape
+    for i,_ in nodes.items():
         print(f"Computing node {i}")
-        for j in range(i+1,N):
+        for j,_ in nodes.items():
             if i != j:
                 dist = haversine_distance( nodes[i][0],nodes[i][1], nodes[j][0],nodes[j][1])
                 x  = data[:,i]
@@ -49,7 +49,7 @@ def granger_causality_all(data,foutput,test='params_ftest'):
                 pvalues = np.array([round(res[i+1][0][test][1],4) for i in range(maxlag)])
                 maxind = np.argmax(pvalues)
                 pval = pvalues[maxind]
-                gc = res[maxind+1][0][test][1]
+                gc = res[maxind+1][0][test][0]
                 prob = posterior_link_probability(pval,dist)
                 if prob > 1e-2:
                     save_results(i,j,gc,prob,foutput)
@@ -64,8 +64,8 @@ if __name__ == "__main__":
 
 
     # Load data
-    fileinput = f'../data/t2m/anomalies_{variable}_1970_2022_{size}grid.nc'
-    data, indices, nodes = import_dataset(fileinput,variable)
+    fileinput = f'../data/t2m/std_anomalies_{variable}_1970_2022_{size}grid.nc'
+    data, indices, nodes = import_dataset(fileinput,variable,filterpoles=True)
 
 
     max_lag = 150
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     for year,y in enumerate(years):
         foutput = f'./Output/GC/year_{years[year]}_maxlag_{max_lag}.csv'    
-        pool.apply_async(granger_causality_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
-        # granger_causality_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
+        # pool.apply_async(granger_causality_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
+        granger_causality_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
     pool.close()    
     pool.join()

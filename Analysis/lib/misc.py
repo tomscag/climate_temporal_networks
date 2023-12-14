@@ -3,7 +3,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-def import_dataset(fileinput,variable='t2m'):
+def import_dataset(fileinput,variable='t2m', filterpoles=False):
     
     from netCDF4 import Dataset
     '''
@@ -16,6 +16,9 @@ def import_dataset(fileinput,variable='t2m'):
 
         nodes: (dict)
             label: (lat,lon)
+
+        filterpoles: (bool)
+            if true remove degenerate nodes on the poles
     '''
 
     data = Dataset(fileinput, 'r')
@@ -31,7 +34,12 @@ def import_dataset(fileinput,variable='t2m'):
         for item_lon in enumerate(lon):
             nodes[count] = (float(item_lat[1].data),float(item_lon[1].data))
             count += 1
-            
+    
+    if filterpoles:
+        nodes = {key:value   for key,value in nodes.items()   if np.abs(value[0]) < 90   }
+        nodes[0] = (-90.0,-180.0) # I mantain the same labels in data
+        nodes[2663] = (90.0,175.0) # 
+        nodes = dict(sorted(nodes.items()))
     return data, indices, nodes
 
 
