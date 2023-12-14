@@ -104,11 +104,11 @@ def main():
 
     plote = PlotterEarth(proj,year,resfolder)
 
-    plot_teleconnections(plote,elist,node=[30, 2663, 2300,1300],K=5000)
+    # plot_teleconnections(plote,elist,node=[30, 2663, 2300,1300],K=5000)
     
 
     ## Plot heatmap
-    # plote.plot_heatmap(weights_matrix)
+    plote.plot_heatmap(weights_matrix)
 
 
 if __name__ == "__main__":
