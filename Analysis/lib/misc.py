@@ -95,7 +95,7 @@ def create_full_network(edgelist):
     return G
 
 
-def create_fuzzy_network(edgelist):
+def create_fuzzy_network(edgelist,mode="networkx"):
     ''''
         Generate fuzzy network from edgelist
     '''
@@ -103,9 +103,14 @@ def create_fuzzy_network(edgelist):
     rnd = np.random.rand(*edgelist['prob'].shape)
     edgelist = edgelist.loc[ rnd < edgelist['prob'] ]
     
-
-    G = nx.from_pandas_edgelist(edgelist,source="node1",target="node2",edge_attr=True)
-    G.add_nodes_from(range(2664)) # In case some nodes are missing in the edgelist
+    match mode:
+        case "networkx":
+            G = nx.from_pandas_edgelist(edgelist,source="node1",target="node2",edge_attr=True)
+            G.add_nodes_from(range(2664)) # In case some nodes are missing in the edgelist
+        case "igraph":
+            pass
+        case _:
+            print("Unknown mode")
 
     return G
 
@@ -116,19 +121,65 @@ def load_edgelist(name,lag_bounds = [0,10]):
     df = pd.read_csv(name,sep="\t",header=None,
                      names=["node1","node2","zscore","maxlag","prob"]
                      )
-    df = df.where( (df["maxlag"] >= lag_bounds[0]) & (df["maxlag"] <= lag_bounds[1]) ).dropna()
+    # df = df.where( (df["maxlag"] >= lag_bounds[0]) & (df["maxlag"] <= lag_bounds[1]) ).dropna()
     # df['prob'].loc[ (df['maxlag'] < lag_bounds[0]) & df['maxlag'] > lag_bounds[1] ] = 0
     df[['node1','node2']] = df[['node1','node2']].astype(int)
     return df
 
 
 
-def filter_network_by_distance(edgelist,K):
+def filter_network_by_distance(edgelist,K,filterpoles=False):
     '''
-        Filter network by putting to zero those links with a distance grater than a threshold
+        Filter edgelist putting to zero links with longer than a threshold
+
+        Input:
+            K:   threshold in kilometers
+            filterpoles: if true deletes nodes with abs(latitude) = 90 (north/sud poles) 
     '''
-    # Compute distances in kilometers between edges
+    
     coords, lons, lats = generate_coordinates(sizegrid=5)
+    if filterpoles:
+        edgelist['flag'] = edgelist.apply(lambda x:
+                                            (coords[x.node1][0] > -90) and (coords[x.node1][0] < 90) and 
+                                            (coords[x.node2][0] > -90) and (coords[x.node2][0] < 90), axis=1
+                                        )  
+        edgelist = edgelist.loc[ edgelist.flag == True ]
+
     edgelist['dist'] = edgelist.apply(lambda x: 
-                                      haversine_distance( coords[x.node1][0],coords[x.node1][1],coords[x.node2][0],coords[x.node2][1]  ), axis=1)
+                                      haversine_distance( coords[x.node1][0],coords[x.node1][1],
+                                                         coords[x.node2][0],coords[x.node2][1]  ), axis=1
+                                      )
     return edgelist.loc[ edgelist.dist > K ]
+
+
+
+
+def total_degree_nodes(G):
+    """
+        Return:
+            weights_matrix
+                Each entry is a node, organized by lat x lon,
+                and represents the total area to which a node
+                is linked to
+    """
+
+    
+    coords, lons, lats = generate_coordinates(sizegrid=5)
+    # Only degree
+    data_matrix1 = np.array(list(dict(sorted(G.degree())).values())).reshape(len(lats),len(lons))
+
+    W = {key:None for key in sorted(G.nodes())} # Weighted connectivity
+    for node in G.nodes():
+
+        w=0
+        for item in G[node]:
+            w += np.abs(np.cos(coords[item][0]*2*np.pi/360)) # cos lat
+        W[node] = w
+
+    c = 0
+    for key,value in coords.items():
+        c += np.abs(np.cos(value[0]*2*np.pi/360))
+
+    W = {key:value/c  for key,value in W.items()}
+    weights_matrix = np.array(list(W.values())).reshape(len(lats),len(lons))
+    return weights_matrix,data_matrix1
