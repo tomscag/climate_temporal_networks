@@ -174,7 +174,7 @@ def total_degree_nodes(G):
     
     coords, lons, lats = generate_coordinates(sizegrid=5)
     # Only degree
-    data_matrix1 = np.array(list(dict(sorted(G.degree())).values())).reshape(len(lats),len(lons))
+    # data_matrix1 = np.array(list(dict(sorted(G.degree())).values())).reshape(len(lats),len(lons))
 
     W = {key:None for key in sorted(G.nodes())} # Weighted connectivity
     for node in G.nodes():
@@ -190,4 +190,4 @@ def total_degree_nodes(G):
 
     W = {key:value/c  for key,value in W.items()}
     weights_matrix = np.array(list(W.values())).reshape(len(lats),len(lons))
-    return weights_matrix,data_matrix1
+    return weights_matrix

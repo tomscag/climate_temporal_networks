@@ -15,7 +15,19 @@ from lib.misc import (
 ######################################
 
 
+def plot_heatmap(plote,fnameinput,K=2000):
 
+    elist = load_edgelist(fnameinput)
+
+    # Filter out short links
+    # elist = filter_network_by_distance(elist,K,filterpoles=True )
+
+    # Create the full network "weighted" with the edge-probabilities
+    graph = create_fuzzy_network(elist)
+
+    weights_matrix = total_degree_nodes(graph)
+    
+    plote.plot_heatmap(weights_matrix)
 
 
 def plot_teleconnections(plote,fnameinput,node=[1050], K = 2000):
@@ -39,8 +51,8 @@ def plot_teleconnections(plote,fnameinput,node=[1050], K = 2000):
 
 def main():
 
-    year       = 1990
-    plev       = 750    # Pressure level
+    year       = 1993
+    plev       = 1000    # Pressure level
     folderinput = f"./Output/correlations/plev_{plev}/"  # /t2m   /plev_{plev}
     fnameinput = f"temperature_press_{plev}_year_{year}_maxlag_150.csv"
     lag_bounds = [-10,20]
@@ -49,14 +61,15 @@ def main():
     proj = "robin"      # Earth projection "robin"
     savefig = True
 
+    plote = PlotterEarth(proj,year,resfolder)
 
     ## Plot teleconnections
-    plote = PlotterEarth(proj,year,resfolder)
-    plot_teleconnections(plote,fname,node=list(range(2664)),K=5000)
+    # plot_teleconnections(plote,fname,node=list(range(2664)),K=5000)
     
 
     ## Plot heatmap
-    # plote.plot_heatmap(weights_matrix)
+    plot_heatmap(plote,fname)
+    
 
 
     #######################

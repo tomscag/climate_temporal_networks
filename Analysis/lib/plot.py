@@ -109,7 +109,7 @@ class PlotterEarth():
         max_limit = 0.05
         norm = plt.Normalize(vmin=min_limit, vmax=max_limit)  # The limits of the colorbar
 
-        cs = self.map.contourf(x,y,data,cmap=cmap,norm=norm)
+        cs = self.map.contourf(x,y,data,cmap=cmap) #,norm=norm)
         self.map.colorbar(location='right', label='Degree',aspect=10)
         plt.savefig(f"{self.resfolder}heatmap_{self.year}.png",dpi=self.params['dpi'])
 
