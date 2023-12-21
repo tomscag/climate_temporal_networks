@@ -1,5 +1,5 @@
 ### New Plot
-
+from cartopy import crs as ccrs, feature as cfeature
 from lib.plot import  PlotterEarth, PlotterLines
 from lib.misc import (
             create_fuzzy_network, 
@@ -51,14 +51,14 @@ def plot_teleconnections(plote,fnameinput,node=[1050], K = 2000):
 
 def main():
 
-    year       = 1993
+    year       = 1990
     plev       = 1000    # Pressure level
     folderinput = f"./Output/correlations/plev_{plev}/"  # /t2m   /plev_{plev}
     fnameinput = f"temperature_press_{plev}_year_{year}_maxlag_150.csv"
     lag_bounds = [-10,20]
     fname = folderinput + fnameinput
     resfolder  = "./fig/"
-    proj = "robin"      # Earth projection "robin"
+    proj = ccrs.Robinson()     # Earth projection "robin"
     savefig = True
 
     plote = PlotterEarth(proj,year,resfolder)

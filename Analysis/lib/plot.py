@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.basemap import Basemap
+from cartopy import crs as ccrs, feature as cfeature
 from lib.misc import generate_coordinates
 
 
@@ -18,14 +19,13 @@ class PlotterEarth():
         -------
             None
     '''
-    def __init__(self,proj,year,resfolder,rows=1,cols=1) -> None:
+    def __init__(self,proj,year,resfolder) -> None:
         """
             Initialize oject attributes and create figure
         """
         self.proj = proj
         self.year = str(year)
         self.resfolder = resfolder
-        self.map = Basemap(projection=proj, lat_0=0, lon_0=0)
 
         # misc. figure parameters
         self.params = {'linewidth': 1,
@@ -55,9 +55,12 @@ class PlotterEarth():
                               )      
           
         # initialize figure as subplots
-        self.fig, self.ax = plt.subplots(nrows=rows,
-                                 ncols=cols, figsize=(20, 10)
-                                 )
+        self.fig = plt.figure(figsize=(11, 8.5))
+        # self.ax = plt.subplot(1, 1, 1, projection=proj)
+
+        # Set the axes using the specified map projection
+        self.ax=plt.axes(projection=proj)
+        
         self.ax.set_title(str(year))
         self.plot_earth_outline()
 
@@ -65,13 +68,17 @@ class PlotterEarth():
         '''
             Draw coastlines and meridians/parallel
         '''
-        self.map.drawcoastlines()
-        self.map.fillcontinents(color='gray',lake_color='gray',alpha=0.45)
-        self.map.drawmapboundary()
-        self.map.drawcountries()
-        self.map.drawmeridians(np.arange(-180., 181., 60.), labels=[False, False, False, True], linewidth=0.5, color='grey')
-        self.map.drawparallels(np.arange(-90., 91., 30.), labels=[True, False, False, False], linewidth=0.5, color='grey')
+        
+        self.ax.coastlines()
+        #self.ax.set_extent([lonW, lonE, latS, latN], crs=projPC)
+        # self.ax.set_facecolor(cfeature.COLORS['water'])
+        # self.ax.add_feature(cfeature.LAND)
+        # self.ax.add_feature(cfeature.COASTLINE)
 
+        # self.ax.add_feature(cfeature.BORDERS, linestyle='--')
+        # self.ax.add_feature(cfeature.LAKES, alpha=0.5)
+        # self.ax.add_feature(cfeature.STATES)
+        # self.ax.add_feature(cfeature.RIVERS)
 
     def plot_teleconnections(self,graph,initnodelist,fname="teleconnections.png"):
         '''
@@ -98,19 +105,25 @@ class PlotterEarth():
 
     def plot_heatmap(self,data,fname="heatmap_earth.png"):
 
+        nlevel = 5
         lats = np.arange(-90,90+5,5,dtype=float)  # 37 
         lons = np.arange(-180,180,5,dtype=float)         # 72
 
-        lon2, lat2 = np.meshgrid(lons, lats)
-        x, y = self.map(lon2,lat2) # Convert to meters
+        grid_lon, grid_lat = np.meshgrid(lons, lats)
 
-        cmap = plt.cm.viridis
-        min_limit = 0.0 
-        max_limit = 0.05
-        norm = plt.Normalize(vmin=min_limit, vmax=max_limit)  # The limits of the colorbar
+        # Define colormap and normalization
+        cmap = plt.cm.rainbow
+        # norm = plt.Normalize(vmin=data.min(), vmax=data.max())  
+        norm = plt.Normalize(vmin=0.03, vmax=0.085)
 
-        cs = self.map.contourf(x,y,data,cmap=cmap) #,norm=norm)
-        self.map.colorbar(location='right', label='Degree',aspect=10)
+        cs = self.ax.contourf(grid_lon, grid_lat, data,nlevel,cmap=cmap,
+                     transform=ccrs.PlateCarree(),norm=norm)
+        cs.set_clim(vmin=0.03, vmax=0.085)
+        self.fig.colorbar(cs,location='right', label='Degree',aspect=10)
+
+        # Show grid
+        self.ax.plot(grid_lon,grid_lat,'k.',markersize=2, alpha=0.75,
+                     transform=ccrs.PlateCarree())
         plt.savefig(f"{self.resfolder}heatmap_{self.year}.png",dpi=self.params['dpi'])
 
 
@@ -168,7 +181,7 @@ class PlotterLines():
         self.fig, self.ax = plt.subplots(nrows=rows,
                                  ncols=cols, figsize=(20, 10),
                                  )
-        # self.ax.set_title(str(year))
+        # self.self.ax.set_title(str(year))
         # self.load_data()
 
     def load_data(self,fnameinput):
