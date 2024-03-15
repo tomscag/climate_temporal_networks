@@ -1,13 +1,10 @@
 import numpy as np
 import pandas as pd 
 
-
-from lib.correlation import _check_arg, cross_correlation
+from lib.correlation import cross_correlation
 from lib.misc import haversine_distance, import_dataset
 from lib.bayes import (posterior_link_probability_havlin,
                        posterior_link_probability_iaaft)
-
-import statistics
 
 
 import multiprocessing as mp
@@ -54,14 +51,14 @@ if __name__ == "__main__":
 
     # Load data
     # fileinput = f'../data/temperature/std_anomalies_temperature_pressure_750_{size}grid.nc'
-    # fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
-    fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
+    fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
+    # fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
     variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes = import_dataset(fileinput,variable)
 
     max_lag = 150
-    # years   = range(1970,2022)  # from 1970 to 2022
-    years   = range(2022,2100)  # from 1970 to 2022
+    years   = range(1970,2022)  # from 1970 to 2022
+    # years   = range(2022,2100)  # from 1970 to 2022
 
     pool = mp.Pool(8)   # Use the number of cores of your PC
 

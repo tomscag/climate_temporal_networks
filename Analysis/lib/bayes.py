@@ -84,8 +84,11 @@ def posterior_link_probability_havlin(cross_corr,dist,max_lag):
         B_value = 1
     
     # Prior probaility for the null hypothesis
-    K = 2000
-    prior = prior_link_probability(dist,K)
+    # K = 2000
+    # prior = prior_link_probability(dist,K)
+
+    ## SETTING A GLOBAL VALUE FOR PRIOR PROBABILITY
+    prior = 0.50
 
     # Posterior probability of link existence
     prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
