@@ -34,6 +34,9 @@ def plot_teleconnections(plote,fnameinput,node=[1050], K = 2000):
 
     elist = load_edgelist(fnameinput)
 
+    # Filter out the small zscore
+    elist = elist[ elist.zscore > 2.5]
+
     # Filter out short links
     elist = filter_network_by_distance(elist,K,filterpoles=True )
 
@@ -49,12 +52,12 @@ def plot_teleconnections(plote,fnameinput,node=[1050], K = 2000):
 ###################################
 
 
-def main():
+if __name__ == "__main__":
 
-    year       = 1990
+    year       = 1970
     plev       = 1000    # Pressure level
-    folderinput = f"./Output/correlations/plev_{plev}/"  # /t2m   /plev_{plev}
-    fnameinput = f"temperature_press_{plev}_year_{year}_maxlag_150.csv"
+    folderinput = f"./Output/correlations/t2m/"  # /t2m   /plev_{plev}
+    fnameinput = f"year_{year}_maxlag_150.csv"
     lag_bounds = [-10,20]
     fname = folderinput + fnameinput
     resfolder  = "./fig/"
@@ -64,11 +67,11 @@ def main():
     plote = PlotterEarth(proj,year,resfolder)
 
     ## Plot teleconnections
-    # plot_teleconnections(plote,fname,node=list(range(2664)),K=5000)
+    plot_teleconnections(plote,fname,node=[34,45],K=5000)
     
 
     ## Plot heatmap
-    plot_heatmap(plote,fname)
+    # plot_heatmap(plote,fname)
     
 
 
@@ -80,5 +83,4 @@ def main():
     # plote = PlotterLines(folderinput,resfolder)
     # plote.plot_clustering_coefficient()
 
-if __name__ == "__main__":
-    main()
+
