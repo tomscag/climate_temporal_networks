@@ -8,7 +8,7 @@ def _check_arg(x, xname):
         raise ValueError('%s must be one-dimensional.' % xname)
     return x
 
-def crosscorrelation(x, y, maxlag, normalize=True):
+def cross_correlation(x, y, maxlag, normalize=True):
 
     """
     Cross correlation with a maximum number of lags.

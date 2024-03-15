@@ -60,4 +60,4 @@ def application():
              else:       
                  day_mean_all_anomaly=ct.cube.concat([day_mean_all_anomaly, daily_mean_anomaly], dim='time')
              count = count + 1
-    return day_mean_all
+    return day_mean_all_anomaly

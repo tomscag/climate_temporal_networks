@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd 
 from numpy.lib.stride_tricks import as_strided
 
-from lib.correlation import _check_arg, crosscorrelation
-from lib.misc import haversine_distance, import_dataset, first_day_of_year_index
+from lib.correlation import _check_arg, cross_correlation
+from lib.misc import haversine_distance, import_dataset
 from lib import iaaft
 
 import statistics
@@ -44,7 +44,7 @@ def posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50):
     for n in range(0,num_surr):
         serie1_surr = pd.Series(surr_x[n])
         serie2_surr = pd.Series(surr_y[n])
-        sh_cross_corr = crosscorrelation(serie1_surr, serie2_surr, max_lag)
+        sh_cross_corr = cross_correlation(serie1_surr, serie2_surr, max_lag)
         sh_crossmax   = sh_cross_corr.max() 
         cross_corr_surr[n] = sh_crossmax
 
@@ -110,18 +110,18 @@ def save_results(i,j,Z,the_lagmax,prob,foutput):
 def correlation_all(data,foutput):
     T,N = data.shape
 
-    for i in range(1500,N):
+    for i in range(0,N):
         print(f"Computing node {i}")
         for j in range(i+1,N):
             dist = haversine_distance( nodes[i][0],nodes[i][1], nodes[j][0],nodes[j][1])
             x  = data[:,i]
             y  = data[:,j]
-            cross_corr = crosscorrelation(x, y, max_lag)
+            cross_corr = cross_correlation(x, y, max_lag)
             # crossmax   = cross_corr.max()   # Put abs(cross_corr) to consider negative lags too
             # the_lagmax = cross_corr.argmax() - (max_lag + 1)
 
-            Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50)
-            # Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
+            # Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50)
+            Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
             if prob > 1e-2:
                 save_results(i,j,Z,the_lagmax,prob,foutput)
 
@@ -135,24 +135,24 @@ def correlation_all(data,foutput):
 if __name__ == "__main__":
 
     # Parameters
-    varname  = "total_precipitation"
-    variable = 'tp' # t2m tp
     size = 5    # Size of the grid in degree
 
     # Load data
     # fileinput = f'../data/temperature/std_anomalies_temperature_pressure_750_{size}grid.nc'
-    fileinput = f'../data/total_precipitation/std_anomalies_total_precipitation_1970_2022_{size}grid.nc'
+    # fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
+    fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
+    variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes = import_dataset(fileinput,variable)
 
-    max_lag = 50
-    years   = range(1970,2022)  # from 1970 to 2022
+    max_lag = 150
+    # years   = range(1970,2022)  # from 1970 to 2022
+    years   = range(2022,2100)  # from 1970 to 2022
 
-
-    # pool = mp.Pool(8)   # Use the number of cores of your PC
+    pool = mp.Pool(8)   # Use the number of cores of your PC
 
     for year,y in enumerate(years):
-        foutput = f'./Output/correlations/{varname}_year_{years[year]}_maxlag_{max_lag}.csv'    
-        # pool.apply_async(correlation_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
-        correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
-    # pool.close()
-    # pool.join()
+        foutput = f'./Output/correlations/{variable}_year_{years[year]}_maxlag_{max_lag}.csv'    
+        pool.apply_async(correlation_all, args = (data[indices[year]:indices[year+1],:], foutput, )) # Parallelize
+        # correlation_all(data[indices[year]:indices[year+1],:],foutput)  # Uncomment to not parallelize
+    pool.close()
+    pool.join()
