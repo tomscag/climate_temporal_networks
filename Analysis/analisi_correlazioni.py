@@ -35,8 +35,8 @@ def correlation_all(data,foutput):
             # crossmax   = cross_corr.max()   # Put abs(cross_corr) to consider negative lags too
             # the_lagmax = cross_corr.argmax() - (max_lag + 1)
 
-            # Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50)
-            Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
+            Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50)
+            # Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
             if prob > 1e-2:
                 save_results(i,j,Z,the_lagmax,prob,foutput)
 
@@ -54,16 +54,16 @@ if __name__ == "__main__":
 
     # Load data
     # fileinput = f'../data/temperature/std_anomalies_temperature_pressure_750_{size}grid.nc'
-    # fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
-    fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
+    fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
+    # fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
     variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes = import_dataset(fileinput,variable)
 
     max_lag = 150
-    # years   = range(1970,2022)  # from 1970 to 2022
-    years   = range(2022,2100)  # from 1970 to 2022
+    years   = range(1970,2022)  # from 1970 to 2022
+    # years   = range(2022,2100)  # from 1970 to 2022
 
-    pool = mp.Pool(8)   # Use the number of cores of your PC
+    pool = mp.Pool(20)   # Use the number of cores of your PC
 
     for year,y in enumerate(years):
         foutput = f'./Output/correlations/{variable}_year_{years[year]}_maxlag_{max_lag}.csv'    

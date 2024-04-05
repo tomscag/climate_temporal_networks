@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import math
 from lib import iaaft
+from lib.correlation import cross_correlation
 
 
 
@@ -11,6 +12,11 @@ def prior_link_probability(dist,K=2000):
     prior = 1 - math.exp(-dist/K)
 
     return prior
+
+def prior_global_null_prob(altern=0.20):
+    # altern: global prior for alternative hypothesis
+    # Return the prior probaility for the null hypothesis
+    return 1 - altern
 
 
 def posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50):
@@ -53,8 +59,9 @@ def posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50):
         B_value = 1
     
     # Prior probaility for the null hypothesis
-    K = 2000
-    prior = prior_link_probability(dist,K)
+    # K = 2000
+    # prior = prior_link_probability(dist,K)
+    prior = prior_global_null_prob(altern=0.20)
 
     # Posterior probability of link existence
     prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
