@@ -19,22 +19,24 @@ def prior_global_null_prob(altern=0.20):
     return 1 - altern
 
 
-def posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50):
+def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30):
     '''
         We compute the null model using IAAFT surrogates
 
         INPUT
             x,y (array):        the original data
-            cross_corr (array): original cross-correlation
+            surr_x, surr_y      surrogates of the series x and y
             dist (float):       distance in km between x and y
     '''
+
+    cross_corr = cross_correlation(x, y, max_lag)
 
     crossmax   = max(abs(cross_corr))
     the_lagmax = abs(cross_corr).argmax() - (max_lag + 1)
 
 
-    surr_x = iaaft.surrogates(x=x, ns= num_surr, verbose=False)
-    surr_y = iaaft.surrogates(x=y, ns= num_surr, verbose=False)
+    # surr_x = iaaft.surrogates(x=x, ns= num_surr, verbose=False)
+    # surr_y = iaaft.surrogates(x=y, ns= num_surr, verbose=False)
 
     cross_corr_surr = np.empty(num_surr)
 
@@ -59,9 +61,9 @@ def posterior_link_probability_iaaft(x,y,cross_corr,dist,max_lag,num_surr=50):
         B_value = 1
     
     # Prior probaility for the null hypothesis
-    # K = 2000
-    # prior = prior_link_probability(dist,K)
-    prior = prior_global_null_prob(altern=0.20)
+    K = 2000
+    prior = prior_link_probability(dist,K)
+    # prior = prior_global_null_prob(altern=0.20)
 
     # Posterior probability of link existence
     prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)

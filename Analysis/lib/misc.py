@@ -2,6 +2,7 @@
 import networkx as nx
 import numpy as np
 import pandas as pd
+from itertools import product
 
 def import_dataset(fileinput,variable='t2m', filterpoles=False):
     
@@ -11,7 +12,7 @@ def import_dataset(fileinput,variable='t2m', filterpoles=False):
         data: (2d-array)
             data reshaped
 
-        indices: (1d-array)
+        ind_years: (1d-array)
             indices 1 Jan
 
         nodes: (dict)
@@ -22,25 +23,23 @@ def import_dataset(fileinput,variable='t2m', filterpoles=False):
     '''
 
     data = Dataset(fileinput, 'r')
-    indices = first_day_of_year_index(data)
-    lat  = data.variables['lat']        
-    lon  = data.variables['lon']            
+    ind_years = first_day_of_year_index(data)
+    lats  = [float(item.data) for item in data.variables['lat'] ]       
+    lons  = [float(item.data) for item in data.variables['lon'] ]      
+    ind_nodes = list(product(range(data.variables['lat'].size),range(data.variables['lon'].size)))  # [(0,0),(0,1),(0,2)...]
+
     temp = data.variables[variable]
     data = np.array(temp).reshape( temp.shape[0],temp.shape[1]*temp.shape[2]) # time, lat * lon
+
+    nodes = list(product(lats,lons)) # [(-90,-180),(-90,-175)...]
     
-    count = 0
-    nodes = dict()
-    for item_lat in enumerate(lat):
-        for item_lon in enumerate(lon):
-            nodes[count] = (float(item_lat[1].data),float(item_lon[1].data))
-            count += 1
-    
+
     if filterpoles:
         nodes = {key:value   for key,value in nodes.items()   if np.abs(value[0]) < 90   }
         nodes[0] = (-90.0,-180.0) # I mantain the same labels in data
         nodes[2663] = (90.0,175.0) # 
         nodes = dict(sorted(nodes.items()))
-    return data, indices, nodes
+    return data, ind_years, nodes, ind_nodes
 
 
 def first_day_of_year_index(data):
