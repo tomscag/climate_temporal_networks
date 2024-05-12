@@ -33,12 +33,12 @@ def correlation_all(data,foutput,year):
         data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
         data[:,i] = data[:,i]/np.sqrt(N) # This is to return a normalized cross-correlation
     # Normalize surrogates
-    for i,j in product(range(data_surr.dimensions['lat'].size),
-                       range(data_surr.dimensions['lon'].size)):
-        print(i,j)
-        for s in range(30): # surrogates
-            surr = data_surr['t2m'][s,:,i,j]
-            data_surr['t2m'][s,:,i,j] = ((surr-surr.mean())/(surr.std()*np.sqrt(N)))
+    # for i,j in product(range(data_surr.dimensions['lat'].size),
+    #                    range(data_surr.dimensions['lon'].size)):
+    #     print(i,j)
+    #     for s in range(30): # surrogates
+    #         surr = data_surr['t2m'][s,:,i,j]
+    #         data_surr['t2m'][s,:,i,j] = ((surr-surr.mean())/(surr.std()*np.sqrt(N)))
 
 
     for i in range(0,N):
