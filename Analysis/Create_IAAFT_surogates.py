@@ -62,6 +62,9 @@ def create_IAAFT_surrogates(data):
             for j in range(nlons):
 
                 surr = iaaft.surrogates(x = data['t2m'][ind[y]:ind[y+1],i,j], ns= num_surr, verbose=False)
+
+                for s in range(num_surr):
+                    surr[s,:] = ((surr[s,:]-surr[s,:].mean())/(surr[s,:].std()*np.sqrt(len(surr[s,:]))))
                 data_surr['t2m'][:,:,i,j] = surr
 
 
