@@ -60,13 +60,14 @@ def analyze_chunk_test(data_chunk_subset, nodes, max_lag, year, outpath):
     arrays = []
     
     for i in range(data_chunk_subset.dims['num']):
-
+        print(indi)
         num_chunks = data_chunk_subset['t2m'].isel(num=i)
         numpy_array = np.zeros((37*72, 37*72))  
         
         for indi, nod in enumerate(nodes):
             Ai, Aj = nodes[indi]
             for indj, node in enumerate(nodes):
+                # print(indi,indj)
                 (Bi, Bj) = nodes[indj]
 
                 if indi < indj:
@@ -95,24 +96,24 @@ if __name__ == "__main__":
 
     ### DASK Client
 
-    cluster = LocalCluster(n_workers=12)     #  , memory_limit='4GB'
+    cluster = LocalCluster(n_workers=8)     #  , memory_limit='4GB'
     client = Client(cluster)
     # Se non specifichi memory_limit, Dask divide la memoria disponibile del sistema equamente tra i worker.
     print(f"Dask Dashboard: {client.dashboard_link}")   # Stampa il link per accedere alla dashboard
 
 
     ### Dataset
-    original_ds = xr.open_dataset('C:/Users/David/OneDrive/Desktop/CLIMATE_NETWORK/data/new_shuffled_t2m_1970_2022_5grid.nc')
-
+    # original_ds = xr.open_dataset('./surr_IAAFT_t2m_1970_2022.nc')
+    original_ds = xr.open_dataset('./surr_IAAFT_t2m_2022_2100_highemission.nc')
 
     ### Parameters
-    start = 1970
-    end = 1981
+    start = 2022
+    end   = 2100
     ds_baseline = original_ds.sel(time=(original_ds['time.year'] >= start) & (original_ds['time.year'] <= end))
 
     grouped_ds = ds_baseline.groupby('time.year')
-    max_lag = 200
-    outpath = "X:/zscore prova"
+    max_lag = 150
+    outpath = "./test_dask"
     lon_range = range(0, len(original_ds['lon']))
     lat_range = range(0, len(original_ds['lat']))
     nodes = tuple((i,j) for i in lat_range for j in lon_range)
@@ -131,13 +132,13 @@ if __name__ == "__main__":
 
     # Itera su ogni anno e crea un task ritardato
     for year, data_chunk in grouped_ds:
-        data_chunk_subset = data_chunk.isel(num=slice(0, 12))  # seleziona surrogati da 0 a 11
+        data_chunk_subset = data_chunk.isel(num=slice(0, 31))  # seleziona surrogati da 0 a 31
         delayed_results.append(dask.delayed(analyze_chunk_test)(data_chunk_subset, nodes, max_lag, year, outpath))
         
     # Visualizzare il grafo di esecuzione
-    dask.visualize(*delayed_results, optimize_graph=True, filename='my_graph.svg')
-    graph_path = os.path.abspath('my_graph.svg')
-    webbrowser.open(f'file://{graph_path}')
+    # dask.visualize(*delayed_results, optimize_graph=True, filename='my_graph.svg')
+    # graph_path = os.path.abspath('my_graph.svg')
+    # webbrowser.open(f'file://{graph_path}')
 
     # Dask compute 
     computed_results = dask.compute(*delayed_results)
