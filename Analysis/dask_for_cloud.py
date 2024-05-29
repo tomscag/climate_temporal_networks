@@ -6,7 +6,7 @@ import os
 from numpy.lib.stride_tricks import as_strided
 import xarray as xr
 import pandas as pd
-import webbrowser
+# import webbrowser
 
 ### Functions
 
@@ -60,9 +60,9 @@ def analyze_chunk_test(data_chunk_subset, nodes, max_lag, year, outpath):
     arrays = []
     
     for i in range(data_chunk_subset.dims['num']):
-        print(indi)
+        print(f"Year {year} Surrogate: {i}")
         num_chunks = data_chunk_subset['t2m'].isel(num=i)
-        numpy_array = np.zeros((37*72, 37*72))  
+        numpy_array = np.zeros((len(nodes), len(nodes)))  
         
         for indi, nod in enumerate(nodes):
             Ai, Aj = nodes[indi]
@@ -96,7 +96,8 @@ if __name__ == "__main__":
 
     ### DASK Client
 
-    cluster = LocalCluster(n_workers=8)     #  , memory_limit='4GB'
+    cluster = LocalCluster(n_workers=8, memory_limit='3GB',  #  , memory_limit='4GB'
+                           threads_per_worker=1,scheduler_port=8786)    
     client = Client(cluster)
     # Se non specifichi memory_limit, Dask divide la memoria disponibile del sistema equamente tra i worker.
     print(f"Dask Dashboard: {client.dashboard_link}")   # Stampa il link per accedere alla dashboard
@@ -108,7 +109,7 @@ if __name__ == "__main__":
 
     ### Parameters
     start = 2022
-    end   = 2100
+    end   = 2023
     ds_baseline = original_ds.sel(time=(original_ds['time.year'] >= start) & (original_ds['time.year'] <= end))
 
     grouped_ds = ds_baseline.groupby('time.year')
@@ -116,6 +117,8 @@ if __name__ == "__main__":
     outpath = "./test_dask"
     lon_range = range(0, len(original_ds['lon']))
     lat_range = range(0, len(original_ds['lat']))
+    lon_range = range(0, 5)
+    lat_range = range(0, 10)
     nodes = tuple((i,j) for i in lat_range for j in lon_range)
 
     ### Make the nodelist
