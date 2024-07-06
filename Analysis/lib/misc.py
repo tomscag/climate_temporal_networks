@@ -3,6 +3,8 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from itertools import product
+from numba import jit
+import math
 
 def import_dataset(fileinput,variable='t2m', filterpoles=False):
     
@@ -50,9 +52,9 @@ def first_day_of_year_index(data):
     return np.where( doy == 1)[0]
 
 
-
+@jit(nopython=True)
 def haversine_distance(lat1, lon1, lat2, lon2):
-    import math
+    
     radius = 6371 #avarege radius
 
     # degree to radiant

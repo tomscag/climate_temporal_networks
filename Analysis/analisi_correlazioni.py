@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd 
-
+from numba import jit
 
 from lib.correlation import _check_arg, cross_correlation
 from lib.misc import haversine_distance, import_dataset
@@ -19,15 +19,13 @@ from itertools import product
 def save_results(i,j,Z,the_lagmax,prob,foutput):
     with open(foutput,'a') as file:
         file.write(f"{i}\t{j}\t{Z:.4f}\t{the_lagmax}\t{prob:.4f}\n")
-    
+    # file = open(foutput,"a")
+    # file.write(f"{i}\t{j}\t{Z:.4f}\t{the_lagmax}\t{prob:.4f}\n")
 
 
-def correlation_all(data,foutput,year):
+def correlation_all(data,data_surr,foutput):
     T,N = data.shape
 
-    # Read surrogates
-    data_surr = Dataset(f"./IAAFT_surrogates/IAAFT_surrogates_year_{year}.nc","r+")
-    
     # Normalize series
     for i in range(0,N):
         data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
@@ -40,7 +38,7 @@ def correlation_all(data,foutput,year):
     #         surr = data_surr['t2m'][s,:,i,j]
     #         data_surr['t2m'][s,:,i,j] = ((surr-surr.mean())/(surr.std()*np.sqrt(N)))
 
-
+    
     for i in range(0,N):
         # print(f"Computing node {i}")
         for j in range(i+1,N):
@@ -48,8 +46,8 @@ def correlation_all(data,foutput,year):
             dist = haversine_distance( nodes[i][0],nodes[i][1], nodes[j][0],nodes[j][1])
             x  = data[:,i]
             y  = data[:,j]
-            surr_x = data_surr['t2m'][:,:,ind_nodes[i][0],ind_nodes[i][1]]
-            surr_y = data_surr['t2m'][:,:,ind_nodes[j][0],ind_nodes[j][1]]
+            surr_x = data_surr[:,:,ind_nodes[i][0],ind_nodes[i][1]]
+            surr_y = data_surr[:,:,ind_nodes[j][0],ind_nodes[j][1]]
 
             Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,surr_x,surr_y,
                                                                            dist,max_lag,num_surr=30)
@@ -77,18 +75,23 @@ if __name__ == "__main__":
     data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)
 
     max_lag = 150
-    years   = range(1970,2022)  # from 1970 to 2022
+    years   = range(1971,2022)  # from 1970 to 2022
     # years   = range(1970,1972)  # from 1970 to 2022
     # years   = range(2022,2100)  # from 1970 to 2022
 
-    pool = mp.Pool(20)   # Use the number of cores of your PC
+    # pool = mp.Pool(20)   # Use the number of cores of your PC
 
     for y,year in enumerate(years):
         foutput = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.csv'    
         # pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], foutput,year )) # Parallelize
-        correlation_all(data[indices[y]:indices[y+1],:],foutput,year)  # Uncomment to not parallelize
-    pool.close()
-    pool.join()
+        
+        # Read surrogates
+        data_surr = Dataset(f"./IAAFT_surrogates/IAAFT_surrogates_year_{year}.nc","r")
+        data_surr = np.array(data_surr['t2m'])
+
+        correlation_all(data[indices[y]:indices[y+1],:],data_surr,foutput)  # Uncomment to not parallelize
+    # pool.close()
+    # pool.join()
 
 
 
