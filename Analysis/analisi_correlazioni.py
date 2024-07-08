@@ -19,30 +19,21 @@ from itertools import product
 def save_results(i,j,Z,the_lagmax,prob,foutput):
     with open(foutput,'a') as file:
         file.write(f"{i}\t{j}\t{Z:.4f}\t{the_lagmax}\t{prob:.4f}\n")
-    # file = open(foutput,"a")
-    # file.write(f"{i}\t{j}\t{Z:.4f}\t{the_lagmax}\t{prob:.4f}\n")
 
 
 def correlation_all(data,data_surr,foutput):
     T,N = data.shape
 
-    # Normalize series
+    # Rescale the series to return a normalized cross-correlation
     for i in range(0,N):
         data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
         data[:,i] = data[:,i]/np.sqrt(N) # This is to return a normalized cross-correlation
-    # Normalize surrogates
-    # for i,j in product(range(data_surr.dimensions['lat'].size),
-    #                    range(data_surr.dimensions['lon'].size)):
-    #     print(i,j)
-    #     for s in range(30): # surrogates
-    #         surr = data_surr['t2m'][s,:,i,j]
-    #         data_surr['t2m'][s,:,i,j] = ((surr-surr.mean())/(surr.std()*np.sqrt(N)))
 
     
     for i in range(0,N):
-        # print(f"Computing node {i}")
+        print(f"Computing node {i}")
         for j in range(i+1,N):
-            print(j)
+            # print(j)
             dist = haversine_distance( nodes[i][0],nodes[i][1], nodes[j][0],nodes[j][1])
             x  = data[:,i]
             y  = data[:,j]
@@ -50,7 +41,7 @@ def correlation_all(data,data_surr,foutput):
             surr_y = data_surr[:,:,ind_nodes[j][0],ind_nodes[j][1]]
 
             Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,surr_x,surr_y,
-                                                                           dist,max_lag,num_surr=30)
+                                                                           dist,max_lag,num_surr=num_surr)
             # Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
             if prob > 1e-2:
                 save_results(i,j,Z,the_lagmax,prob,foutput)
@@ -67,65 +58,35 @@ if __name__ == "__main__":
     # Parameters
     size = 5    # Size of the grid in degree
 
+    # Input folder surrogates
+    finputsurr = "./IAAFT_surrogates/All/surr_IAAFT_t2m_1970_2022.nc"
+    data_surr_all = Dataset(finputsurr,"r")
+
     # Load data
-    # fileinput = f'../data/temperature/std_anomalies_temperature_pressure_750_{size}grid.nc'
-    fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
     # fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
+    fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
+    
     variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)
 
     max_lag = 150
-    years   = range(1971,2022)  # from 1970 to 2022
-    # years   = range(1970,1972)  # from 1970 to 2022
+    num_surr = 30
+    years   = range(1970,2022)  # from 1970 to 2022
     # years   = range(2022,2100)  # from 1970 to 2022
 
-    # pool = mp.Pool(20)   # Use the number of cores of your PC
-
+    pool = mp.Pool(5)   # Use the number of cores of your PC
+    
     for y,year in enumerate(years):
         foutput = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.csv'    
-        # pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], foutput,year )) # Parallelize
         
         # Read surrogates
-        data_surr = Dataset(f"./IAAFT_surrogates/IAAFT_surrogates_year_{year}.nc","r")
-        data_surr = np.array(data_surr['t2m'])
+        data_surr = np.array(data_surr_all['t2m'][0:num_surr,indices[y]:indices[y+1],:,:])
 
-        correlation_all(data[indices[y]:indices[y+1],:],data_surr,foutput)  # Uncomment to not parallelize
-    # pool.close()
-    # pool.join()
-
-
-
-# import pstats
-# import cProfile
-# if __name__ == "__main__":
+        # correlation_all(data[indices[y]:indices[y+1],:],data_surr,foutput)  # Uncomment to not parallelize
+        pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], data_surr,foutput )) # Parallelize
+    pool.close()
+    pool.join()
 
 
-#     with cProfile.Profile() as profile:
-#         # Parameters
-#         size = 5    # Size of the grid in degree
 
-#         # Load data
-#         # fileinput = f'../data/temperature/std_anomalies_temperature_pressure_750_{size}grid.nc'
-#         fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
-#         # fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
-#         variable = fileinput.split("_")[1] # t2m tp total_precipitation
-#         data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)
 
-#         max_lag = 150
-#         years   = range(1970,2022)  # from 1970 to 2022
-#         years   = range(1970,1971)  # from 1970 to 2022
-#         # years   = range(2022,2100)  # from 1970 to 2022
-
-#         pool = mp.Pool(20)   # Use the number of cores of your PC
-
-#         for y,year in enumerate(years):
-#             foutput = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.csv'    
-#             # pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], foutput,year )) # Parallelize
-#             correlation_all(data[indices[y]:indices[y+1],:],foutput,year)  # Uncomment to not parallelize
-#         pool.close()
-#         pool.join()
-    
-#     results = pstats.Stats(profile)
-#     results.sort_stats(pstats.SortKey.TIME)
-#     results.print_stats()
-#     results.dump_stats("results.prof")
