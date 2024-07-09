@@ -59,20 +59,21 @@ if __name__ == "__main__":
     size = 5    # Size of the grid in degree
 
     # Input folder surrogates
-    finputsurr = "./IAAFT_surrogates/All/surr_IAAFT_t2m_1970_2022.nc"
+    # finputsurr = "./IAAFT_surrogates/All/surr_IAAFT_t2m_1970_2022.nc"
+    finputsurr = "./IAAFT_surrogates/All/surr_IAAFT_t2m_2022_2100_highemission.nc"
     data_surr_all = Dataset(finputsurr,"r")
 
     # Load data
-    # fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
-    fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
+    fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
+    # fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
     
     variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)
 
     max_lag = 150
     num_surr = 30
-    years   = range(1970,2022)  # from 1970 to 2022
-    # years   = range(2022,2100)  # from 1970 to 2022
+    # years   = range(1970,2022)  # from 1970 to 2022
+    years   = range(2022,2100)  # from 1970 to 2022
 
     pool = mp.Pool(5)   # Use the number of cores of your PC
     
