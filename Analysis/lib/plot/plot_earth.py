@@ -1,9 +1,8 @@
 # Plot functions
 import numpy as np
 import matplotlib.pyplot as plt
-from mpl_toolkits.basemap import Basemap
 from cartopy import crs as ccrs, feature as cfeature
-from lib.misc import generate_coordinates
+
 
 
 class PlotterEarth():
@@ -19,13 +18,13 @@ class PlotterEarth():
         -------
             None
     '''
-    def __init__(self,proj,year,resfolder) -> None:
+    def __init__(self) -> None:
         """
             Initialize oject attributes and create figure
         """
-        self.proj = proj
-        self.year = str(year)
-        self.resfolder = resfolder
+        self.proj = ccrs.Robinson() # Earth projection "robin"
+        # self.year = str(year)
+        
 
         # misc. figure parameters
         self.params = {'linewidth': 1,
@@ -59,9 +58,9 @@ class PlotterEarth():
         # self.ax = plt.subplot(1, 1, 1, projection=proj)
 
         # Set the axes using the specified map projection
-        self.ax=plt.axes(projection=proj)
+        self.ax=plt.axes(projection=self.proj)
         
-        self.ax.set_title(str(year))
+        # self.ax.set_title(str(year))
         self.plot_earth_outline()
 
     def plot_earth_outline(self):
@@ -80,51 +79,6 @@ class PlotterEarth():
         # self.ax.add_feature(cfeature.STATES)
         # self.ax.add_feature(cfeature.RIVERS)
 
-    def plot_teleconnections(self,graph,initnodelist,fname="teleconnections.png"):
-        '''
-            Draw on a map all the teleconnections in the graph object
-            starting from the nodes stored in initnodelist
-        '''
-
-        for initnode in initnodelist:
-            print(f"Drawing teleconnections for node {initnode}")
-            endnodes = list(graph[initnode])
-            coords, lons, lats = generate_coordinates(sizegrid=5)
-            latinit, loninit =  coords[initnode]
-            lats = [coords[item][0] for item in endnodes ]
-            lons = [coords[item][1] for item in endnodes ]
-            
-            for edges in range(len(endnodes)):
-                alpha = graph[initnode][endnodes[edges]]['prob']
-                self.map.drawgreatcircle(lon1=loninit,lat1=latinit,lon2=lons[edges],lat2=lats[edges],
-                                color=self.colors['blue'],linewidth=self.params['linewidth'],
-                                alpha=alpha       
-                                        )
-        plt.savefig(f"{self.resfolder}telecon_{self.year}.png",dpi=self.params['dpi'])
-        plt.close()
-
-    def plot_heatmap(self,data,fname="heatmap_earth.png"):
-
-        nlevel = 5
-        lats = np.arange(-90,90+5,5,dtype=float)  # 37 
-        lons = np.arange(-180,180,5,dtype=float)         # 72
-
-        grid_lon, grid_lat = np.meshgrid(lons, lats)
-
-        # Define colormap and normalization
-        cmap = plt.cm.rainbow
-        # norm = plt.Normalize(vmin=data.min(), vmax=data.max())  
-        norm = plt.Normalize(vmin=0.03, vmax=0.085)
-
-        cs = self.ax.contourf(grid_lon, grid_lat, data,nlevel,cmap=cmap,
-                     transform=ccrs.PlateCarree(),norm=norm)
-        cs.set_clim(vmin=0.03, vmax=0.085)
-        self.fig.colorbar(cs,location='right', label='Degree',aspect=10)
-
-        # Show grid
-        self.ax.plot(grid_lon,grid_lat,'k.',markersize=2, alpha=0.75,
-                     transform=ccrs.PlateCarree())
-        plt.savefig(f"{self.resfolder}heatmap_{self.year}.png",dpi=self.params['dpi'])
 
 
 
