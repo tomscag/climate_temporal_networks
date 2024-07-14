@@ -11,18 +11,26 @@ from netCDF4 import Dataset
 
 
 import multiprocessing as mp
-from itertools import product
+import h5py
+
 #############################
 
+def create_hdf_dataset(fnameout):
+    fout = h5py.File(fnameout,"w")
+    fout.create_dataset("results",shape=(2664,2664,3), dtype="f")
+    fout.attrs['finput'] = fileinput
+    fout.attrs['finputsurr'] = finputsurr
+    return fout
+
+def save_results(fout,i,j,Z,the_lagmax,prob):
+    fout["results"][i,j,0] = Z
+    fout["results"][i,j,1] = the_lagmax
+    fout["results"][i,j,2] = prob
 
 
-def save_results(i,j,Z,the_lagmax,prob,foutput):
-    with open(foutput,'a') as file:
-        file.write(f"{i}\t{j}\t{Z:.4f}\t{the_lagmax}\t{prob:.4f}\n")
-
-
-def correlation_all(data,data_surr,foutput):
+def correlation_all(data,data_surr,fnameout):
     T,N = data.shape
+    fout = create_hdf_dataset(fnameout)
 
     # Rescale the series to return a normalized cross-correlation
     for i in range(0,N):
@@ -42,12 +50,7 @@ def correlation_all(data,data_surr,foutput):
 
             Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,surr_x,surr_y,
                                                                            dist,max_lag,num_surr=num_surr)
-            # Z, prob,crossmax,the_lagmax = posterior_link_probability_havlin(cross_corr,dist,max_lag)
-            if prob > 1e-2:
-                save_results(i,j,Z,the_lagmax,prob,foutput)
-
-            # print(f"Computing nodes {i} and {j}: corrmax {crossmax:.4f} at lag {the_lagmax}, prob {prob:.4f}")
-
+            save_results(fout,i,j,Z,the_lagmax,prob)
 
 #############################
 
@@ -78,13 +81,13 @@ if __name__ == "__main__":
     pool = mp.Pool(5)   # Use the number of cores of your PC
     
     for y,year in enumerate(years):
-        foutput = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.csv'    
+        fnameout = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
         
         # Read surrogates
         data_surr = np.array(data_surr_all['t2m'][0:num_surr,indices[y]:indices[y+1],:,:])
 
-        # correlation_all(data[indices[y]:indices[y+1],:],data_surr,foutput)  # Uncomment to not parallelize
-        pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], data_surr,foutput )) # Parallelize
+        # correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
+        pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], data_surr,fnameout )) # Parallelize
     pool.close()
     pool.join()
 
