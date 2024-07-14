@@ -62,13 +62,13 @@ if __name__ == "__main__":
     size = 5    # Size of the grid in degree
 
     # Input folder surrogates
-    # finputsurr = "./IAAFT_surrogates/All/surr_IAAFT_t2m_1970_2022.nc"
-    finputsurr = "./IAAFT_surrogates/All/surr_IAAFT_t2m_2022_2100_highemission.nc"
+    finputsurr = "/mnt/surr_CMIP6_2_6_precipitation_awi_cm_1_1_mr.nc"
+    # finputsurr = "./surr_CMIP6_2_6_precipitation_awi_cm_1_1_mr.nc"
     data_surr_all = Dataset(finputsurr,"r")
 
     # Load data
-    fileinput = f'../data/t2m/t2m_tas_projections_2022_2100.nc'
-    # fileinput = f'../data/t2m/anomalies_t2m_1970_2022_5grid.nc'
+    # fileinput = f'../data/CMIP6_pr_ssp5_2_6_model_awi_cm_1_1_mr_precipitation_anomalies.nc'
+    fileinput = "/mnt/CMIP6_pr_ssp5_2_6_model_awi_cm_1_1_mr_precipitation_anomalies.nc"
     
     variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)
@@ -84,7 +84,7 @@ if __name__ == "__main__":
         fnameout = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
         
         # Read surrogates
-        data_surr = np.array(data_surr_all['t2m'][0:num_surr,indices[y]:indices[y+1],:,:])
+        data_surr = np.array(data_surr_all[variable][0:num_surr,indices[y]:indices[y+1],:,:])
 
         # correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
         pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], data_surr,fnameout )) # Parallelize
