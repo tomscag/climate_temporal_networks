@@ -5,6 +5,7 @@ import pandas as pd
 from itertools import product
 from numba import jit
 import math
+import h5py
 
 def import_dataset(fileinput,variable='t2m', filterpoles=False):
     
@@ -124,9 +125,16 @@ def create_fuzzy_network(edgelist,mode="networkx"):
     return G
 
 
-
-
 def load_edgelist(name,lag_bounds = [0,10]):
+    df = pd.read_csv(name,sep="\t",header=None,
+                     names=["node1","node2","zscore","maxlag","prob"]
+                     )
+    df[['node1','node2']] = df[['node1','node2']].astype(int)
+    return df
+
+
+
+def load_edgelist_csv(name,lag_bounds = [0,10]):
     df = pd.read_csv(name,sep="\t",header=None,
                      names=["node1","node2","zscore","maxlag","prob"]
                      )

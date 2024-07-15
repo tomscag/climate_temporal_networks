@@ -1,5 +1,4 @@
 ### New Plot
-from lib.plot.plot_earth import  PlotterEarth, PlotterLines
 from lib.plot.plot_heatmap import plot_heatmap
 
 
