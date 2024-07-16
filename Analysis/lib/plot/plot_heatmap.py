@@ -7,10 +7,9 @@ from cartopy import crs as ccrs, feature as cfeature
 
 from lib.misc import (
             create_fuzzy_network, 
-            create_full_network,
-            load_edgelist,
-            filter_network_by_distance,
-            total_degree_nodes
+            total_degree_nodes,
+            load_dataset_hdf5,
+            sample_fuzzy_network
             )
 
 #############################
@@ -35,13 +34,10 @@ class plot_heatmap(PlotterEarth):
 
     def load_data(self,K=2000):
 
-        elist = load_edgelist(self.fnameinput)
-
-        # Filter out short links
-        # elist = filter_network_by_distance(elist,K,filterpoles=True )
+        elist = load_dataset_hdf5(self.fnameinput)
 
         # Create the full network "weighted" with the edge-probabilities
-        graph = create_fuzzy_network(elist)
+        graph = sample_fuzzy_network(elist)
 
         self.data = total_degree_nodes(graph)
         

@@ -6,6 +6,9 @@ from itertools import product
 from numba import jit
 import math
 import h5py
+import igraph as ig
+
+#############################
 
 def import_dataset(fileinput,variable='t2m', filterpoles=False):
     
@@ -105,6 +108,20 @@ def create_full_network(edgelist):
     return G
 
 
+def load_dataset_hdf5(finput):
+    dset = h5py.File(finput,"r")
+    return dset["results"][:,:,2] # Index 0 is the zscore matrix, 2 for the probability
+
+
+def sample_fuzzy_network(arr):
+    # arr: matrix of probabilities (upper triangular)
+    N = arr.shape[0]
+    arr[arr < np.random.random(size=(N,N)) ] = 0    # Sample fuzzy
+    # return nx.from_numpy_array(arr,edge_attr="weight")
+    return ig.Graph.Weighted_Adjacency(arr,mode="upper")
+
+
+
 def create_fuzzy_network(edgelist,mode="networkx"):
     ''''
         Generate fuzzy network from edgelist
@@ -173,6 +190,7 @@ def filter_network_by_distance(edgelist,K,filterpoles=False):
 
 def total_degree_nodes(G):
     """
+        G:      igraph network
         Return:
             weights_matrix
                 Each entry is a node, organized by lat x lon,
@@ -185,11 +203,11 @@ def total_degree_nodes(G):
     # Only degree
     # data_matrix1 = np.array(list(dict(sorted(G.degree())).values())).reshape(len(lats),len(lons))
 
-    W = {key:None for key in sorted(G.nodes())} # Weighted connectivity
-    for node in G.nodes():
+    W = {key:None for key in sorted(G.get_vertex_dataframe().index)} # Weighted connectivity
+    for node in G.get_vertex_dataframe().index:
 
         w=0
-        for item in G[node]:
+        for item in G.neighbors(node):
             w += np.abs(np.cos(coords[item][0]*2*np.pi/360)) # cos lat
         W[node] = w
 

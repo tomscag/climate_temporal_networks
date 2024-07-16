@@ -11,18 +11,18 @@ from lib.plot.plot_heatmap import plot_heatmap
 
 if __name__ == "__main__":
 
-    year       = 1970
+    year       = 2022
     var        = 't2m'
-    folderinput = f"./Output_cluster/historical_{var}_1970_2022/"  # /t2m   /plev_{plev}
-    fnameinput = f"t2m_year_{year}_maxlag_150.csv"
-    lag_bounds = [-10,20]
+    # folderinput = f"./Output_cluster/historical_{var}_1970_2022/"  # /t2m   /plev_{plev}
+    folderinput = "./Output/correlations/"
+    finput = folderinput + f"pr_year_{year}_maxlag_150.hdf5"
     resfolder  = "./fig/"
 
     savefig = True
 
 
     # Plot heatmap
-    plot_heatmap(folderinput+fnameinput,resfolder,year)
+    plot_heatmap(finput,resfolder,year)
 
 
     ## Plot teleconnections
