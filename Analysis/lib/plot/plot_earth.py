@@ -4,6 +4,13 @@ import matplotlib.pyplot as plt
 from cartopy import crs as ccrs, feature as cfeature
 
 
+from lib.misc import (
+            create_fuzzy_network, 
+            total_degree_nodes,
+            load_dataset_hdf5,
+            sample_fuzzy_network
+            )
+
 
 class PlotterEarth():
     ''' 
@@ -23,35 +30,7 @@ class PlotterEarth():
             Initialize oject attributes and create figure
         """
         self.proj = ccrs.Robinson() # Earth projection "robin"
-        # self.year = str(year)
-        
 
-        # misc. figure parameters
-        self.params = {'linewidth': 1,
-                       'mrkrsize': 10,
-                       'opacity': 0.8,
-                       'width': 850,
-                       'length': 700,
-                       'dpi': 300
-                       }        
-        
-        # colors
-        self.colors = {'blue':'#377eb8',
-                       'red' : '#e41a1c',
-
-                       }
-
-        # font for figure labels and legend
-        self.lab_dict = dict(family='Arial',
-                             size=26,
-                             color='black'
-                             )  
-              
-        # font for number labeling on axes
-        self.tick_dict = dict(family='Arial',
-                              size=24,
-                              color='black'
-                              )      
           
         # initialize figure as subplots
         self.fig = plt.figure(figsize=(11, 8.5))
@@ -62,6 +41,17 @@ class PlotterEarth():
         
         # self.ax.set_title(str(year))
         self.plot_earth_outline()
+
+        # misc. figure parameters
+        self.params = {'linewidth': 1,
+                       'mrkrsize': 10,
+                       'opacity': 0.8,
+                       'width': 850,
+                       'length': 700,
+                       'dpi': 300
+                       } 
+
+
 
     def plot_earth_outline(self):
         '''
@@ -79,6 +69,16 @@ class PlotterEarth():
         # self.ax.add_feature(cfeature.STATES)
         # self.ax.add_feature(cfeature.RIVERS)
 
+
+    def load_data(self,K=2000):
+
+        prb_mat = load_dataset_hdf5(self.fnameinput)
+
+        # Create the full network "weighted" with the edge-probabilities
+        graph = sample_fuzzy_network(prb_mat)
+        self.adj_mat = graph.get_adjacency()
+
+        self.weighted_node_degree = total_degree_nodes(graph)
 
 
 

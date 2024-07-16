@@ -1,5 +1,7 @@
 ### New Plot
 from lib.plot.plot_heatmap import plot_heatmap
+from lib.plot.plot_tipping_elements import plot_tipping_elements
+                                   
 
 
 
@@ -20,9 +22,14 @@ if __name__ == "__main__":
 
     savefig = True
 
-
+    # Plot tipping elements
+    plot_tipping_elements(finput,resfolder,year)
+    
+    
     # Plot heatmap
-    plot_heatmap(finput,resfolder,year)
+    # plot_heatmap(finput,resfolder,year)
+
+
 
 
     ## Plot teleconnections

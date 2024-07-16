@@ -39,12 +39,12 @@ class plot_heatmap(PlotterEarth):
         # Create the full network "weighted" with the edge-probabilities
         graph = sample_fuzzy_network(elist)
 
-        self.data = total_degree_nodes(graph)
+        self.weighted_node_degree = total_degree_nodes(graph)
         
 
     def construct(self):
 
-        nlevel = 5
+        nlevel = 6
         lats = np.arange(-90,90+5,5,dtype=float)  # 37 
         lons = np.arange(-180,180,5,dtype=float)         # 72
 
@@ -52,12 +52,12 @@ class plot_heatmap(PlotterEarth):
 
         # Define colormap and normalization
         cmap = plt.cm.rainbow
-        # norm = plt.Normalize(vmin=data.min(), vmax=data.max())  
-        norm = plt.Normalize(vmin=0.03, vmax=0.085)
+        norm = plt.Normalize(vmin=self.weighted_node_degree.min(), vmax=self.weighted_node_degree.max())  
+        # norm = plt.Normalize(vmin=0.03, vmax=0.085)
 
-        cs = self.ax.contourf(grid_lon, grid_lat, self.data,nlevel,cmap=cmap,
+        cs = self.ax.contourf(grid_lon, grid_lat, self.weighted_node_degree,nlevel,cmap=cmap,
                         transform=ccrs.PlateCarree(),norm=norm)
-        cs.set_clim(vmin=0.03, vmax=0.085)
+        # cs.set_clim(vmin=0.03, vmax=0.085)
         self.fig.colorbar(cs,location='right', label='Degree',aspect=10)
 
         # Show grid
