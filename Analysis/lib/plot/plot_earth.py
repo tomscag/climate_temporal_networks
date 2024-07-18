@@ -8,6 +8,7 @@ from lib.misc import (
             create_fuzzy_network, 
             total_degree_nodes,
             load_dataset_hdf5,
+            load_lon_lat_hdf5,
             sample_fuzzy_network
             )
 
@@ -72,13 +73,15 @@ class PlotterEarth():
 
     def load_data(self,K=2000):
 
-        prb_mat = load_dataset_hdf5(self.fnameinput)
-
+        prb_mat = load_dataset_hdf5(self.fnameinput,self.year)
+        lons, lats = load_lon_lat_hdf5(self.fnameinput)
         # Create the full network "weighted" with the edge-probabilities
         graph = sample_fuzzy_network(prb_mat)
         self.adj_mat = graph.get_adjacency()
 
-        self.weighted_node_degree = total_degree_nodes(graph)
+        self.weighted_node_degree = total_degree_nodes(graph,lons,lats)
+
+
 
 
 

@@ -35,6 +35,9 @@ class plot_tipping_elements(PlotterEarth):
         self.tipping_points = ast.literal_eval(data) 
         self.tipping_centers = ast.literal_eval(cent)
 
+    def compute_connectivity(self,tip1,tip2):
+        pass
+
 
     def construct(self):
 
@@ -60,7 +63,7 @@ class plot_tipping_elements(PlotterEarth):
 
         # Define colormap and normalization
         cmap = plt.cm.rainbow
-        norm = plt.Normalize(vmin=self.data.min(), vmax=self.data.max())  
+        # norm = plt.Normalize(vmin=self.data.min(), vmax=self.data.max())  
 
         # Show grid
         self.ax.plot(grid_lon,grid_lat,'k.',markersize=2, alpha=0.75,

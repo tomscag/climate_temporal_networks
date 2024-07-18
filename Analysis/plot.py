@@ -17,7 +17,7 @@ if __name__ == "__main__":
     var        = 't2m'
     # folderinput = f"./Output_cluster/historical_{var}_1970_2022/"  # /t2m   /plev_{plev}
     folderinput = "./Output/correlations/"
-    finput = folderinput + f"pr_year_{year}_maxlag_150.hdf5"
+    finput = folderinput + f"Results_2_6_precipitation_awi_cm_1_1_mr.hdf5"
     resfolder  = "./fig/"
 
     savefig = True

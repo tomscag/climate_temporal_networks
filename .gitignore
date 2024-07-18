@@ -1,8 +1,9 @@
 # Ignore ncdf data
-/data/*.nc
-/data/t2m
-/data/total_precipitation
-/data/temperature
+/data/
+/Analysis/Output_cluster/
+/paper/
+/Analysis/Output/
+/tests/
 
 /Analysis/Output/*.txt
 /Analysis/__pycache__
