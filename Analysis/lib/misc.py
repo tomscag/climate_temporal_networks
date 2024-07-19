@@ -111,7 +111,10 @@ def create_full_network(edgelist):
 
 def load_lon_lat_hdf5(finput):
     dset = h5py.File(finput,"r")
-    return dset["lon"], dset["lat"]
+    lons, lats = dset["lon"][:], dset["lat"][:]
+    if max(lons)>=355:  # (0,355) -> (-180, 175)
+        lons = lons - 180
+    return lons, lats
 
 def load_dataset_hdf5(finput,year):
     dset = h5py.File(finput,"r")

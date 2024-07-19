@@ -13,7 +13,7 @@ from lib.plot.plot_tipping_elements import plot_tipping_elements
 
 if __name__ == "__main__":
 
-    year       = 2022
+    year       = 2043
     var        = 't2m'
     # folderinput = f"./Output_cluster/historical_{var}_1970_2022/"  # /t2m   /plev_{plev}
     folderinput = "./Output/correlations/"
