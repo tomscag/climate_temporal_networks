@@ -109,6 +109,22 @@ def create_full_network(edgelist):
 
     return G
 
+
+    
+def compute_connectivity(adj_mat,coord1,coord2,coords):
+    # Compute connectivity considering 
+    # Earth's spherical geometry
+
+    C = 0
+    for c1 in coord1:
+        label1 = coords[c1]
+        for c2 in coord2:
+            label2 = coords[c2]
+            C += adj_mat[label1,label2]*np.cos(c1[0])*np.cos(c2[0])/(np.cos(c1[0])*np.cos(c2[0]))
+    return C
+
+
+
 def load_lon_lat_hdf5(finput):
     dset = h5py.File(finput,"r")
     lons, lats = dset["lon"][:], dset["lat"][:]
@@ -198,11 +214,11 @@ def filter_network_by_distance(edgelist,K,filterpoles=False):
 
 def total_degree_nodes(G,lons,lats):
     """
-        G:      igraph network
-        Return:
-            weights_matrix
-                Each entry is a node, organized by lat x lon,
-                and represents the total area to which a node
+            G:      igraph network
+        Output:
+            ACM:    Area connectivity matrix
+                Each entry is a node position, organized by lat x lon,
+                whose value is the total area to which a node
                 is linked to
     """
     sizegrid = 5
@@ -212,6 +228,7 @@ def total_degree_nodes(G,lons,lats):
     # data_matrix1 = np.array(list(dict(sorted(G.degree())).values())).reshape(len(lats),len(lons))
 
     W = {key:None for key in sorted(G.get_vertex_dataframe().index)} # Weighted connectivity
+
     for node in G.get_vertex_dataframe().index:
 
         w=0
@@ -219,10 +236,10 @@ def total_degree_nodes(G,lons,lats):
             w += np.abs(np.cos(coords[item][0]*2*np.pi/360)) # cos lat
         W[node] = w
 
-    c = 0
+    c = 0    # Normalization factor
     for key,value in coords.items():
         c += np.abs(np.cos(value[0]*2*np.pi/360))
 
     W = {key:value/c  for key,value in W.items()}
-    weights_matrix = np.array(list(W.values())).reshape(len(lats),len(lons))
-    return weights_matrix
+    ACM = np.array(list(W.values())).reshape(len(lats),len(lons))
+    return ACM

@@ -70,16 +70,16 @@ class PlotterEarth():
         # self.ax.add_feature(cfeature.STATES)
         # self.ax.add_feature(cfeature.RIVERS)
 
+    @staticmethod
+    def load_data(fnameinput,year):
 
-    def load_data(self,K=2000):
-
-        prb_mat = load_dataset_hdf5(self.fnameinput,self.year)
-        lons, lats = load_lon_lat_hdf5(self.fnameinput)
+        prb_mat = load_dataset_hdf5(fnameinput,year)
+        lons, lats = load_lon_lat_hdf5(fnameinput)
         # Create the full network "weighted" with the edge-probabilities
         graph = sample_fuzzy_network(prb_mat)
-        self.adj_mat = graph.get_adjacency()
+        return graph.get_adjacency()
+        # weighted_node_degree = total_degree_nodes(graph,lons,lats)
 
-        self.weighted_node_degree = total_degree_nodes(graph,lons,lats)
 
 
 
