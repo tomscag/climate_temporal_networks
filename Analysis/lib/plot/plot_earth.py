@@ -71,13 +71,20 @@ class PlotterEarth():
         # self.ax.add_feature(cfeature.RIVERS)
 
     @staticmethod
-    def load_data(fnameinput,year):
+    def load_results(fnameinput,year,index):
+        # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
 
-        prb_mat = load_dataset_hdf5(fnameinput,year)
-        lons, lats = load_lon_lat_hdf5(fnameinput)
-        # Create the full network "weighted" with the edge-probabilities
-        graph = sample_fuzzy_network(prb_mat)
-        return graph.get_adjacency()
+        if index == 2:
+            prb_mat = load_dataset_hdf5(fnameinput,year,index)
+            lons, lats = load_lon_lat_hdf5(fnameinput)
+            # Create the full network "weighted" with the edge-probabilities
+            graph = sample_fuzzy_network(prb_mat)
+            return graph.get_adjacency()
+        if index == 1: # tau
+            return load_dataset_hdf5(fnameinput,year,index)
+        else:
+            print("Load results: index not recognized!")
+
         # weighted_node_degree = total_degree_nodes(graph,lons,lats)
 
 
@@ -139,9 +146,9 @@ class PlotterLines():
                                  ncols=cols, figsize=(20, 10),
                                  )
         # self.self.ax.set_title(str(year))
-        # self.load_data()
+        # self.load_results()
 
-    def load_data(self,fnameinput):
+    def load_results(self,fnameinput):
 
         df = load_edgelist(fnameinput)
         return df
@@ -161,7 +168,7 @@ class PlotterLines():
         for idx, year in enumerate(range(self.startyear,self.endyear+1)):
             print(f"Load results for year {year}")
             inputfname = self.get_filename(year,filelist)
-            edgelist = self.load_data(self.folderinput+inputfname)
+            edgelist = self.load_results(self.folderinput+inputfname)
             graph = create_fuzzy_network(edgelist)
             graph = ig.Graph.from_networkx(graph)
             self.clust[idx]  = graph.transitivity_avglocal_undirected(mode="NaN")

@@ -132,9 +132,10 @@ def load_lon_lat_hdf5(finput):
         lons = lons - 180
     return lons, lats
 
-def load_dataset_hdf5(finput,year):
+def load_dataset_hdf5(finput,year,index):
+    # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
     dset = h5py.File(finput,"r")
-    return dset[str(year)][:,:,2] # Index 0 is the zscore matrix, 2 for the probability
+    return dset[str(year)][:,:,index] 
 
 
 def sample_fuzzy_network(arr):

@@ -13,7 +13,7 @@ from lib.plot.plot_tipping_elements import plot_tipping_elements
 
 if __name__ == "__main__":
 
-    year       = 2039
+    year       = 2030
     var        = 't2m'
     # folderinput = f"./Output_cluster/historical_{var}_1970_2022/"  # /t2m   /plev_{plev}
     folderinput = "./Output/correlations/"
@@ -25,11 +25,11 @@ if __name__ == "__main__":
     savefig = True
 
     # # Plot tipping elements
-    # plot_tipping_elements(finput,resfolder,year)
+    plot_tipping_elements(finput,resfolder,year)
 
-    for year in range(2022,2040):
-        print(year)
-        plot_tipping_elements(finput,resfolder,year)
+    # for year in range(2022,2040):
+    #     print(year)
+    #     plot_tipping_elements(finput,resfolder,year)
     
     
     # Plot heatmap
