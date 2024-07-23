@@ -1,3 +1,5 @@
+import numpy as np
+
 ### New Plot
 from lib.plot.plot_heatmap import plot_heatmap
 from lib.plot.draw_connectivity_earth_network import draw_connectivity_earth_network
@@ -16,7 +18,8 @@ from lib.plot.draw_variation_earth_network import draw_variation_earth_network
 
 if __name__ == "__main__":
 
-    year       = 2090
+    years   = np.arange(2030,2040)
+    nsamples = 10       # Number of samples from fuzzy network
     var        = 't2m'
     folderinput = "./Output/"
     # finput = folderinput + f"Results_2_6_precipitation_awi_cm_1_1_mr.hdf5"
@@ -27,13 +30,13 @@ if __name__ == "__main__":
     savefig = True
 
     # # Plot tipping elements
-    draw_connectivity_earth_network(finput,resfolder,year)
-    # draw_variation_earth_network(finput,resfolder,year)
-    # draw_tau_earth_network(finput,resfolder,year)
+    # draw_connectivity_earth_network(finput,resfolder,years,nsamples)
+    # draw_variation_earth_network(finput,resfolder,years,nsamples)
+    draw_tau_earth_network(finput,resfolder,years,nsamples)
 
     # for year in range(2022,2040):
     #     print(year)
-    #     draw_connectivity_earth_network(finput,resfolder,year)
+    #     draw_connectivity_earth_network(finput,resfolder,years)
     
     
     # Plot heatmap

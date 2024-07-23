@@ -114,14 +114,16 @@ def create_full_network(edgelist):
 def compute_connectivity(adj_mat,coord1,coord2,coords):
     # Compute connectivity considering 
     # Earth's spherical geometry
-
-    C = 0
+    fact = 2*np.pi/360 # For conversion to rad
+    CC = 0
+    D = 0   # Normalization factor
     for c1 in coord1:
         label1 = coords[c1]
         for c2 in coord2:
             label2 = coords[c2]
-            C += adj_mat[label1,label2]*np.cos(c1[0])*np.cos(c2[0])/(np.cos(c1[0])*np.cos(c2[0]))
-    return C
+            CC += adj_mat[label1,label2]*np.cos(c1[0]*fact)*np.cos(c2[0]*fact)
+            D += (np.cos(c1[0]*fact)*np.cos(c2[0]*fact))
+    return CC/D
 
 
 
@@ -140,10 +142,13 @@ def load_dataset_hdf5(finput,year,index):
 
 def sample_fuzzy_network(arr):
     # arr: matrix of probabilities (upper triangular)
+    # Return the adjacency matrix
     N = arr.shape[0]
-    arr[arr < np.random.random(size=(N,N)) ] = 0    # Sample fuzzy
+    arrc = arr.copy()
+    arrc[arrc < np.random.random(size=(N,N)) ] = 0    # Sample fuzzy
     # return nx.from_numpy_array(arr,edge_attr="weight")
-    return ig.Graph.Weighted_Adjacency(arr,mode="upper")
+    graph = ig.Graph.Weighted_Adjacency(arrc,mode="upper")
+    return graph.get_adjacency()
 
 
 

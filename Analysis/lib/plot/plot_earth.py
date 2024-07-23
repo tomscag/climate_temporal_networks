@@ -81,23 +81,28 @@ class PlotterEarth():
 
 
     @staticmethod
-    def load_results(fnameinput,year,index):
+    def load_results(fnameinput,years,index):
         # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
 
-        if index == 2:
-            prb_mat = load_dataset_hdf5(fnameinput,year,index)
-            lons, lats = load_lon_lat_hdf5(fnameinput)
-            # Create the full network "weighted" with the edge-probabilities
-            graph = sample_fuzzy_network(prb_mat)
-            return graph.get_adjacency()
-        if index == 1: # tau
-            return load_dataset_hdf5(fnameinput,year,index)
-        else:
-            print("Load results: index not recognized!")
-
-        # weighted_node_degree = total_degree_nodes(graph,lons,lats)
-
-
+        # Average over the considered period
+        for idx,year in enumerate(years):
+            if idx==0:
+                mat = load_dataset_hdf5(fnameinput,year,index)
+            elif idx>0:
+                mat += load_dataset_hdf5(fnameinput,year,index)
+        mat /= len(years)
+        return mat
+        
+        # if index == 2:
+        #     # Create the full network "weighted" with the edge-probabilities
+        #     graph = sample_fuzzy_network(mat)
+        #     return graph.get_adjacency()
+        # elif index == 1: # tau:
+        #     return mat
+        # elif index == 0: # zscore
+        #     return mat
+        # else:
+        #     print("Load results: index not recognized!")
 
 
 
