@@ -18,8 +18,9 @@ import h5py
 def create_hdf_dataset(fnameout):
     fout = h5py.File(fnameout,"w")
     fout.create_dataset("results",shape=(2664,2664,3), dtype="f")
-    fout.attrs['finput'] = fileinput
-    fout.attrs['finputsurr'] = finputsurr
+    fout.attrs['finput'] = str(fileinput)
+    fout.attrs['finputsurr'] = str(finputsurr)
+
     return fout
 
 def save_results(fout,i,j,Z,the_lagmax,prob):
