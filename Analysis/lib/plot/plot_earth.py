@@ -71,9 +71,9 @@ class PlotterEarth():
         # self.ax.add_feature(cfeature.RIVERS)
 
     def load_tipping_points(self):
-        with open("../data/tipping_points_positions_5deg.dat", 'r') as file:
+        with open("../data/tipping_elements/tipping_points_positions_5deg.dat", 'r') as file:
             data = file.read()
-        with open("../data/tipping_points_centers.dat", 'r') as file:
+        with open("../data/tipping_elements/tipping_points_centers.dat", 'r') as file:
             cent = file.read()
         self.tipping_points = ast.literal_eval(data) 
         self.tipping_centers = ast.literal_eval(cent)

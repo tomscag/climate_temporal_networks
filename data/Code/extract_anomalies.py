@@ -36,15 +36,17 @@ def compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL):
 #################################################
 #################################################
 
-VARIABLE             = 't'    # total_precipitation
+VARIABLE             = 'tas'    # total_precipitation
 # FILENAME_INPUT       = f'../{VARIABLE}/{VARIABLE}_1970_2022_5grid.nc'
 # FILENAME_OUTPUT      = f'../{VARIABLE}/std_anomalies_{VARIABLE}_1970_2022_5grid.nc'
-FILENAME_INPUT       = f'../temperature/temperature_pressure_500_5grid.nc'
-FILENAME_OUTPUT      = f'../temperature/std_anomalies_temperature_pressure_500_5grid.nc'
+# FILENAME_INPUT       = f'../temperature/temperature_pressure_500_5grid.nc'
+# FILENAME_OUTPUT      = f'../temperature/std_anomalies_temperature_pressure_500_5grid.nc'
+FILENAME_INPUT       = f'../t2m/t2m_tas_projections_2022_2100.nc'
+FILENAME_OUTPUT      = f'../t2m/t2m_tas_projections_2022_2100_anomalies.nc'
 
-BASELINE_INTERVAL    = [1970,1989]
+
+BASELINE_INTERVAL    = [2022,2042]
 ds        = load_dataset(FILENAME_INPUT)
-VARIABLE  = 't'
 anomalies = compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL)
 
 

@@ -29,8 +29,8 @@ class draw_variation_earth_network(PlotterEarth):
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
-        self.vmin = -0.50
-        self.vmax = 0.50
+        self.vmin = -0.30
+        self.vmax = 0.30
 
         self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
         self.load_tipping_points()

@@ -19,7 +19,7 @@ from lib.plot.draw_variation_earth_network import draw_variation_earth_network
 if __name__ == "__main__":
 
     years   = np.arange(2030,2040)
-    nsamples = 10       # Number of samples from fuzzy network
+    nsamples = 1       # Number of samples from fuzzy network
     var        = 't2m'
     folderinput = "./Output/"
     # finput = folderinput + f"Results_2_6_precipitation_awi_cm_1_1_mr.hdf5"
@@ -32,13 +32,18 @@ if __name__ == "__main__":
     # # Plot tipping elements
     # draw_connectivity_earth_network(finput,resfolder,years,nsamples)
     # draw_variation_earth_network(finput,resfolder,years,nsamples)
-    draw_tau_earth_network(finput,resfolder,years,nsamples)
+    # draw_tau_earth_network(finput,resfolder,years,nsamples)
 
-    # for year in range(2022,2040):
-    #     print(year)
-    #     draw_connectivity_earth_network(finput,resfolder,years)
-    
-    
+    # Analysis per decades
+    init_year = np.array([2022,2030,2040,2050,2060,2070,2080,2090,2100])
+    for id,yrs in enumerate(init_year[:-1]):
+        print(f"Analyzing years: {init_year[id:id+2]}")
+        years = init_year[id:id+2]
+        draw_connectivity_earth_network(finput,resfolder,years,nsamples)
+        draw_variation_earth_network(finput,resfolder,years,nsamples)
+        draw_tau_earth_network(finput,resfolder,years,nsamples)
+
+
     # Plot heatmap
     # plot_heatmap(finput,resfolder,year)
 
@@ -47,9 +52,6 @@ if __name__ == "__main__":
 
     ## Plot teleconnections
     # plot_teleconnections(plote,fname,node=[34,45],K=5000)
-    
-
-
     
 
 
