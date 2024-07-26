@@ -1,0 +1,18 @@
+{
+'el_nino_basin': ('r', (0, -140)), 
+'AMOC_up': ('forestgreen', (70, 0)), 
+'AMOC_subpolar_gyre': ('steelblue', (60, -50)), 
+'AMOC_golf': ('gold', (30, -60)),  
+'AMOC_europe_NorthA': ('mediumpurple', (40, -20)),  
+'tibetan_plateau_snow_cover': ('y', (35, 90)), 
+'coral_reef': ('coral', (0, 105)),  
+'west_antarctic_ice_sheet': ('lightblue', (-75, -85)),  
+'wilkes_basin': ('blueviolet', (-70, 115)),  
+'boreal_forest': ('darkgreen',  (55, -110)),  
+'artic_seaice': ('lightskyblue', (85, -5)), 
+'permafrost': ('slategray', (65, 150)),  
+'greenland_ice_sheet': ('blue', (75, -40)), 
+'nodi_amazzonia': ('darkolivegreen', (-10, -50)),  
+'SMOC_south': ('plum', (-60, 0)),  
+'sahel': ('saddlebrown', (10, 10)),
+}

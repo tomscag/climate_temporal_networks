@@ -1,11 +1,11 @@
 # Ignore ncdf data
-/data/
+/data/Datasets
+/data/old_files
 /Analysis/Output_cluster/
 /paper/
 /Analysis/Output/
 /tests/
 
-/Analysis/Output/*.txt
 /Analysis/__pycache__
 /Analysis/Deprecated
 /Analysis/Functions/__pycache__
