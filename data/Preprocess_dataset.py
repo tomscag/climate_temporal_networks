@@ -26,7 +26,7 @@ if __name__== "__main__":
         print(inputfolder)
     else:
         print("Insert a input folder")
-        inputfolder = "CMIP6_ssp5_8_5_model_gfdl_esm4_near_surface_air_temperature"
+        inputfolder = "CMIP6_ssp5_8.5_model_CESM2_variable_pr"
         # exit()
     print(os.getcwd())
     os.system(f"rm ./Datasets/{inputfolder}/*.nc")
