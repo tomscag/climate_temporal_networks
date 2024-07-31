@@ -20,9 +20,15 @@ Routine to join data for projections
 
 4) Join all the file with ncrcat *.nc All.nc
 
+
 Important: 
-Climate models sometime use different calendars, for example Hadley Centre models in CMIP6 use a 360 day calendar, 
+
+Climate models use different calendars, for example Hadley Centre models in CMIP6 use a 360 day calendar, 
 where every month has exactly 30 days. 
-Some models use a fixed 365-day calendar, and others include leap-years.
+Most of them use a fixed 365-day calendar, and others include leap-years.
+See here for a detailed description of model's calendars: https://loca.ucsd.edu/loca-calendar/
+
 awi_cm_1_1_mr: include leap years
 CESM2: fixed 365 days/year
+
+

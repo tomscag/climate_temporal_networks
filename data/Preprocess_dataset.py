@@ -26,7 +26,7 @@ if __name__== "__main__":
         print(inputfolder)
     else:
         print("Insert a input folder")
-        inputfolder = "test_folder"
+        inputfolder = "CMIP6_ssp5_8_5_model_gfdl_esm4_near_surface_air_temperature"
         # exit()
     print(os.getcwd())
     os.system(f"rm ./Datasets/{inputfolder}/*.nc")
@@ -87,25 +87,33 @@ if __name__== "__main__":
 
     print("\n\n Creating 'day of year' variable:\n\n")
 
-    def create_day_of_year(fileinput="../t2m/t2m_tas_projections_2022_2100.nc"):
+    def create_day_of_year(fileinput):
         # To be done once when creating the combined file
         data = Dataset(fileinput,"r+",clobber=True)
         data.createVariable("dayofyear","i4",("time",))
+        cal_name = data["time"].calendar
 
         # Extract start date
-        if data["time"].calendar == "365_day":
+        if (cal_name == "365_day") or (cal_name == "noleap"): # No leap year, as most model are
             start_date = data["time"].units.split("days since")[1].strip()
             start_date = datetime.strptime(start_date, "%Y-%m-%d")
             shift_years = int(data["time"][0]//365)
             start_date = start_date.replace(year=start_date.year + shift_years )
-            # start_date = datetime(2022,1,1)
+
+            # Create day_of_year vector for 365 calendar
+            temp = np.floor(data["time"][:]) 
+            temp = temp - temp[0] 
+            day_of_year = [i%365 for i in temp]
+            day_of_year = [int(i)+1 for i in day_of_year]
+            data['dayofyear'][:] = day_of_year
+
         else:
-            print("Calendar not 365 days (not recognized)")
+            print(f"Calendar {cal_name} (not recognized)")
+            exit()
+
         print(f"Start date: {start_date}")
         
-        date_vec = [start_date + timedelta(days=i) for i in range(len(data['time']))]
-        day_of_year = [item.timetuple().tm_yday for item in date_vec ]
-        data['dayofyear'][:] = day_of_year
+
         data.close()
         
         
@@ -159,9 +167,11 @@ if __name__== "__main__":
     else:
         BASELINE_INTERVAL = [2022,2041]
 
+
     FILENAME_OUTPUT = filecombined.split(".nc")[0] + "_anomalies.nc"
     ds = xr.open_dataset(filecombined, engine='netcdf4')    # netcdf4   cfgrib
     anomalies = compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL)
+    anomalies = anomalies.assign_attrs(climate_variable_name=VARIABLE) # Save var name as attribute
     anomalies.to_netcdf(FILENAME_OUTPUT)
 
 
