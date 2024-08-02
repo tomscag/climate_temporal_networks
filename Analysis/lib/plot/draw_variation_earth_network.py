@@ -29,8 +29,8 @@ class draw_variation_earth_network(PlotterEarth):
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
-        self.vmin = -0.30
-        self.vmax = 0.30
+        self.vmin = -0.10
+        self.vmax = 0.10
 
         self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
         self.load_tipping_points()
@@ -66,7 +66,7 @@ class draw_variation_earth_network(PlotterEarth):
                     if id1 < id2:
                         coord1 = self.tipping_points[tip1]
                         coord2 = self.tipping_points[tip2]
-                        C1[id1,id2] += compute_connectivity(self.prb_mat_base,coord1,coord2,coords)
+                        C1[id1,id2] += compute_connectivity(self.adj_mat_base,coord1,coord2,coords)
                         C2[id1,id2] += compute_connectivity(self.adj_mat,coord1,coord2,coords)
 
 
@@ -85,7 +85,7 @@ class draw_variation_earth_network(PlotterEarth):
                     
                     color = self.get_color(variat[id1,id2])
                     # print(color)
-                    self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=variat[id1,id2]*10,
+                    self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=np.abs(variat[id1,id2])*150,
                         color=color,transform=ccrs.PlateCarree())                     
   
                     

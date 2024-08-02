@@ -18,9 +18,8 @@ from lib.plot.draw_variation_earth_network import draw_variation_earth_network
 
 if __name__ == "__main__":
 
-    years   = np.arange(2030,2040)
-    nsamples = 1       # Number of samples from fuzzy network
-    var        = 't2m'
+    years   = np.arange(2090,2099)
+    nsamples = 20       # Number of samples from fuzzy network
     folderinput = "./Output/"
     # finput = folderinput + f"Results_2_6_precipitation_awi_cm_1_1_mr.hdf5"
     finput = folderinput + f"Results_8_5_temperature_awi_cm_1_1_mr.hdf5"
@@ -35,12 +34,12 @@ if __name__ == "__main__":
     # draw_tau_earth_network(finput,resfolder,years,nsamples)
 
     # Analysis per decades
-    init_year = np.array([2022,2030,2040,2050,2060,2070,2080,2090,2100])
+    init_year = np.array([2022,2030,2040,2050,2060,2070,2080,2090,2099])
     for id,yrs in enumerate(init_year[:-1]):
         print(f"Analyzing years: {init_year[id:id+2]}")
         years = init_year[id:id+2]
-        draw_connectivity_earth_network(finput,resfolder,years,nsamples)
-        draw_variation_earth_network(finput,resfolder,years,nsamples)
+        # draw_connectivity_earth_network(finput,resfolder,years,nsamples)
+        # draw_variation_earth_network(finput,resfolder,years,nsamples)
         draw_tau_earth_network(finput,resfolder,years,nsamples)
 
 
