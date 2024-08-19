@@ -21,8 +21,8 @@ class draw_variation_earth_network(PlotterEarth):
     def __init__(self,fnameinput,resfolder,year,nsamples):
 
         super().__init__()
-        self.fnameoutput = "variations"
         self.fnameinput = fnameinput
+        self.fnameoutput = "variations_" + fnameinput.split("Results_")[1]
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples

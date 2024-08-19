@@ -20,8 +20,8 @@ class draw_tau_earth_network(PlotterEarth):
     def __init__(self,fnameinput, resfolder,year,nsamples):
 
         super().__init__()
-        self.fnameoutput = "lags"
         self.fnameinput = fnameinput
+        self.fnameoutput = "lags_" + fnameinput.split("Results_")[1]
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples

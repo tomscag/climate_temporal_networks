@@ -20,8 +20,8 @@ class draw_connectivity_earth_network(PlotterEarth):
     def __init__(self,fnameinput, resfolder,year,nsamples):
 
         super().__init__()
-        self.fnameout = "connectivity"
         self.fnameinput = fnameinput
+        self.fnameoutput = "connectivity_" + fnameinput.split("Results_")[1]
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples

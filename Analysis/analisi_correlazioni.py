@@ -76,8 +76,8 @@ if __name__ == "__main__":
 
     max_lag = 150
     num_surr = 30
-    # years   = range(1970,2022)  # from 1970 to 2022
-    years   = range(2022,2100)  # from 1970 to 2022
+    # years   = range(1970,2022)  # from 1970 to 2021
+    years   = range(2022,2101)  # from 2022 to 2100
 
     pool = mp.Pool(5)   # Use the number of cores of your PC
     
