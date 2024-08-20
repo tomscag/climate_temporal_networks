@@ -29,7 +29,7 @@ def import_dataset(fileinput,variable='t2m', filterpoles=False):
     '''
 
     data = Dataset(fileinput, 'r')
-    ind_years = first_day_of_year_index(data)
+    ind_years = extract_year_limits(data)
     lats  = [float(item.data) for item in data.variables['lat'] ]       
     lons  = [float(item.data) for item in data.variables['lon'] ]      
     ind_nodes = list(product(range(data.variables['lat'].size),range(data.variables['lon'].size)))  # [(0,0),(0,1),(0,2)...]
@@ -48,12 +48,14 @@ def import_dataset(fileinput,variable='t2m', filterpoles=False):
     return data, ind_years, nodes, ind_nodes
 
 
-def first_day_of_year_index(data):
+def extract_year_limits(data):
     '''
         Return the indices of the first day of the years
     '''
     doy = np.array(data['dayofyear']) 
-    return np.where( doy == 1)[0]
+    doy = np.where( doy == 1)[0]
+    doy = np.append(doy,len(data["time"])+1) # Add the index for the end of the last year
+    return doy
 
 
 @jit(nopython=True)

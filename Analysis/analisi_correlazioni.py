@@ -63,13 +63,13 @@ if __name__ == "__main__":
     size = 5    # Size of the grid in degree
 
     # Input folder surrogates
-    finputsurr = "/mnt/surr_CMIP6_2_6_precipitation_awi_cm_1_1_mr.nc"
-    # finputsurr = "./surr_CMIP6_2_6_precipitation_awi_cm_1_1_mr.nc"
+    # finputsurr = "../data/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
+    finputsurr = "./mnt/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
     data_surr_all = Dataset(finputsurr,"r")
 
     # Load data
-    # fileinput = f'../data/CMIP6_pr_ssp5_2_6_model_awi_cm_1_1_mr_precipitation_anomalies.nc'
-    fileinput = "/mnt/CMIP6_pr_ssp5_2_6_model_awi_cm_1_1_mr_precipitation_anomalies.nc"
+    # fileinput = f'../data/Datasets/anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc'
+    fileinput = "/mnt/anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
     
     variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)
@@ -79,9 +79,10 @@ if __name__ == "__main__":
     # years   = range(1970,2022)  # from 1970 to 2021
     years   = range(2022,2101)  # from 2022 to 2100
 
-    pool = mp.Pool(5)   # Use the number of cores of your PC
+    pool = mp.Pool(8)   # Use the number of cores of your PC
     
     for y,year in enumerate(years):
+        print(year)
         fnameout = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
         
         # Read surrogates
