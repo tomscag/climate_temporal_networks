@@ -168,7 +168,7 @@ if __name__== "__main__":
         BASELINE_INTERVAL = [2022,2041]
 
 
-    FILENAME_OUTPUT = filecombined.split(".nc")[0] + "_anomalies.nc"
+    FILENAME_OUTPUT = "./Datasets/anomalies_" + f"{VARIABLE}_"+ filecombined.split("Datasets/")[1]
     ds = xr.open_dataset(filecombined, engine='netcdf4')    # netcdf4   cfgrib
     anomalies = compute_anomalies(ds,VARIABLE,BASELINE_INTERVAL)
     anomalies = anomalies.assign_attrs(climate_variable_name=VARIABLE) # Save var name as attribute
