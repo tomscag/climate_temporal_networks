@@ -26,9 +26,9 @@ def cross_correlation(x, y, maxlag, normalize=True):
     https://stackoverflow.com/questions/30677241/how-to-limit-cross-correlation-window-width-in-numpy
     """
 
-    # if normalize: # No need to normalize if series are already normalized
-    x = (x - np.mean(x)) / (np.std(x) * len(x))
-    y = (y - np.mean(y)) /  np.std(y) 
+    if normalize: # No need to normalize if series are already normalized
+        x = (x - np.mean(x)) / (np.std(x) * len(x))
+        y = (y - np.mean(y)) /  np.std(y)  
 
     # x = _check_arg(x, 'x')
     # y = _check_arg(y, 'y')
