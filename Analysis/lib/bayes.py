@@ -29,7 +29,7 @@ def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30)
             dist (float):       distance in km between x and y
     '''
 
-    cross_corr = cross_correlation(x, y, max_lag, normalize=True)
+    cross_corr = cross_correlation(x, y, max_lag, normalize=False)
 
     crossmax   = max(np.abs(cross_corr))
     the_lagmax = np.abs(cross_corr).argmax() - (max_lag + 1)

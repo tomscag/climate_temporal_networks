@@ -11,7 +11,7 @@ def _check_arg(x, xname):
     return x
 
 @jit(nopython=True)
-def cross_correlation(x, y, maxlag, normalize=True):
+def cross_correlation(x, y, maxlag,normalize=True):
 
     """
     Cross correlation with a maximum number of lags.
@@ -26,14 +26,14 @@ def cross_correlation(x, y, maxlag, normalize=True):
     https://stackoverflow.com/questions/30677241/how-to-limit-cross-correlation-window-width-in-numpy
     """
 
-    if normalize: # No need to normalize if series are already normalized
-        x = (x - np.mean(x)) / (np.std(x) * len(x))
-        y = (y - np.mean(y)) /  np.std(y)  
+    # if normalize==True: # FOR SPEED: the series are already passed normalized and rescaled
+    #     x = (x - np.mean(x)) / (np.std(x) * len(x))
+    #     y = (y - np.mean(y)) /  np.std(y)  
 
     # x = _check_arg(x, 'x')
     # y = _check_arg(y, 'y')
     # py = np.pad(y.conj(), 2*maxlag, mode='constant')
-    py = np.concatenate( (np.zeros(2*maxlag), y.conj(), np.zeros(2*maxlag))) # equivalent of pad (not supported in numba)
+    py = np.concatenate( (np.zeros(2*maxlag), y.conj(), np.zeros(2*maxlag))) # equivalent to pad (not supported in numba)
 
     T = as_strided(py[2*maxlag:], shape=(2*maxlag+1, len(y) + 2*maxlag),
                    strides=(-py.strides[0], py.strides[0]))
