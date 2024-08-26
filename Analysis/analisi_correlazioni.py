@@ -1,3 +1,6 @@
+from os import environ
+environ['OMP_NUM_THREADS'] = '1' # Control the number of threads per core (fixed to 1 to avoid clash with mutliprocessing)
+
 import numpy as np
 
 from lib.misc import haversine_distance, import_dataset
@@ -5,7 +8,8 @@ from lib.bayes import posterior_link_probability_iaaft
 
 from netCDF4 import Dataset
 
-from numba import njit, prange
+
+import multiprocessing as mp
 import h5py
 
 #############################
@@ -23,14 +27,18 @@ def save_results(fout,i,j,Z,the_lagmax,prob):
     fout["results"][i,j,1] = the_lagmax
     fout["results"][i,j,2] = prob
 
-@njit(parallel=True)
-def correlation_all(data,data_surr,nodes,ind_nodes):
-    T,N = data.shape
-    Z_array = np.empty(shape=(2664,2664),dtype=np.float64)
-    lagmax_array = np.empty(shape=(2664,2664))
-    prob_array = np.empty(shape=(2664,2664),dtype=np.float64)
 
-    for i in prange(0,N):
+def correlation_all(data,data_surr,fnameout):
+    T,N = data.shape
+    fout = create_hdf_dataset(fnameout)
+
+    # Rescale the series to return a normalized cross-correlation
+    for i in range(0,N):
+        data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
+        data[:,i] = data[:,i]/np.sqrt(N) # This is to return a normalized cross-correlation
+
+    
+    for i in range(0,N):
         print(f"Computing node {i}")
         for j in range(i+1,N):
             # print(j)
@@ -42,11 +50,7 @@ def correlation_all(data,data_surr,nodes,ind_nodes):
 
             Z, prob,crossmax,the_lagmax = posterior_link_probability_iaaft(x,y,surr_x,surr_y,
                                                                            dist,max_lag,num_surr=num_surr)
-            # save_results(fout,i,j,Z,the_lagmax,prob)
-            Z_array[i,j] = Z
-            lagmax_array[i,j] = the_lagmax
-            prob_array[i,j] = prob
-    return Z_array, lagmax_array, prob_array
+            save_results(fout,i,j,Z,the_lagmax,prob)
 
 #############################
 
@@ -74,29 +78,19 @@ if __name__ == "__main__":
     # years   = range(1970,2022)  # from 1970 to 2021
     years   = range(2022,2101)  # from 2022 to 2100
 
-    param_str = fileinput.split("anomalies_")[-1].split(".nc")[0]
-
+    pool = mp.Pool(8)   # Use the number of cores of your PC
+    
     for y,year in enumerate(years):
-        # print(year)
-        fnameout = f'./Output/{param_str}_maxlag_{max_lag}_year_{years[y]}.hdf5'    
+        print(year)
+        fnameout = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
         
         # Read surrogates
         data_surr = np.array(data_surr_all[variable][0:num_surr,indices[y]:indices[y+1],:,:])
 
-        T,N = data.shape
-        fout = create_hdf_dataset(fnameout)
-
-        # Rescale the series to return a normalized cross-correlation
-        for i in range(0,N):
-            data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
-            data[:,i] = data[:,i]/np.sqrt(N) # This is to return a normalized cross-correlation
-
-        Z_array, lagmax_array, prob_array = correlation_all(data[indices[y]:indices[y+1],:],data_surr,nodes,ind_nodes)  
-
-        
-        fout["results"][:,:,0] = Z_array
-        fout["results"][:,:,1] = lagmax_array
-        fout["results"][:,:,2] = prob_array
+        # correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
+        pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], data_surr,fnameout )) # Parallelize
+    pool.close()
+    pool.join()
 
 
 
