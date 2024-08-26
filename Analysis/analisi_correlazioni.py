@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     # Input folder surrogates
     finputsurr = "../data/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
-    # finputsurr = "./mnt/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
+    # finputsurr = "/mnt/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
     data_surr_all = Dataset(finputsurr,"r")
 
     # Load data
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     
     for y,year in enumerate(years):
         print(year)
-        fnameout = f'./Output/correlations/{variable}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
+        fnameout = f'./Output/{variable}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
         
         # Read surrogates
         data_surr = np.array(data_surr_all[variable][0:num_surr,indices[y]:indices[y+1],:,:])
