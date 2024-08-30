@@ -26,7 +26,7 @@ if __name__== "__main__":
         print(inputfolder)
     else:
         print("Insert a input folder")
-        inputfolder = "CMIP6_ssp5_8.5_model_CESM2_variable_pr"
+        inputfolder = "CMIP6_ssp5_8.5_model_awi_cm_1_1_mr"
         # exit()
     print(os.getcwd())
     os.system(f"rm ./Datasets/{inputfolder}/*.nc")
@@ -105,6 +105,13 @@ if __name__== "__main__":
             temp = temp - temp[0] 
             day_of_year = [i%365 for i in temp]
             day_of_year = [int(i)+1 for i in day_of_year]
+            data['dayofyear'][:] = day_of_year
+
+        elif (cal_name == "proleptic_gregorian"):
+            print("Presence of leap years")
+            start_date = data["time"].units.split("days since")[1].strip()
+            start_date = datetime.strptime(start_date, "%Y-%m-%d")
+            day_of_year = [(start_date + timedelta(days=item)).timetuple().tm_yday for item in list(data["time"][:])]
             data['dayofyear'][:] = day_of_year
 
         else:
