@@ -67,7 +67,7 @@ class draw_tau_earth_network(PlotterEarth):
 
         for sample in range(self.nsamples):
             print(f"sample {sample}")
-            self.adj_mat = sample_fuzzy_network(self.prb_mat)
+            self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
             for id1, tip1 in enumerate(self.tipping_points.keys()):
                 for id2, tip2 in enumerate(self.tipping_points.keys()):
                     if id1 < id2:

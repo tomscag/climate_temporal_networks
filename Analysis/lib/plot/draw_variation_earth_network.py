@@ -44,7 +44,8 @@ class draw_variation_earth_network(PlotterEarth):
 
 
 
-    def draw_variation_network(self,baseline=np.arange(2022,2042)):   
+    def draw_variation_network(self,baseline=np.arange(2022,2042)): 
+    # def draw_variation_network(self,baseline=np.arange(1970,1990)):   
 
         lons, lats = load_lon_lat_hdf5(self.fnameinput)
         coords = generate_coordinates(5,lats,lons)
@@ -58,8 +59,8 @@ class draw_variation_earth_network(PlotterEarth):
 
         for sample in range(self.nsamples):
             print(f"sample {sample}")
-            self.adj_mat = sample_fuzzy_network(self.prb_mat)
-            self.adj_mat_base = sample_fuzzy_network(self.prb_mat_base)
+            self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
+            self.adj_mat_base = sample_fuzzy_network(self.prb_mat_base).get_adjacency()
             # Draw variation wrt baseline
             for id1, tip1 in enumerate(self.tipping_points.keys()):
                 for id2, tip2 in enumerate(self.tipping_points.keys()):
@@ -88,19 +89,18 @@ class draw_variation_earth_network(PlotterEarth):
                     self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=np.abs(variat[id1,id2])*150,
                         color=color,transform=ccrs.PlateCarree())                     
   
+
+        grid_lon, grid_lat = np.meshgrid(lons, lats)
+        # Show grid
+        self.ax.plot(grid_lon,grid_lat,'k.',markersize=2, alpha=0.50,
+                        transform=ccrs.PlateCarree())
                     
         # Draw tipping elements positions
         for name, coords in self.tipping_points.items():
             col, coord = self.tipping_centers[name]
 
-            self.ax.scatter(coord[1], coord[0], color=col, 
-                       s=100, label=name, transform=ccrs.PlateCarree())
-
-        grid_lon, grid_lat = np.meshgrid(lons, lats)
-        # Show grid
-        self.ax.plot(grid_lon,grid_lat,'k.',markersize=2, alpha=0.75,
-                        transform=ccrs.PlateCarree())
-        
+            self.ax.plot(coord[1], coord[0],color=col, marker='o',markersize=10, alpha=0.85,
+                transform=ccrs.PlateCarree())
 
         # Set colorbar
         

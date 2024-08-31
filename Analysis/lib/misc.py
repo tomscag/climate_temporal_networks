@@ -150,7 +150,7 @@ def sample_fuzzy_network(arr):
     arrc[arrc < np.random.random(size=(N,N)) ] = 0    # Sample fuzzy
     # return nx.from_numpy_array(arr,edge_attr="weight")
     graph = ig.Graph.Weighted_Adjacency(arrc,mode="upper")
-    return graph.get_adjacency()
+    return graph
 
 
 

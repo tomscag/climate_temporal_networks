@@ -45,7 +45,7 @@ class draw_connectivity_earth_network(PlotterEarth):
 
         for sample in range(self.nsamples):
             print(f"sample {sample}")
-            self.adj_mat = sample_fuzzy_network(self.prb_mat)
+            self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
             # print(C)
             # Calculate average connectivity
             for id1, tip1 in enumerate(self.tipping_points.keys()):
