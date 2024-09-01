@@ -26,6 +26,7 @@ class draw_variation_earth_network(PlotterEarth):
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples
+        self.set_title = True
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
@@ -109,6 +110,8 @@ class draw_variation_earth_network(PlotterEarth):
         cb = plt.colorbar(sm,orientation='horizontal')
         cb.set_label("Connectivity variation respect to baseline",fontsize=20)
 
+        if self.set_title:
+            self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
 
         plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
 

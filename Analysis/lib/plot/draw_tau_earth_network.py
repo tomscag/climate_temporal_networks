@@ -25,6 +25,7 @@ class draw_tau_earth_network(PlotterEarth):
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples
+        self.set_title = True
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("gist_rainbow") 
@@ -117,6 +118,8 @@ class draw_tau_earth_network(PlotterEarth):
         cb.set_ticks(cb.get_ticks().tolist())
         cb.set_ticklabels([str(np.round(item)) for item in cb.get_ticks()*(self.vmax-self.vmin) + self.vmin])
 
+        if self.set_title:
+            self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
 
         plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
 

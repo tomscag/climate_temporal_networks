@@ -25,6 +25,7 @@ class draw_connectivity_earth_network(PlotterEarth):
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples
+        self.set_title = True
 
         self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
         self.load_tipping_points()
@@ -80,4 +81,7 @@ class draw_connectivity_earth_network(PlotterEarth):
         self.ax.plot(grid_lon,grid_lat,'k.',markersize=2, alpha=0.75,
                         transform=ccrs.PlateCarree())
         
-        plt.savefig(f"{self.resfolder}{self.fnameout}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
+        if self.set_title:
+            self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
+
+        plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
