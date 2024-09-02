@@ -18,7 +18,7 @@ from lib.misc import (load_lon_lat_hdf5,
 
 class draw_variation_earth_network(PlotterEarth):
 
-    def __init__(self,fnameinput,resfolder,year,nsamples):
+    def __init__(self,fnameinput,resfolder,year,nsamples,baseline):
 
         super().__init__()
         self.fnameinput = fnameinput
@@ -26,6 +26,7 @@ class draw_variation_earth_network(PlotterEarth):
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples
+        self.baseline = baseline
         self.set_title = True
 
         # Set colormap parameters
@@ -45,14 +46,14 @@ class draw_variation_earth_network(PlotterEarth):
 
 
 
-    def draw_variation_network(self,baseline=np.arange(2022,2042)): 
+    def draw_variation_network(self): 
     # def draw_variation_network(self,baseline=np.arange(1970,1990)):   
 
         lons, lats = load_lon_lat_hdf5(self.fnameinput)
         coords = generate_coordinates(5,lats,lons)
         coords = {tuple(val):key for key,val in coords.items()}
 
-        self.prb_mat_base = self.load_results(self.fnameinput,baseline,index=2)
+        self.prb_mat_base = self.load_results(self.fnameinput,self.baseline,index=2)
 
         ntip = len(self.tipping_points.keys())
         C1 = np.zeros(shape=(ntip,ntip))
