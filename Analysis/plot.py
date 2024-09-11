@@ -23,7 +23,7 @@ if __name__ == "__main__":
     nsamples = 10       # Number of samples from fuzzy network
     folderinput = "./Output/"
     # finput = folderinput + f"Results_2_6_precipitation_awi_cm_1_1_mr.hdf5"
-    finput = folderinput + f"Results_tas_ssp5_8.5_model_awi_cm_1_1_mr_prior_0.5.hdf5"
+    finput = folderinput + f"Results_tas_ssp5_8.5_model_awi_cm_1_1_mr.hdf5"
     baseline = np.arange(2022,2032)  # 2022,2042    1970,1990
     
     resfolder  = "./fig/"
@@ -40,10 +40,12 @@ if __name__ == "__main__":
     # init_year = np.array([1970,1980,1990,2000,2010,2020])
     for id,yrs in enumerate(init_year[:-1]):
         print(f"Analyzing years: {init_year[id:id+2]}")
-        years = init_year[id:id+2]
+        years = np.arange(init_year[id]+1,init_year[id+1]+1)
         # draw_connectivity_earth_network(finput,resfolder,years,nsamples)
         draw_variation_earth_network(finput,resfolder,years,nsamples,baseline)
         # draw_tau_earth_network(finput,resfolder,years,nsamples)
+
+    # plot_global_variations(finput,resfolder,init_year,nsamples,baseline)
 
 
     ## Plot Global Variations
