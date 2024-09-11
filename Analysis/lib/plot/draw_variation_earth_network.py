@@ -35,6 +35,7 @@ class draw_variation_earth_network(PlotterEarth):
         self.vmax = 0.10
 
         self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
+        self.prb_mat = np.maximum(self.prb_mat,self.prb_mat.transpose())
         self.load_tipping_points()
 
         self.draw_variation_network()
@@ -54,27 +55,32 @@ class draw_variation_earth_network(PlotterEarth):
         coords = {tuple(val):key for key,val in coords.items()}
 
         self.prb_mat_base = self.load_results(self.fnameinput,self.baseline,index=2)
+        self.prb_mat_base = np.maximum(self.prb_mat_base,self.prb_mat_base.transpose())
 
         ntip = len(self.tipping_points.keys())
         C1 = np.zeros(shape=(ntip,ntip))
         C2 = np.zeros(shape=(ntip,ntip))
 
-        for sample in range(self.nsamples):
-            print(f"sample {sample}")
-            self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
-            self.adj_mat_base = sample_fuzzy_network(self.prb_mat_base).get_adjacency()
-            # Draw variation wrt baseline
-            for id1, tip1 in enumerate(self.tipping_points.keys()):
-                for id2, tip2 in enumerate(self.tipping_points.keys()):
-                    if id1 < id2:
-                        coord1 = self.tipping_points[tip1]
-                        coord2 = self.tipping_points[tip2]
-                        C1[id1,id2] += compute_connectivity(self.adj_mat_base,coord1,coord2,coords)
-                        C2[id1,id2] += compute_connectivity(self.adj_mat,coord1,coord2,coords)
+        # for sample in range(self.nsamples):
+        #     print(f"sample {sample}")
+        #     self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
+        #     self.adj_mat_base = sample_fuzzy_network(self.prb_mat_base).get_adjacency()
+        
+        # Draw variation wrt baseline
+        for id1, tip1 in enumerate(self.tipping_points.keys()):
+            for id2, tip2 in enumerate(self.tipping_points.keys()):
+                if id1 < id2:
+                    coord1 = self.tipping_points[tip1]
+                    coord2 = self.tipping_points[tip2]
+                    C1[id1,id2] += compute_connectivity(self.prb_mat_base,coord1,coord2,coords)
+                    C1[id2,id1] = C1[id1,id2]
+                    C2[id1,id2] += compute_connectivity(self.prb_mat,coord1,coord2,coords)
+                    C2[id2,id1] = C2[id1,id2]
 
-
-        C1 /= self.nsamples
-        C2 /= self.nsamples
+        # C1 /= self.nsamples
+        # C2 /= self.nsamples
+        # C1 = np.triu(C1) + np.tril(C1.T, 1)
+        # C2 = np.triu(C2) + np.tril(C2.T, 1)
         variat = C2 - C1
         
         # Draw connections between tipping elements
