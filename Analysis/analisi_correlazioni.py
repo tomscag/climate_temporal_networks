@@ -35,7 +35,7 @@ def correlation_all(data,data_surr,fnameout):
     # Rescale the series to return a normalized cross-correlation
     for i in range(0,N):
         data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
-        data[:,i] = data[:,i]/np.sqrt(N) # This is to return a normalized cross-correlation
+        data[:,i] = data[:,i]/np.sqrt(T) # This is to return a normalized cross-correlation
 
     
     for i in range(0,N):
