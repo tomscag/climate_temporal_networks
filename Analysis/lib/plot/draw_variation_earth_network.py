@@ -31,10 +31,11 @@ class draw_variation_earth_network(PlotterEarth):
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
-        self.vmin = -0.10
-        self.vmax = 0.10
+        self.vmin = -0.1
+        self.vmax = 0.1
 
         self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
+        self.prb_mat = np.maximum(self.prb_mat,self.prb_mat.transpose())
         self.load_tipping_points()
 
         self.draw_variation_network()
@@ -54,29 +55,36 @@ class draw_variation_earth_network(PlotterEarth):
         coords = {tuple(val):key for key,val in coords.items()}
 
         self.prb_mat_base = self.load_results(self.fnameinput,self.baseline,index=2)
+        self.prb_mat_base = np.maximum(self.prb_mat_base,self.prb_mat_base.transpose())
 
         ntip = len(self.tipping_points.keys())
         C1 = np.zeros(shape=(ntip,ntip))
         C2 = np.zeros(shape=(ntip,ntip))
 
-        for sample in range(self.nsamples):
-            print(f"sample {sample}")
-            self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
-            self.adj_mat_base = sample_fuzzy_network(self.prb_mat_base).get_adjacency()
-            # Draw variation wrt baseline
-            for id1, tip1 in enumerate(self.tipping_points.keys()):
-                for id2, tip2 in enumerate(self.tipping_points.keys()):
-                    if id1 < id2:
-                        coord1 = self.tipping_points[tip1]
-                        coord2 = self.tipping_points[tip2]
-                        C1[id1,id2] += compute_connectivity(self.adj_mat_base,coord1,coord2,coords)
-                        C2[id1,id2] += compute_connectivity(self.adj_mat,coord1,coord2,coords)
-
-
-        C1 /= self.nsamples
-        C2 /= self.nsamples
-        variat = C2 - C1
+        # for sample in range(self.nsamples):
+        #     print(f"sample {sample}")
+        #     self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
+        #     self.adj_mat_base = sample_fuzzy_network(self.prb_mat_base).get_adjacency()
         
+        # Draw variation wrt baseline
+        for id1, tip1 in enumerate(self.tipping_points.keys()):
+            for id2, tip2 in enumerate(self.tipping_points.keys()):
+                if id1 < id2:
+                    coord1 = self.tipping_points[tip1]
+                    coord2 = self.tipping_points[tip2]
+                    C1[id1,id2] += compute_connectivity(self.prb_mat_base,coord1,coord2,coords)
+                    C1[id2,id1] = C1[id1,id2]
+                    C2[id1,id2] += compute_connectivity(self.prb_mat,coord1,coord2,coords)
+                    C2[id2,id1] = C2[id1,id2]
+
+        # C1 /= self.nsamples
+        # C2 /= self.nsamples
+        # C1 = np.triu(C1) + np.tril(C1.T, 1)
+        # C2 = np.triu(C2) + np.tril(C2.T, 1)
+        # variat = C2 - C1
+        variat = (C2 - C1)/C1
+        print(np.nanmin(variat))
+
         # Draw connections between tipping elements
 
         for id1, tip1 in enumerate(self.tipping_points.keys()):
@@ -88,7 +96,7 @@ class draw_variation_earth_network(PlotterEarth):
                     
                     color = self.get_color(variat[id1,id2])
                     # print(color)
-                    self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=np.abs(variat[id1,id2])*150,
+                    self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=np.abs(C1[id1,id2])*30,
                         color=color,transform=ccrs.PlateCarree())                     
   
 
@@ -109,10 +117,10 @@ class draw_variation_earth_network(PlotterEarth):
         norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
         sm = plt.cm.ScalarMappable(cmap=self.cmap,norm=norm)
         cb = plt.colorbar(sm,orientation='horizontal')
-        cb.set_label("Connectivity variation respect to baseline",fontsize=20)
+        cb.set_label("Percentage variation respect to baseline",fontsize=20)
 
         if self.set_title:
-            self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
+            self.ax.set_title(f"Years {self.year[0]-1}s",fontsize=30,weight='bold')
 
         plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
 
