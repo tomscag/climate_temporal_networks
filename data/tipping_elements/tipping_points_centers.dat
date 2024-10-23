@@ -1,9 +1,6 @@
 {
 'el_nino_basin': ('r', (0, -140)), 
-'AMOC_up': ('forestgreen', (70, 0)), 
-'AMOC_subpolar_gyre': ('steelblue', (60, -50)), 
-'AMOC_golf': ('gold', (30, -60)),  
-'AMOC_europe_NorthA': ('mediumpurple', (40, -20)),  
+'AMOC': ('deepskyblue', (30, -40)), 
 'tibetan_plateau_snow_cover': ('y', (35, 90)), 
 'coral_reef': ('coral', (0, 105)),  
 'west_antarctic_ice_sheet': ('lightblue', (-75, -85)),  

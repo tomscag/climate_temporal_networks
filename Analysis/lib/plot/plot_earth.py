@@ -30,8 +30,8 @@ class PlotterEarth():
         """
             Initialize oject attributes and create figure
         """
-        self.proj = ccrs.Robinson() # Earth projection "robin"
-
+        # self.proj = ccrs.Robinson() # Earth projection "robin"
+        self.proj = ccrs.PlateCarree() # Earth projection "robin"
           
         # initialize figure as subplots
         self.fig = plt.figure(figsize=(11, 8.5))

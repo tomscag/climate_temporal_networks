@@ -107,7 +107,7 @@ def create_IAAFT_surrogates(data,foutput):
 if __name__ == "__main__":
 
     num_surr = 30
-    filename = "anomalies_tas_CMIP6_ssp1_2.6_model_CESM2.nc"
+    filename = "anomalies_tas_ssp2_4_5_awi_cm_1_1_mr_near_surface_air_temperature.nc"
 
     # Load data
     fileinput = f'{filename}'

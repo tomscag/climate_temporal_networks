@@ -35,7 +35,7 @@ def correlation_all(data,data_surr,fnameout):
     # Rescale the series to return a normalized cross-correlation
     for i in range(0,N):
         data[:,i] = (data[:,i]-data[:,i].mean())/data[:,i].std()
-        data[:,i] = data[:,i]/np.sqrt(N) # This is to return a normalized cross-correlation
+        data[:,i] = data[:,i]/np.sqrt(T) # This is to return a normalized cross-correlation
 
     
     for i in range(0,N):
@@ -63,12 +63,12 @@ if __name__ == "__main__":
 
     # Input folder surrogates
     # finputsurr = "../data/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
-    finputsurr = "/mnt/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
-    data_surr_all = Dataset(finputsurr,"r")
+    # finputsurr = "/mnt/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
+    # data_surr_all = Dataset(finputsurr,"r")
 
     # Load data
-    # fileinput = f'../data/anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc'
-    fileinput = "/mnt/anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
+    fileinput = f'../data/Datasets/Anomalies/anomalies_tas_ssp1_2.6_model_CESM2.nc'
+    # fileinput = "/mnt/anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
     
     variable = fileinput.split("_")[1] # t2m tp total_precipitation
     data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)

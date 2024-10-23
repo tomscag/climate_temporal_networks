@@ -31,8 +31,8 @@ class draw_variation_earth_network(PlotterEarth):
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
-        self.vmin = -0.10
-        self.vmax = 0.10
+        self.vmin = -0.1
+        self.vmax = 0.1
 
         self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
         self.prb_mat = np.maximum(self.prb_mat,self.prb_mat.transpose())
@@ -81,8 +81,10 @@ class draw_variation_earth_network(PlotterEarth):
         # C2 /= self.nsamples
         # C1 = np.triu(C1) + np.tril(C1.T, 1)
         # C2 = np.triu(C2) + np.tril(C2.T, 1)
-        variat = C2 - C1
-        
+        # variat = C2 - C1
+        variat = (C2 - C1)/C1
+        print(np.nanmin(variat))
+
         # Draw connections between tipping elements
 
         for id1, tip1 in enumerate(self.tipping_points.keys()):
@@ -94,7 +96,7 @@ class draw_variation_earth_network(PlotterEarth):
                     
                     color = self.get_color(variat[id1,id2])
                     # print(color)
-                    self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=np.abs(variat[id1,id2])*150,
+                    self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=np.abs(C1[id1,id2])*30,
                         color=color,transform=ccrs.PlateCarree())                     
   
 
@@ -115,10 +117,10 @@ class draw_variation_earth_network(PlotterEarth):
         norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
         sm = plt.cm.ScalarMappable(cmap=self.cmap,norm=norm)
         cb = plt.colorbar(sm,orientation='horizontal')
-        cb.set_label("Connectivity variation respect to baseline",fontsize=20)
+        cb.set_label("Percentage variation respect to baseline",fontsize=20)
 
         if self.set_title:
-            self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
+            self.ax.set_title(f"Years {self.year[0]-1}s",fontsize=30,weight='bold')
 
         plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
 
