@@ -2,7 +2,7 @@ Routine to import data from Copernicus
 
 1) Run ./Launcher.sh, adjusting for parameters
 
-2) Run python Preprocess_dataset.py to:
+2) Run python preprocessing_models.py to:
 	- Extract data
 	- Regrid and combine in a single nc file
 	- Compute anomalies and save them in a nc file
