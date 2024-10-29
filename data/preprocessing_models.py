@@ -104,7 +104,10 @@ def create_day_of_year(infile: str):
 
     data.close()
 
-def compute_anomalies(ds: xr.Dataset, var_name: str, baseline: list):
+def compute_anomalies(ds: xr.Dataset, 
+                      var_name: str, 
+                      baseline: list,
+                      standardize_anomalies: bool=False):
 
     print("\n\n Computing anomalies:\n\n")
     start, end = baseline
@@ -118,12 +121,22 @@ def compute_anomalies(ds: xr.Dataset, var_name: str, baseline: list):
 
     # reindex to full time series
     clim_time = clim.sel(dayofyear=ds.time.dt.dayofyear)
-    std_clim_time = std_clim.sel(dayofyear=ds.time.dt.dayofyear)
+    
 
     # Assign array to a new dataset
     anomalies = ds
-    # anomalies[var_name][:] = ((ds - clim_time)/std_clim_time)[var_name] # I think it's better to avoid divide by std_dev (that can be very small for eg. precipitation )
-    anomalies[var_name][:] = ((ds - clim_time))[var_name]
+    if standardize_anomalies: # I think it's better to avoid divide by std_dev (since can be very small for eg. precipitation )
+        std_clim_time = std_clim.sel(dayofyear=ds.time.dt.dayofyear)
+        anomalies[var_name][:] = ((ds - clim_time)/std_clim_time)[var_name] 
+    else:
+        anomalies[var_name][:] = ((ds - clim_time))[var_name]
+    
+    # Store attributes
+    anomalies = anomalies.assign_attrs(
+        climate_variable_name=var_name,
+        baseline=baseline,
+        standardize_anomalies=int(standardize_anomalies))
+    
     return anomalies
 
 
@@ -181,8 +194,6 @@ if __name__ == "__main__":
         f"{var_name}_" + filecombined.split("Datasets/")[1]
     ds = xr.open_dataset(filecombined, engine='netcdf4')    # netcdf4   cfgrib
     anomalies = compute_anomalies(ds, var_name, baseline)
-    anomalies = anomalies.assign_attrs(
-        climate_variable_name=var_name)  # Save var name as attribute
     anomalies.to_netcdf(FILENAME_OUTPUT)
 
     print("\n\n FINISHED \n\n")
