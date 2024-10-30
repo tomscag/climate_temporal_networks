@@ -17,26 +17,36 @@ from lib.misc import (load_lon_lat_hdf5,
 
 class draw_connectivity_earth_network(PlotterEarth):
 
-    def __init__(self,fnameinput, resfolder,year,nsamples):
+    def __init__(self,
+                 fnameinput: str, 
+                 resfolder: str,
+                 year: np.array):
 
         super().__init__()
         self.fnameinput = fnameinput
-        self.fnameoutput = "connectivity_" + fnameinput.split("Results_")[1]
+        
         self.resfolder = resfolder
         self.year = year
-        self.nsamples = nsamples
         self.set_title = True
-
+        self.fnameoutput = self.set_fnameoutput()
+        
         self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
+        self.prb_mat = np.maximum(self.prb_mat,self.prb_mat.transpose())
         self.load_tipping_points()
 
         self.draw_connectivity_network()
 
-    
+    def set_fnameoutput(self):
+        string = "connectivity_" 
+        string += self.fnameinput.split("Results_")[1]
+        return f"{self.resfolder}{string}_{self.year[0]}_{self.year[-1]}.png"
 
 
     def draw_connectivity_network(self):
-
+        """
+        # NOTE: we compute connectivity directly from the probability matrix
+        #       since sampling is not needed in this case
+        """
         lons, lats = load_lon_lat_hdf5(self.fnameinput)
         coords = generate_coordinates(5,lats,lons)
         coords = {tuple(val):key for key,val in coords.items()}
@@ -44,21 +54,15 @@ class draw_connectivity_earth_network(PlotterEarth):
         ntip = len(self.tipping_points.keys())
         C = np.zeros(shape=(ntip,ntip))
 
-        for sample in range(self.nsamples):
-            print(f"sample {sample}")
-            self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
-            # print(C)
-            # Calculate average connectivity
-            for id1, tip1 in enumerate(self.tipping_points.keys()):
-                for id2, tip2 in enumerate(self.tipping_points.keys()):
-                    if id1 < id2:
+        for id1, tip1 in enumerate(self.tipping_points.keys()):
+            for id2, tip2 in enumerate(self.tipping_points.keys()):
+                if id1 < id2:
+                    coord1 = self.tipping_points[tip1]
+                    coord2 = self.tipping_points[tip2]
+                    c = compute_connectivity(self.prb_mat,coord1,coord2,coords)
+                    C[id1,id2] += c
+                    C[id2,id1] = C[id1,id2]
 
-                        coord1 = self.tipping_points[tip1]
-                        coord2 = self.tipping_points[tip2]
-                        c = compute_connectivity(self.adj_mat,coord1,coord2,coords)
-                        C[id1,id2] += c
-
-        C /= self.nsamples 
 
         # Draw connections between tipping elements
         for id1, tip1 in enumerate(self.tipping_points.keys()):
@@ -82,6 +86,8 @@ class draw_connectivity_earth_network(PlotterEarth):
                         transform=ccrs.PlateCarree())
         
         if self.set_title:
-            self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
+            self.ax.set_title(f"Years: {self.year[0]} - {self.year[-1]}",
+                              fontsize=30,weight='bold')
 
-        plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
+        plt.savefig(self.fnameoutput,
+                    dpi=self.params['dpi'])

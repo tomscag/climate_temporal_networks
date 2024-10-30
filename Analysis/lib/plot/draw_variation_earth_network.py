@@ -68,8 +68,8 @@ class draw_variation_earth_network(PlotterEarth):
         self.prb_mat_base = np.maximum(self.prb_mat_base,self.prb_mat_base.transpose())
 
         ntip = len(self.tipping_points.keys())
-        C1 = np.zeros(shape=(ntip,ntip))
-        C2 = np.zeros(shape=(ntip,ntip))
+        C1 = np.zeros(shape=(ntip,ntip))*np.nan
+        C2 = np.zeros(shape=(ntip,ntip))*np.nan
         
         # Draw variation wrt baseline
         for id1, tip1 in enumerate(self.tipping_points.keys()):
@@ -77,9 +77,9 @@ class draw_variation_earth_network(PlotterEarth):
                 if id1 < id2:
                     coord1 = self.tipping_points[tip1]
                     coord2 = self.tipping_points[tip2]
-                    C1[id1,id2] += compute_connectivity(self.prb_mat_base,coord1,coord2,coords)
+                    C1[id1,id2] = compute_connectivity(self.prb_mat_base,coord1,coord2,coords)
                     C1[id2,id1] = C1[id1,id2]
-                    C2[id1,id2] += compute_connectivity(self.prb_mat,coord1,coord2,coords)
+                    C2[id1,id2] = compute_connectivity(self.prb_mat,coord1,coord2,coords)
                     C2[id2,id1] = C2[id1,id2]
         
         if self.variat_percnt:
@@ -116,12 +116,14 @@ class draw_variation_earth_network(PlotterEarth):
         # Set colorbar
         norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
         sm = plt.cm.ScalarMappable(cmap=self.cmap,norm=norm)
-        cb = plt.colorbar(sm,orientation='horizontal')
-        cb.set_label("Percentage variation respect to baseline",fontsize=20)
+        cb = plt.colorbar(sm,orientation='horizontal',ax=self.ax)
+        label = ("Percentage " if self.variat_percnt else "")+ "variation respect to baseline"
+        cb.set_label(label,fontsize=20)
 
         if self.set_title:
             self.ax.set_title(f"Years: {self.year[0]} - {self.year[-1]}",
                               fontsize=30,weight='bold')
         plt.savefig(self.fnameoutput,
-                    dpi=self.params['dpi'])
+                    dpi=self.params['dpi'],
+                    bbox_inches='tight')
 
