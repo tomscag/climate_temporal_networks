@@ -8,9 +8,11 @@ from lib.bayes import posterior_link_probability_iaaft
 
 from netCDF4 import Dataset
 
+from lib.generate_surrogates import create_surrogates 
 
 import multiprocessing as mp
 import h5py
+import os
 
 #############################
 
@@ -18,7 +20,7 @@ def create_hdf_dataset(fnameout):
     fout = h5py.File(fnameout,"w")
     fout.create_dataset("results",shape=(2664,2664,3), dtype="f")
     fout.attrs['finput'] = str(fileinput)
-    fout.attrs['finputsurr'] = str(finputsurr)
+    # fout.attrs['finputsurr'] = str(finputsurr)
 
     return fout
 
@@ -55,38 +57,40 @@ def correlation_all(data,data_surr,fnameout):
 #############################
 
 
-
 if __name__ == "__main__":
 
-    # Parameters
-    size = 5    # Size of the grid in degree
-
-    # Input folder surrogates
-    # finputsurr = "../data/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
-    # finputsurr = "/mnt/surr_anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
-    # data_surr_all = Dataset(finputsurr,"r")
 
     # Load data
-    fileinput = f'../data/Datasets/Anomalies/anomalies_tas_ssp1_2.6_model_CESM2.nc'
-    # fileinput = "/mnt/anomalies_pr_CMIP6_ssp5_8.5_model_CESM2.nc"
+    infolder = '../data/'
+    fileinput = 'era5_t2m_1970_2020_anomalies.nc'
+    filepath = infolder + fileinput
+    # fileinput = "/mnt/era5_t2m_1970_2020_anomalies.nc"
     
-    variable = fileinput.split("_")[1] # t2m tp total_precipitation
-    data, indices, nodes, ind_nodes = import_dataset(fileinput,variable)
+    var_name = fileinput.split("_")[1] # t2m tp total_precipitation
+    data, indices, nodes, ind_nodes = import_dataset(filepath,var_name)
 
     max_lag = 150
     num_surr = 30
-    # years   = range(1970,2022)  # from 1970 to 2021
-    years   = range(2022,2101)  # from 2022 to 2100
+    years = range(1970,2021)  # from 1970 to 2020
+    # years   = range(2022,2101)  # from 2022 to 2100
+
+    # Create surrogates
+    fileoutput = f"./surr_{fileinput}"
+    if not os.path.exists(fileoutput):  # Create the file if not exists
+        create_surrogates(filepath,num_surr,var_name,years,fileoutput)
+        data_surr_all = Dataset(fileoutput,"r")
+    else:
+        data_surr_all = Dataset(fileoutput,"r")
+
 
     pool = mp.Pool(8)   # Use the number of cores of your PC
-    parameters = fileinput.split("anomalies_")[1].split(".nc")[0]
 
     for y,year in enumerate(years):
         print(year)
-        fnameout = f'./Output/{parameters}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
+        fnameout = f'./Output/{var_name}_year_{years[y]}_maxlag_{max_lag}.hdf5'    
         
         # Read surrogates
-        data_surr = np.array(data_surr_all[variable][0:num_surr,indices[y]:indices[y+1],:,:])
+        data_surr = np.array(data_surr_all[var_name][0:num_surr,indices[y]:indices[y+1],:,:])
 
         # correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
         pool.apply_async(correlation_all, args = (data[indices[y]:indices[y+1],:], data_surr,fnameout )) # Parallelize

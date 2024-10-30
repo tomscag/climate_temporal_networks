@@ -30,9 +30,9 @@ def import_dataset(fileinput,variable='t2m', filterpoles=False):
 
     data = Dataset(fileinput, 'r')
     ind_years = extract_year_limits(data)
-    lats  = [float(item.data) for item in data.variables['lat'] ]       
-    lons  = [float(item.data) for item in data.variables['lon'] ]      
-    ind_nodes = list(product(range(data.variables['lat'].size),range(data.variables['lon'].size)))  # [(0,0),(0,1),(0,2)...]
+    lats  = [float(item.data) for item in data.variables['latitude'] ]       
+    lons  = [float(item.data) for item in data.variables['longitude'] ]      
+    ind_nodes = list(product(range(data.variables['latitude'].size),range(data.variables['longitude'].size)))  # [(0,0),(0,1),(0,2)...]
 
     temp = data.variables[variable]
     data = np.array(temp).reshape( temp.shape[0],temp.shape[1]*temp.shape[2]) # time, lat * lon

@@ -92,7 +92,7 @@ def create_day_of_year(infile: str):
         print("Presence of leap years")
         start_date = data["time"].units.split("days since")[1].strip()
         start_date = datetime.strptime(start_date, "%Y-%m-%d")
-        day_of_year = [(start_date + timedelta(days=item)
+        day_of_year = [(start_date + timedelta(days=int(item))
                         ).timetuple().tm_yday for item in list(data["time"][:])]
         data['dayofyear'][:] = day_of_year
 
