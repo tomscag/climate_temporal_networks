@@ -18,16 +18,20 @@ from lib.misc import (load_lon_lat_hdf5,
 
 class draw_variation_earth_network(PlotterEarth):
 
-    def __init__(self,fnameinput,resfolder,year,nsamples,baseline):
+    def __init__(self,
+                 fnameinput: str,
+                 resfolder: str,
+                 year: np.array,
+                 baseline: list):
 
         super().__init__()
         self.fnameinput = fnameinput
-        self.fnameoutput = "variations_" + fnameinput.split("Results_")[1]
         self.resfolder = resfolder
         self.year = year
-        self.nsamples = nsamples
         self.baseline = baseline
+        self.variat_percnt = True # If true links are percentage variations wrt the baseline
         self.set_title = True
+        self.fnameoutput = self.set_fnameoutput()
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
@@ -40,15 +44,21 @@ class draw_variation_earth_network(PlotterEarth):
 
         self.draw_variation_network()
 
-    def get_color(self,value):      
-        vmin, vmax = -1.0, 1.0
+    def get_color(self,value): 
         norm_value = np.clip((value - self.vmin) / (self.vmax - self.vmin), 0, 1)
         return self.cmap(norm_value)
 
+    def set_fnameoutput(self):
+        string = "variations_percnt_" if self.variat_percnt else "variations_"
+        string += self.fnameinput.split("Results_")[1]
+        return f"{self.resfolder}{string}_{self.year[0]}_{self.year[-1]}.png"
 
 
     def draw_variation_network(self): 
-    # def draw_variation_network(self,baseline=np.arange(1970,1990)):   
+        """
+        # NOTE: we compute connectivity directly from the probability matrix
+        #       since sampling is not needed in this case
+        """
 
         lons, lats = load_lon_lat_hdf5(self.fnameinput)
         coords = generate_coordinates(5,lats,lons)
@@ -60,11 +70,6 @@ class draw_variation_earth_network(PlotterEarth):
         ntip = len(self.tipping_points.keys())
         C1 = np.zeros(shape=(ntip,ntip))
         C2 = np.zeros(shape=(ntip,ntip))
-
-        # for sample in range(self.nsamples):
-        #     print(f"sample {sample}")
-        #     self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
-        #     self.adj_mat_base = sample_fuzzy_network(self.prb_mat_base).get_adjacency()
         
         # Draw variation wrt baseline
         for id1, tip1 in enumerate(self.tipping_points.keys()):
@@ -76,14 +81,11 @@ class draw_variation_earth_network(PlotterEarth):
                     C1[id2,id1] = C1[id1,id2]
                     C2[id1,id2] += compute_connectivity(self.prb_mat,coord1,coord2,coords)
                     C2[id2,id1] = C2[id1,id2]
-
-        # C1 /= self.nsamples
-        # C2 /= self.nsamples
-        # C1 = np.triu(C1) + np.tril(C1.T, 1)
-        # C2 = np.triu(C2) + np.tril(C2.T, 1)
-        # variat = C2 - C1
-        variat = (C2 - C1)/C1
-        print(np.nanmin(variat))
+        
+        if self.variat_percnt:
+            variat = (C2 - C1)/C1
+        else:
+            variat = C2 - C1
 
         # Draw connections between tipping elements
 
@@ -93,13 +95,12 @@ class draw_variation_earth_network(PlotterEarth):
                     _,pos1 = self.tipping_centers[tip1]
                     _,pos2 = self.tipping_centers[tip2]   
 
-                    
                     color = self.get_color(variat[id1,id2])
-                    # print(color)
-                    self.ax.plot([pos1[1],pos2[1]],[pos1[0],pos2[0]], linewidth=np.abs(C1[id1,id2])*30,
+                    self.ax.plot(
+                        [pos1[1],pos2[1]],[pos1[0],pos2[0]], 
+                        linewidth=np.abs(C1[id1,id2])*30,
                         color=color,transform=ccrs.PlateCarree())                     
   
-
         grid_lon, grid_lat = np.meshgrid(lons, lats)
         # Show grid
         self.ax.plot(grid_lon,grid_lat,'k.',markersize=2, alpha=0.50,
@@ -113,14 +114,14 @@ class draw_variation_earth_network(PlotterEarth):
                 transform=ccrs.PlateCarree())
 
         # Set colorbar
-        
         norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
         sm = plt.cm.ScalarMappable(cmap=self.cmap,norm=norm)
         cb = plt.colorbar(sm,orientation='horizontal')
         cb.set_label("Percentage variation respect to baseline",fontsize=20)
 
         if self.set_title:
-            self.ax.set_title(f"Years {self.year[0]-1}s",fontsize=30,weight='bold')
-
-        plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
+            self.ax.set_title(f"Years: {self.year[0]} - {self.year[-1]}",
+                              fontsize=30,weight='bold')
+        plt.savefig(self.fnameoutput,
+                    dpi=self.params['dpi'])
 
