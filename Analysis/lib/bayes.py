@@ -50,10 +50,7 @@ def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30)
 
     zscore = abs(crossmax - cross_corr_surr.mean())/cross_corr_surr.std()
 
-    if zscore < 1:
-        pval =1
-    else:
-        pval = 1/(zscore**2)
+    pval = math.erfc(zscore)
     
     if pval < math.e**(-1):
         B_value = -math.e*pval*math.log(abs(pval))
