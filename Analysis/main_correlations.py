@@ -83,7 +83,7 @@ if __name__ == "__main__":
     foldersurr = "./surrogates"
     fileoutput = f"{foldersurr}/surr_{fileinput}"
     if not os.path.exists(fileoutput):  # Create the file if not exists
-        create_surrogates(infilepath, num_surr, var_name, years, fileoutput)
+        create_surrogates(infilepath, num_surr, var_name, indices, fileoutput)
         data_surr_all = Dataset(fileoutput, "r")
     else:
         data_surr_all = Dataset(fileoutput, "r")
