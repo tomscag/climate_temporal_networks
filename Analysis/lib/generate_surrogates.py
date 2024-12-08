@@ -9,7 +9,8 @@ def create_surrogates(fileinput: str,
                       num_surr: int,
                       var_name: str,
                       time_periods_limits: np.array,
-                      foutput: str):
+                      years: list,
+                      foldersurr: str):
     """
     Parameters
     ----------
@@ -20,9 +21,11 @@ def create_surrogates(fileinput: str,
     var_name : str
         DESCRIPTION.
     time_periods_limits : np.array
-        DESCRIPTION.
-    foutput : str
-        DESCRIPTION.
+        limit indices of the years in data.
+    years: list
+        years label.
+    foldersurr : str
+        Folder where to store the surrogates.
 
     Returns
     -------
@@ -30,66 +33,56 @@ def create_surrogates(fileinput: str,
 
     """
     
+    # Load data to surrogate
     data = Dataset(fileinput, 'r')    
-
-    print("\n\n Initialize surrogates dataset\n\n")
-
-    # Create dataset to store surrogates
     nlats = data.dimensions['latitude'].size
     nlons = data.dimensions['longitude'].size
-    ntimes = data["time"].size
     
-    if os.path.exists(foutput):
-        os.system(f"rm {foutput}")
+    print("\n\n Initialize surrogates dataset\n\n")
+
+
+    # if os.path.exists(foldersurr):
+    #     os.system(f"rm {foldersurr}")
     
-    surr_dataset = Dataset(foutput,"w")
 
+    for n, year in enumerate(years):
+        
+        foutput_yrs = (foldersurr + 
+                       foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
+                       + '_' + str(year) + '.nc')
+        
+        start_id = time_periods_limits[n]
+        end_id = time_periods_limits[n+1]
+        ntimes = len(range(start_id,end_id))
 
-    surr_dataset.createDimension("lat",nlats)
-    surr_dataset.createDimension("lon",nlons)
-    surr_dataset.createDimension("time",ntimes)
-    surr_dataset.createDimension("surrogate",num_surr)
-
-    # IMPORTANT: setting the chunksizes is crucial for speed
-    surr_dataset.createVariable(var_name,float,('surrogate','time','lat','lon'),
-                                chunksizes=(num_surr,ntimes,1,1))
-    
-    print("\n\n Populate surrogates dataset\n\n")
-    # Here we create and save IAAFT surrogates for each year
-    
-    # years   = range(1970,2022)  # from 1970 to 2022
-
-    # yr_limits = extract_year_limits(data)
-
-
-    # surr_dataset_arr = np.empty(shape=(num_surr,ntimes,nlats,nlons))
-
-    for i in range(nlats):
-        # print(f"Generating surrogates for nodes of lat: {i}")
-        for j in range(nlons):
-            print(f'Surrogating node ({i},{j}) :')
+        with Dataset(foutput_yrs,"w") as surr_dataset:
+            surr_dataset.createDimension("latitude",nlats)
+            surr_dataset.createDimension("longitude",nlons)
+            surr_dataset.createDimension("time",ntimes)
+            surr_dataset.createDimension("surrogate",num_surr)
+        
+            # IMPORTANT: setting the chunksizes is crucial for speed
+            surr_dataset.createVariable(var_name,float,
+                                        ('surrogate','time','latitude','longitude'),
+                                        chunksizes=(num_surr,ntimes,1,1))
             
-            # fill_dataset(data,surr_dataset,ind_ini,ind_end,ntimes,num_surr,i,j,var_name)
-            data_slice = data[var_name][:,i,j]
-
-            surr_temp = np.empty(shape=(num_surr,ntimes),dtype=np.float32)
-            for n,idx in enumerate(time_periods_limits[:-1]):
-                
-                start_id = time_periods_limits[n]+1
-                end_id = time_periods_limits[n+1]+1
-                
-                # print(f"Creating surrogates for year {y}")
-                surr = iaaft.surrogates(x = data_slice[start_id:end_id], ns=num_surr, verbose=False)
-
-                for s in range(num_surr):    # Normalize and rescale 
-                    surr[s,:] = ((surr[s,:]-surr[s,:].mean())/(surr[s,:].std()*np.sqrt(len(surr[s,:]))))
-
-                surr_temp[:,start_id:end_id] = surr
+            print(f"Creating surrogates for year {years[n]}")
             
-            surr_dataset[var_name][:,:,i,j] = surr_temp
-
+            data_slice = data[var_name][start_id:end_id,:,:]
+            
+            for i in range(nlats):
+                print(f"Surrogating nodes of lat: {i}")
+                for j in range(nlons):
+                    # print(f'Surrogating node ({i},{j}) :')
+                    
+                    surr = iaaft.surrogates(x = data_slice[:,i,j], 
+                                            ns=num_surr, verbose=False)
+            
+                    for s in range(num_surr):    # Normalize and rescale 
+                        surr[s,:] = ((surr[s,:]-surr[s,:].mean())/(surr[s,:].std()*np.sqrt(ntimes)))
+            
+                    surr_dataset[var_name][:,:,i,j] = surr
     
-    surr_dataset.close()
 
 
 # D = data['time'].units.split("days since ")[1]

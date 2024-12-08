@@ -67,7 +67,7 @@ if __name__ == "__main__":
     
     # Load data
     infolder = '../data/'
-    fileinput = 'era5_t2m_1970_2020_anomalies.nc'
+    fileinput = 'era5_t2m_1970_2020_anomalies.nc' 
     infilepath = infolder + fileinput
     # fileinput = "/mnt/era5_t2m_1970_2020_anomalies.nc"
 
@@ -77,26 +77,29 @@ if __name__ == "__main__":
     max_lag = 150
     num_surr = 30
     years = range(1970, 2021)  # from 1970 to 2020
-    # years   = range(2022,2101)  # from 2022 to 2100
+    # years = range(2022,2101)  # from 2022 to 2100
+    years = range(1970, 1971)
 
     # Create surrogates
-    foldersurr = "./surrogates"
-    fileoutput = f"{foldersurr}/surr_{fileinput}"
-    if not os.path.exists(fileoutput):  # Create the file if not exists
-        create_surrogates(infilepath, num_surr, var_name, indices, fileoutput)
-        data_surr_all = Dataset(fileoutput, "r")
+    foldersurr = f"./surrogates/surr_{fileinput.strip('.nc')}_nsurr_{num_surr}/"
+    if not os.path.exists(foldersurr):  # Create the folder if not exists
+        os.makedirs(foldersurr)
+        create_surrogates(infilepath, num_surr, var_name, indices, years, foldersurr)
     else:
-        data_surr_all = Dataset(fileoutput, "r")
+        print("Surrogates directory found!")
 
     pool = mp.Pool(num_cpus)   
 
     for y, year in enumerate(years):
         print(year)
-        fnameout = f'{outfolder}/{var_name}_year_{years[y]}_maxlag_{max_lag}.hdf5'
+        fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
 
         # Read surrogates
+        foutput_yrs = (foldersurr + 
+                       foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
+                       + '_' + str(year) + '.nc')
         data_surr = np.array(
-            data_surr_all[var_name][0:num_surr, indices[y]:indices[y+1], :, :])
+            Dataset(foutput_yrs, "r")[var_name])
 
         # correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
         pool.apply_async(correlation_all, args=(
