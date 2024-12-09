@@ -54,7 +54,7 @@ def extract_year_limits(data):
     '''
     doy = np.array(data['dayofyear']) 
     doy = np.where( doy == 1)[0]
-    doy = np.append(doy,len(data["time"])+1) # Add the index for the end of the last year
+    doy = np.append(doy,len(data["time"])) # Add the index for the end of the last year
     return doy
 
 
