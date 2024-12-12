@@ -18,7 +18,15 @@ def prior_global_null_prob(altern=0.20):
     # Return the prior probaility for the null hypothesis
     return 1 - altern
 
-@jit(nopython=True)
+
+def safe_log(x):
+    """Compute the natural logarithm of x, or return NaN if x is invalid."""
+    try:
+        return math.log(x)
+    except ValueError:  # Catch domain errors (e.g., log(0) or log(negative))
+        return float('nan')
+
+#@jit(nopython=True)
 def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30):
     '''
         We compute the null model using IAAFT surrogates
@@ -47,13 +55,12 @@ def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30)
         sh_crossmax   = sh_cross_corr.max() 
         cross_corr_surr[n] = sh_crossmax
 
-
     zscore = abs(crossmax - cross_corr_surr.mean())/cross_corr_surr.std()
 
     pval = math.erfc(zscore)
     
     if pval < math.e**(-1):
-        B_value = -math.e*pval*math.log(abs(pval))
+        B_value = -math.e*pval*safe_log(pval)
     else:
         B_value = 1
     
@@ -63,11 +70,11 @@ def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30)
     # prior = prior_global_null_prob(altern=0.20)
 
     # Posterior probability of link existence
-    if prior > 1e-9:
+    try:
         prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
-    else:
-        prior = 1e-9
-        prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
+    except (OverflowError, ZeroDivisionError) as e:
+        print(f"Exception {e} {B_value} {pval}")
+        prob = float('nan')
 
     return zscore, prob,crossmax,the_lagmax
 

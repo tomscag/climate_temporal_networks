@@ -42,7 +42,6 @@ def correlation_all(data, data_surr, fnameout):
         for i in range(0, N):
             print(f"Computing node {i}")
             for j in range(i+1, N):
-                # print(j)
                 dist = haversine_distance(
                     nodes[i][0], nodes[i][1], nodes[j][0], nodes[j][1])
                 x = data[:, i]
@@ -60,14 +59,14 @@ def correlation_all(data, data_surr, fnameout):
 if __name__ == "__main__":
     
     # Use the number of cores of your PC
-    num_cpus = 8
+    num_cpus = 15
     
     # Save results in
     outfolder = "../Output"
     
     # Load data
-    infolder = '../data/'
-    fileinput = 'era5_t2m_1970_2020_anomalies.nc' 
+    infolder = '/mnt/'
+    fileinput = 'anomalies_tas_ssp5_8.5_model_awi_cm_1_1_mr.nc' 
     infilepath = infolder + fileinput
     # fileinput = "/mnt/era5_t2m_1970_2020_anomalies.nc"
 
@@ -75,34 +74,30 @@ if __name__ == "__main__":
     data, indices, nodes, ind_nodes = import_dataset(infilepath, var_name)
 
     max_lag = 150
-    num_surr = 30
-    years = range(1970, 2021)  # from 1970 to 2020
-    # years = range(2022,2101)  # from 2022 to 2100
-    years = range(1970, 1971)
+    num_surr = 50
+    #years = range(1970, 2021)  # from 1970 to 2020
+    years = range(2022,2101)  # from 2022 to 2100
 
     # Create surrogates
-    foldersurr = f"./surrogates/surr_{fileinput.strip('.nc')}_nsurr_{num_surr}/"
+    foldersurr = f"/mnt/surrogates/surr_{fileinput.strip('.nc')}_nsurr_{num_surr}/"
     if not os.path.exists(foldersurr):  # Create the folder if not exists
         os.makedirs(foldersurr)
         create_surrogates(infilepath, num_surr, var_name, indices, years, foldersurr)
     else:
         print("Surrogates directory found!")
 
-    pool = mp.Pool(num_cpus)   
-
-    for y, year in enumerate(years):
-        print(year)
-        fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
-
-        # Read surrogates
-        foutput_yrs = (foldersurr + 
-                       foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
-                       + '_' + str(year) + '.nc')
-        data_surr = np.array(
-            Dataset(foutput_yrs, "r")[var_name])
-
-        # correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
-        pool.apply_async(correlation_all, args=(
-            data[indices[y]:indices[y+1], :], data_surr, fnameout))  # Parallelize
-    pool.close()
-    pool.join()
+    with mp.Pool(num_cpus) as pool:
+        for y, year in enumerate(years):
+            print(year)
+            fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
+    
+            # Read surrogates
+            foutput_yrs = (foldersurr + 
+                           foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
+                           + '_' + str(year) + '.nc')
+            data_surr = np.array(
+                Dataset(foutput_yrs, "r")[var_name])
+    
+            #correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
+            pool.apply_async(correlation_all, args=(
+                data[indices[y]:indices[y+1], :], data_surr, fnameout))  # Parallelize
