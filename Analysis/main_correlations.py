@@ -88,16 +88,19 @@ if __name__ == "__main__":
 
     with mp.Pool(num_cpus) as pool:
         for y, year in enumerate(years):
-            print(year)
-            fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
-    
-            # Read surrogates
-            foutput_yrs = (foldersurr + 
-                           foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
-                           + '_' + str(year) + '.nc')
-            data_surr = np.array(
-                Dataset(foutput_yrs, "r")[var_name])
-    
-            #correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
-            pool.apply_async(correlation_all, args=(
-                data[indices[y]:indices[y+1], :], data_surr, fnameout))  # Parallelize
+            try:
+                print(year)
+                fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
+        
+                # Read surrogates
+                foutput_yrs = (foldersurr + 
+                               foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
+                               + '_' + str(year) + '.nc')
+                data_surr = np.array(
+                    Dataset(foutput_yrs, "r")[var_name])
+        
+                #correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
+                pool.apply_async(correlation_all, args=(
+                    data[indices[y]:indices[y+1], :], data_surr, fnameout))  # Parallelize
+            except BrokenPipeError as exc:
+                print("Broken pipe error, ignoring...")
