@@ -5,7 +5,7 @@ from lib import iaaft
 from lib.correlation import cross_correlation
 from numba import jit
 
-@jit(nopython=True)
+# @jit(nopython=True)
 def prior_link_probability(dist,K=2000):
 
     # Prior probaility for the null hypothesis
@@ -49,9 +49,8 @@ def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30)
     cross_corr_surr = np.empty(num_surr)
 
     for n in range(0,num_surr):
-        serie1_surr = surr_x[n,:]
-        serie2_surr = surr_y[n,:]
-        sh_cross_corr = cross_correlation(serie1_surr, serie2_surr, max_lag, normalize=False) # surrogates are already normalized when generated
+        sh_cross_corr = cross_correlation(surr_x[n,:], surr_y[n,:], 
+                                          max_lag, normalize=False) # surrogates are already normalized when generated
         sh_crossmax   = sh_cross_corr.max() 
         cross_corr_surr[n] = sh_crossmax
 
@@ -73,38 +72,10 @@ def posterior_link_probability_iaaft(x,y,surr_x,surr_y,dist,max_lag,num_surr=30)
     try:
         prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
     except (OverflowError, ZeroDivisionError) as e:
-        print(f"Exception {e} {B_value} {pval}")
+        #print(f"Exception {e} {B_value} {pval}")
         prob = float('nan')
 
     return zscore, prob,crossmax,the_lagmax
 
 
-def posterior_link_probability_havlin(cross_corr,dist,max_lag):
-    '''
-        We compute the null model as explained in "Stability of Climate Networks with Time"
-        https://doi.org/10.1038/srep00666
-    '''
-    crossmax   = max(abs(cross_corr))
-    the_lagmax = abs(cross_corr).argmax() - (max_lag + 1)
 
-    zscore = (max(abs(cross_corr)) - cross_corr.mean() )/ cross_corr.std()
-
-
-    if zscore < 1:
-        pval =1
-    else:
-        pval = 1/(zscore**2)
-    
-    if pval < math.e**(-1):
-        B_value = -math.e*pval*math.log(abs(pval))
-    else:
-        B_value = 1
-    
-    # Prior probaility for the null hypothesis
-    K = 2000
-    prior = prior_link_probability(dist,K)
-
-    # Posterior probability of link existence
-    prob = 1-(1+((B_value)*(prior)/(1-prior))**(-1))**(-1)
-
-    return zscore, prob,crossmax,the_lagmax
