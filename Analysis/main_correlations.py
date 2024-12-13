@@ -32,27 +32,29 @@ def correlation_all(data, data_surr, fnameout):
     T, N = data.shape
     fout = create_hdf_dataset(fnameout)
 
-    # Rescale the series to return a normalized cross-correlation
-    for i in range(0, N):
-        data[:, i] = (data[:, i]-data[:, i].mean())/data[:, i].std()
-        # This is to return a normalized cross-correlation
-        data[:, i] = data[:, i]/np.sqrt(T)
-
-    with h5py.File(fnameout, mode='r+') as fout:
+    try:
+        # Rescale the series to return a normalized cross-correlation
         for i in range(0, N):
-            print(f"Computing node {i}")
-            for j in range(i+1, N):
-                dist = haversine_distance(
-                    nodes[i][0], nodes[i][1], nodes[j][0], nodes[j][1])
-                x = data[:, i]
-                y = data[:, j]
-                surr_x = data_surr[:, :, ind_nodes[i][0], ind_nodes[i][1]]
-                surr_y = data_surr[:, :, ind_nodes[j][0], ind_nodes[j][1]]
+            data[:, i] = (data[:, i]-data[:, i].mean())/data[:, i].std()
+            # This is to return a normalized cross-correlation
+            data[:, i] = data[:, i]/np.sqrt(T)
     
-                Z, prob, crossmax, the_lagmax = posterior_link_probability_iaaft(x, y, surr_x, surr_y,
-                                                                                 dist, max_lag, num_surr=num_surr)
-                save_results(fout, i, j, Z, the_lagmax, prob)
-
+        with h5py.File(fnameout, mode='r+') as fout:
+            for i in range(0, N):
+                print(f"Computing node {i}")
+                for j in range(i+1, N):
+                    dist = haversine_distance(
+                        nodes[i][0], nodes[i][1], nodes[j][0], nodes[j][1])
+                    x = data[:, i]
+                    y = data[:, j]
+                    surr_x = data_surr[:, :, ind_nodes[i][0], ind_nodes[i][1]]
+                    surr_y = data_surr[:, :, ind_nodes[j][0], ind_nodes[j][1]]
+        
+                    Z, prob, crossmax, the_lagmax = posterior_link_probability_iaaft(x, y, surr_x, surr_y,
+                                                                                     dist, max_lag, num_surr=num_surr)
+                    save_results(fout, i, j, Z, the_lagmax, prob)
+    except BrokenPipeError:
+        print(f"Broken pipe error when computing nodes {i} and {j}")
 #############################
 
 
@@ -88,19 +90,17 @@ if __name__ == "__main__":
 
     with mp.Pool(num_cpus) as pool:
         for y, year in enumerate(years):
-            try:
-                print(year)
-                fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
-        
-                # Read surrogates
-                foutput_yrs = (foldersurr + 
-                               foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
-                               + '_' + str(year) + '.nc')
-                data_surr = np.array(
-                    Dataset(foutput_yrs, "r")[var_name])
-        
-                #correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
-                pool.apply_async(correlation_all, args=(
-                    data[indices[y]:indices[y+1], :], data_surr, fnameout))  # Parallelize
-            except BrokenPipeError as exc:
-                print("Broken pipe error, ignoring...")
+
+            print(year)
+            fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
+    
+            # Read surrogates
+            foutput_yrs = (foldersurr + 
+                           foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
+                           + '_' + str(year) + '.nc')
+            data_surr = np.array(
+                Dataset(foutput_yrs, "r")[var_name])
+    
+            #correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
+            pool.apply_async(correlation_all, args=(
+                data[indices[y]:indices[y+1], :], data_surr, fnameout))  # Parallelize
