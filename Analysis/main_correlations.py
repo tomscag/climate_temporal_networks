@@ -122,5 +122,5 @@ if __name__ == "__main__":
                              error_callback=error_callback
                              )  # Parallelize
             
-            pool.close()
-            pool.join()
+            # pool.close()
+            # pool.join()
