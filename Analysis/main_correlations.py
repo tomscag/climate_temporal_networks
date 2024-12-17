@@ -6,6 +6,7 @@ from netCDF4 import Dataset
 from lib.bayes import posterior_link_probability_iaaft
 from lib.misc import haversine_distance, import_dataset
 import numpy as np
+import json
 from os import environ
 # Control the number of threads per core (fixed to 1 to avoid clash with mutliprocessing)
 environ['OMP_NUM_THREADS'] = '1'
@@ -62,12 +63,13 @@ if __name__ == "__main__":
     
     # Use the number of cores of your PC
     num_cpus = 15
-    
-    # Save results in
-    outfolder = "../Output"
-    
-    # Load data
-    infolder = '/mnt/'
+    with open('config.json','r') as f:
+        data = json.load(f)
+        outfolder = data.get('outfolder','/mnt/')   # Results are stored here
+        infolder = data.get('infolder','/mnt/')     # Anomalies are stored here
+        foldersurr = data.get('foldersurr','/mnt') # Surrogates are stored here
+
+
     fileinput = 'anomalies_tas_ssp5_8.5_model_awi_cm_1_1_mr.nc' 
     infilepath = infolder + fileinput
     # fileinput = "/mnt/era5_t2m_1970_2020_anomalies.nc"
@@ -76,12 +78,12 @@ if __name__ == "__main__":
     data, indices, nodes, ind_nodes = import_dataset(infilepath, var_name)
 
     max_lag = 150
-    num_surr = 50
+    num_surr = 30
     #years = range(1970, 2021)  # from 1970 to 2020
     years = range(2022,2101)  # from 2022 to 2100
 
     # Create surrogates
-    foldersurr = f"/mnt/surrogates/surr_{fileinput.strip('.nc')}_nsurr_{num_surr}/"
+    foldersurr += f"surr_{fileinput.strip('.nc')}_nsurr_{num_surr}/"
     if not os.path.exists(foldersurr):  # Create the folder if not exists
         os.makedirs(foldersurr)
         create_surrogates(infilepath, num_surr, var_name, indices, years, foldersurr)
