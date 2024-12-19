@@ -38,9 +38,13 @@ def error_callback(error):
 def result_callback(result):
     print(f"Result: {result}")
 
-def correlation_all(data, data_surr, fnameout):
+def correlation_all(data, foutput_yrs, fnameout):
     
     try:
+        # Read surrogates
+        data_surr = np.array(
+            Dataset(foutput_yrs, "r")[var_name])
+        
         T, N = data.shape
         fout = create_hdf_dataset(fnameout)
         # Rescale the series to return a normalized cross-correlation
@@ -67,6 +71,7 @@ def correlation_all(data, data_surr, fnameout):
         return True
     
     except Exception as exc:
+        print("ERROR!!!!")
         return f"Error process {exc}"
 #############################
 
@@ -89,7 +94,7 @@ if __name__ == "__main__":
     data, indices, nodes, ind_nodes = import_dataset(infilepath, var_name)
 
     max_lag = 150
-    num_surr = 50
+    num_surr = 100
     #years = range(1970, 2021)  # from 1970 to 2020
     years = range(2022,2101)  # from 2022 to 2100
 
@@ -103,24 +108,23 @@ if __name__ == "__main__":
 
     with mp.Pool(processes=num_cpus) as pool:
         for y, year in enumerate(years):
-
-            print(year)
+    
+            # print(year)
             fnameout = f'{outfolder}/{var_name}_year_{year}_maxlag_{max_lag}.hdf5'
     
             # Read surrogates
             foutput_yrs = (foldersurr + 
                            foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
                            + '_' + str(year) + '.nc')
-            data_surr = np.array(
-                Dataset(foutput_yrs, "r")[var_name])
     
-            #correlation_all(data[indices[y]:indices[y+1],:],data_surr,fnameout)  # Uncomment to not parallelize
+    
+            #correlation_all(data[indices[y]:indices[y+1],:],foutput_yrs,fnameout)  # Uncomment to not parallelize
             pool.apply_async(correlation_all, 
                              args=(data[indices[y]:indices[y+1], :], 
-                                   data_surr, fnameout),
+                                   foutput_yrs, fnameout),
                              callback=result_callback,
                              error_callback=error_callback
                              )  # Parallelize
-            
-            # pool.close()
-            # pool.join()
+        
+        pool.close()
+        pool.join()
