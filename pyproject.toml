@@ -1,0 +1,26 @@
+[project]
+name = "climanet"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Tomas Scagliarini", email = "tomscag92@gmail.com"},
+]
+dependencies = [
+    "igraph==0.10.4",
+    "h5py==3.6.0",
+    "netCDF4",
+    "networkx==3.0",
+    "numba==0.59.1",
+    "numpy==1.23.5",
+    "pandas==2.2.2",
+    "scipy==1.10.0",
+    "xarray==2024.6.0",
+    "tqdm==4.65.0",
+]
+requires-python = "==3.10.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
