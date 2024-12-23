@@ -84,7 +84,7 @@ if __name__ == "__main__":
     num_cpus = 15
     with open('config.json','r') as f:
         data = json.load(f)
-        outfolder = data.get('outfolder','/mnt/')   # Results are stored here
+        outfolder = data.get('outfolder','../Output/')
         infolder = data.get('infolder','/mnt/')     # Anomalies are stored here
         foldersurr = data.get('foldersurr','/mnt') # Surrogates are stored here
 
@@ -98,6 +98,14 @@ if __name__ == "__main__":
 
     max_lag = 150
     num_surr = 100
+    
+    # Create output folder
+    outfolder += fileinput.strip(".nc").strip("anomalies_") + f"_{num_surr}_surr"
+    try:    
+        os.makedirs(outfolder)
+    except Exception as exc:
+        print(exc)
+        sys.exit("Outfolder exists. Exiting...")
     
     #years = range(1970, 2021)  # from 1970 to 2020
     years = range(2022,2101)  # from 2022 to 2100
