@@ -30,8 +30,8 @@ class PlotterEarth():
         """
             Initialize oject attributes and create figure
         """
-        # self.proj = ccrs.Robinson() # Earth projection "robin"
-        self.proj = ccrs.PlateCarree() # Earth projection "robin"
+        self.proj = ccrs.Robinson() # Earth projection "robin"
+        # self.proj = ccrs.PlateCarree() # Earth projection "robin"
           
         # initialize figure as subplots
         self.fig = plt.figure(figsize=(11, 8.5))
@@ -60,6 +60,7 @@ class PlotterEarth():
         '''
         
         self.ax.coastlines()
+        self.ax.add_feature(cfeature.OCEAN, facecolor=(0.8,0.8,0.8))
         #self.ax.set_extent([lonW, lonE, latS, latN], crs=projPC)
         # self.ax.set_facecolor(cfeature.COLORS['water'])
         # self.ax.add_feature(cfeature.LAND)

@@ -44,6 +44,7 @@ class draw_variation_earth_network(PlotterEarth):
         self.baseline = baseline
         self.variat_percnt = variat_percnt
         self.set_title = True
+        self.set_colorbar = True
         self.fnameoutput = self.set_fnameoutput()
 
         # Set colormap parameters
@@ -64,7 +65,7 @@ class draw_variation_earth_network(PlotterEarth):
 
     def set_fnameoutput(self):
         string = "variations_percnt_" if self.variat_percnt else "variations_"
-        string += self.fnameinput.split("Results_")[1]
+        string += self.fnameinput.split("res_")[1]
         return f"{self.resfolder}{string}_{self.years[0]}_{self.years[-1]}.png"
 
     def draw_variation_network(self):
@@ -131,9 +132,12 @@ class draw_variation_earth_network(PlotterEarth):
                          transform=ccrs.PlateCarree())
 
         # Set colorbar
+        # if self.set_colorbar:
         norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
         sm = plt.cm.ScalarMappable(cmap=self.cmap, norm=norm)
-        cb = plt.colorbar(sm, orientation='horizontal', ax=self.ax)
+        cb = plt.colorbar(sm, ax=self.ax, 
+                          orientation='horizontal', shrink = 0.8,
+                          pad = 0.025, aspect = 30)
         label = ("Percentage " if self.variat_percnt else "") + \
             "variation respect to baseline"
         cb.set_label(label, fontsize=20)
