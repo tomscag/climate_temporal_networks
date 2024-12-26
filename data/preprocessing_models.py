@@ -5,6 +5,7 @@ import os
 # os.system("conda activate climate_env")
 
 import numpy as np
+from pandas import date_range
 
 import xarray as xr
 import xesmf as xe
@@ -66,41 +67,50 @@ def regridding(infolder: str):
         os.system(f"ncks -O --mk_rec_dmn time {fname_output} {fname_output}")
 
 
-def create_day_of_year(infile: str):
+def create_date_vector(infile: str):
 
-    print("\n\n Creating 'day of year' variable:\n\n")
-    # To be done once when creating the combined file
-    data = Dataset(infile, "r+", clobber=True)
-    data.createVariable("dayofyear", "i4", ("time",))
     cal_name = data["time"].calendar
-
-    # Extract start date
+    
     if (cal_name == "365_day") or (cal_name == "noleap"):  # No leap year, as most model are
-        start_date = data["time"].units.split("days since")[1].strip()
-        start_date = datetime.strptime(start_date, "%Y-%m-%d")
+        print("Calendar WITHOUT leap years")
+        first_day = data["time"].units.split("days since")[1].strip()
+        first_day = datetime.strptime(first_day, "%Y-%m-%d")
+
         shift_years = int(data["time"][0]//365)
-        start_date = start_date.replace(year=start_date.year + shift_years)
+        start_date = first_day.replace(year=first_day.year + shift_years)
+        end_date = datetime(year=start_date.year + int(len(data['time'])/365) - 1,
+                            month=12,
+                            day=31)
 
-        # Create day_of_year vector for 365 calendar
-        temp = np.floor(data["time"][:])
-        temp = temp - temp[0]
-        day_of_year = [i % 365 for i in temp]
-        day_of_year = [int(i)+1 for i in day_of_year]
-        data['dayofyear'][:] = day_of_year
+        date_vec = date_range(start=start_date, end=end_date)
 
+        # Filter out leap year dates
+        date = [date for date in date_vec
+                          if not (date.day == 29 and date.month == 2)]
+
+        date = np.array([item.strftime('%Y-%m-%d') for item in date ])
+        
     elif (cal_name == "proleptic_gregorian"):
-        print("Presence of leap years")
-        start_date = data["time"].units.split("days since")[1].strip()
-        start_date = datetime.strptime(start_date, "%Y-%m-%d")
-        day_of_year = [(start_date + timedelta(days=int(item))
-                        ).timetuple().tm_yday for item in list(data["time"][:])]
-        data['dayofyear'][:] = day_of_year
+        print("Calendar WITH leap years")
 
+        first_day = data["time"].units.split("days since")[1].strip()
+        first_day = datetime.strptime(first_day, "%Y-%m-%d")
+
+        start_date = first_day + timedelta(days=data['time'][:][0])
+        end_date = first_day + timedelta(days=data['time'][:][-1])
+
+        date = np.array(date_range(start_date, end_date, freq='D').strftime('%Y-%m-%d'))
     else:
         print(f"Calendar {cal_name} (not recognized)")
-        exit()
+        sys.exit()
+    
+    if 'date' not in data.variables.keys():
+        data.createVariable("date", str, ("time",))
+        data['date'][:] = date
+    else:
+        print("Date variable already exist!")
+        sys.exit()
 
-    print(f"Start date: {start_date}")
 
     data.close()
 
@@ -165,7 +175,7 @@ if __name__ == "__main__":
 
     ##############################
 
-    create_day_of_year(str(filecombined))
+    create_date_vector(str(filecombined))
 
     ##############################
 
