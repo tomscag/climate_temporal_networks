@@ -82,6 +82,7 @@ if __name__ == "__main__":
     
     # Use the number of cores of your PC
     num_cpus = 15
+    
     with open('config.json','r') as f:
         data = json.load(f)
         outfolder = data.get('outfolder','../Output/')
@@ -89,16 +90,25 @@ if __name__ == "__main__":
         foldersurr = data.get('foldersurr','/mnt') # Surrogates are stored here
 
 
-    fileinput = 'anomalies_tas_ssp5_8.5_model_awi_cm_1_1_mr.nc' 
+    fileinput = 'anomalies_pr_ssp5_8.5_model_CESM2.nc' 
     infilepath = infolder + fileinput
-    # fileinput = "/mnt/era5_t2m_1970_2020_anomalies.nc"
 
     var_name = fileinput.split("_")[1]  # t2m tp total_precipitation
-    data, indices, nodes, ind_nodes = import_dataset(infilepath, var_name)
+    data, date_vec, nodes, ind_nodes = import_dataset(infilepath, var_name)
 
+    years = sorted(set([item.year for item in date_vec]))
     max_lag = 150
     num_surr = 100
-    
+
+
+    # Create surrogates
+    foldersurr += f"surr_{fileinput.strip('.nc')}_nsurr_{num_surr}/"
+    if not os.path.exists(foldersurr):  # Create the folder if not exists
+        os.makedirs(foldersurr)
+        create_surrogates(infilepath, num_surr, var_name, date_vec, years, foldersurr)
+    else:
+        print("Surrogates directory found!")
+        
     # Create output folder
     outfolder += fileinput.strip(".nc").strip("anomalies_") + f"_{num_surr}_surr"
     try:    
@@ -106,17 +116,6 @@ if __name__ == "__main__":
     except Exception as exc:
         print(exc)
         sys.exit("Outfolder exists. Exiting...")
-    
-    #years = range(1970, 2021)  # from 1970 to 2020
-    years = range(2022,2101)  # from 2022 to 2100
-
-    # Create surrogates
-    foldersurr += f"surr_{fileinput.strip('.nc')}_nsurr_{num_surr}/"
-    if not os.path.exists(foldersurr):  # Create the folder if not exists
-        os.makedirs(foldersurr)
-        create_surrogates(infilepath, num_surr, var_name, indices, years, foldersurr)
-    else:
-        print("Surrogates directory found!")
 
     with mp.Pool(processes=num_cpus) as pool:
         for y, year in enumerate(years):
@@ -126,17 +125,18 @@ if __name__ == "__main__":
     
             # Read surrogates
             foutput_yrs = (foldersurr + 
-                           foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
-                           + '_' + str(year) + '.nc')
+                            foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
+                            + '_' + str(year) + '.nc')
     
-    
+            ind = [i for i, dt in enumerate(date_vec) if dt.year==year]
+            
             #correlation_all(data[indices[y]:indices[y+1],:],foutput_yrs,fnameout)  # Uncomment to not parallelize
             pool.apply_async(correlation_all, 
-                             args=(data[indices[y]:indices[y+1], :], 
-                                   foutput_yrs, fnameout),
-                             callback=result_callback,
-                             error_callback=error_callback
-                             )  # Parallelize
+                              args=(data[ind, :], 
+                                    foutput_yrs, fnameout),
+                              callback=result_callback,
+                              error_callback=error_callback
+                              )  # Parallelize
         
         pool.close()
         pool.join()

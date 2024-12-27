@@ -10,52 +10,36 @@ import igraph as ig
 
 #############################
 
-def import_dataset(fileinput,variable='t2m', filterpoles=False):
+def import_dataset(fileinput,variable='t2m'):
     
     from netCDF4 import Dataset
+    from datetime import datetime
     '''
     OUTPUT
         data: (2d-array)
             data reshaped
 
-        ind_years: (1d-array)
+        date_vec: (datetime.datetime)
             indices 1 Jan
 
         nodes: (dict)
             label: (lat,lon)
-
-        filterpoles: (bool)
-            if true remove degenerate nodes on the poles
     '''
 
-    data = Dataset(fileinput, 'r')
-    ind_years = extract_year_limits(data)
-    lats  = [float(item.data) for item in data.variables['latitude'] ]       
-    lons  = [float(item.data) for item in data.variables['longitude'] ]      
-    ind_nodes = list(product(range(data.variables['latitude'].size),range(data.variables['longitude'].size)))  # [(0,0),(0,1),(0,2)...]
-
-    temp = data.variables[variable]
-    data = np.array(temp).reshape( temp.shape[0],temp.shape[1]*temp.shape[2]) # time, lat * lon
-
-    nodes = list(product(lats,lons)) # [(-90,-180),(-90,-175)...]
+    with Dataset(fileinput, 'r') as data:
+        lats  = [float(item.data) for item in data.variables['latitude'] ]       
+        lons  = [float(item.data) for item in data.variables['longitude'] ]      
+        ind_nodes = list(product(range(data.variables['latitude'].size),range(data.variables['longitude'].size)))  # [(0,0),(0,1),(0,2)...]
     
+        date_vec = [datetime.strptime(item,'%Y-%m-%d' ) for item in data['date']]
+    
+        temp = data.variables[variable]
+        data = np.array(temp).reshape( temp.shape[0],temp.shape[1]*temp.shape[2]) # time, lat * lon
+    
+        nodes = list(product(lats,lons)) # [(-90,-180),(-90,-175)...]
+        
+    return data, date_vec, nodes, ind_nodes
 
-    if filterpoles:
-        nodes = {key:value   for key,value in nodes.items()   if np.abs(value[0]) < 90   }
-        nodes[0] = (-90.0,-180.0) # I mantain the same labels in data
-        nodes[2663] = (90.0,175.0) # 
-        nodes = dict(sorted(nodes.items()))
-    return data, ind_years, nodes, ind_nodes
-
-
-def extract_year_limits(data):
-    '''
-        Return the indices of the first day of the years
-    '''
-    doy = np.array(data['dayofyear']) 
-    doy = np.where( doy == 1)[0]
-    doy = np.append(doy,len(data["time"])) # Add the index for the end of the last year
-    return doy
 
 
 @jit(nopython=True)
@@ -131,7 +115,7 @@ def compute_connectivity(adj_mat,coord1,coord2,coords):
 
 def load_lon_lat_hdf5(finput):
     dset = h5py.File(finput,"r")
-    lons, lats = dset["lon"][:], dset["lat"][:]
+    lons, lats = dset["longitude"][:], dset["latitude"][:]
     if max(lons)>=355:  # (0,355) -> (-180, 175)
         lons = lons - 180
     return lons, lats

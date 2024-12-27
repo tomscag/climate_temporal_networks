@@ -1,6 +1,5 @@
 import numpy as np
 from netCDF4 import Dataset
-from lib.misc import extract_year_limits
 import lib.iaaft as iaaft
 from datetime import datetime, timedelta
 import os
@@ -8,7 +7,7 @@ import os
 def create_surrogates(fileinput: str,
                       num_surr: int,
                       var_name: str,
-                      time_periods_limits: np.array,
+                      date_vec: datetime,
                       years: list,
                       foldersurr: str):
     """
@@ -20,10 +19,10 @@ def create_surrogates(fileinput: str,
         DESCRIPTION.
     var_name : str
         DESCRIPTION.
-    time_periods_limits : np.array
-        limit indices of the years in data.
+    date_vec : datetime
+        datetime vector
     years: list
-        years label.
+        years list.
     foldersurr : str
         Folder where to store the surrogates.
 
@@ -40,20 +39,14 @@ def create_surrogates(fileinput: str,
     
     print("\n\n Initialize surrogates dataset\n\n")
 
-
-    # if os.path.exists(foldersurr):
-    #     os.system(f"rm {foldersurr}")
-    
-
     for n, year in enumerate(years):
         
         foutput_yrs = (foldersurr + 
                        foldersurr.split("surr_")[1].strip("/").split(".nc")[0] 
                        + '_' + str(year) + '.nc')
         
-        start_id = time_periods_limits[n]
-        end_id = time_periods_limits[n+1]
-        ntimes = len(range(start_id,end_id))
+        ind = [i for i, dt in enumerate(date_vec) if dt.year==year]
+        ntimes = len(ind)
 
         with Dataset(foutput_yrs,"w") as surr_dataset:
             surr_dataset.createDimension("latitude",nlats)
@@ -68,7 +61,7 @@ def create_surrogates(fileinput: str,
             
             print(f"Creating surrogates for year {years[n]}")
             
-            data_slice = data[var_name][start_id:end_id,:,:]
+            data_slice = data[var_name][ind,:,:]
             
             for i in range(nlats):
                 print(f"Surrogating nodes of lat: {i}")
@@ -83,7 +76,3 @@ def create_surrogates(fileinput: str,
             
                     surr_dataset[var_name][:,:,i,j] = surr
     
-
-
-# D = data['time'].units.split("days since ")[1]
-# datetime.strptime(D, '%Y-%m-%d') + timedelta(float(data['time'][0].data))

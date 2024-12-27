@@ -44,8 +44,8 @@ def regridding(infolder: str):
         ds = xr.open_dataset(fname_input, engine='netcdf4')
         ds_target = xr.Dataset(
             {
-                "lat": (["lat"], np.arange(-90, 90+5.0, 5.0), {"units": "degrees_north"}),
-                "lon": (["lon"], np.arange(0, 360, 5.0), {"units": "degrees_east"}),
+                "latitude": (["latitude"], np.arange(-90, 90+5.0, 5.0), {"units": "degrees_north"}),
+                "longitude": (["longitude"], np.arange(0, 360, 5.0), {"units": "degrees_east"}),
             }
         )
         # define the regridder object (from our source dataarray to the target)
