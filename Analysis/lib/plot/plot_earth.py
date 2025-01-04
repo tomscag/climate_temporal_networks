@@ -82,11 +82,12 @@ class PlotterEarth():
 
 
     @staticmethod
-    def load_results(fnameinput,years,index):
+    def load_results(folderinput,years,index):
         # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
 
         # Average over the considered period
-        for idx,year in enumerate(years):
+        for idx, year in enumerate(years):
+            fnameinput = folderinput + f"/tas_year_{year}_maxlag_150.hdf5"
             if idx==0:
                 mat = load_dataset_hdf5(fnameinput,year,index)
             elif idx>0:

@@ -64,8 +64,8 @@ class draw_variation_earth_network(PlotterEarth):
         return self.cmap(norm_value)
 
     def set_fnameoutput(self):
-        string = "variations_percnt_" if self.variat_percnt else "variations_"
-        string += self.fnameinput.split("res_")[1]
+        string = "variat_percnt_" if self.variat_percnt else "variat_"
+        string += self.fnameinput.split("Output/")[1]
         return f"{self.resfolder}{string}_{self.years[0]}_{self.years[-1]}.png"
 
     def draw_variation_network(self):
@@ -74,7 +74,7 @@ class draw_variation_earth_network(PlotterEarth):
         #       since sampling is not needed in this case
         """
 
-        lons, lats = load_lon_lat_hdf5(self.fnameinput)
+        lons, lats = load_lon_lat_hdf5()
         coords = generate_coordinates(5, lats, lons)
         coords = {tuple(val): key for key, val in coords.items()}
 

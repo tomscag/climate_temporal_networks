@@ -8,8 +8,6 @@ from lib.plot.draw_variation_earth_network import draw_variation_earth_network
 from lib.plot.plot_global_variations import plot_global_variations
 
 
-                                
-
 
 ######################################
 ######################################
@@ -20,25 +18,25 @@ from lib.plot.plot_global_variations import plot_global_variations
 if __name__ == "__main__":
 
     # years   = np.arange(2090,2100)
-    folderinput = "../Output/"
-    # Results_tas_ssp2_4_5_gfdl_esm4.hdf5 Results_pr_ssp5_8.5_model_CESM2.hdf5
-    finput = folderinput + "res_era5_tas_100_surr.hdf5" 
-    baseline = np.arange(1970,1990)  # 2022,2042    1970,1990
-    
     resfolder  = "./fig/"
+    folderinput = "../Output/"
+    finput = folderinput + "tas_ssp5_8.5_model_awi_cm_100_surr"
+    baseline = np.arange(2022,2042)  # 2022,2042    1970,1990
+    
+    
 
     savefig = True
     variat_percnt = False
 
     # Analysis per decades
-    init_year = np.array([1970,1980,1990,2000,2010,2020])
-    # init_year = np.array([2040,2050,2060,2070,2080,2090,2100])
+    # init_year = np.array([1970,1980,1990,2000,2010,2020])
+    init_year = np.array([2040,2050,2060,2070,2080,2090,2100])
     # init_year = np.array([1970,1980])
     for id,yrs in enumerate(init_year[:-1]):
         print(f"Analyzing years: {init_year[id:id+2]}")
         years = np.arange(init_year[id]+1,init_year[id+1]+1)
         # draw_connectivity_earth_network(finput,resfolder,years,nsamples)
-        draw_variation_earth_network(finput,years,baseline,variat_percnt)
+        draw_variation_earth_network(finput, years, baseline, variat_percnt)
         # draw_tau_earth_network(finput,resfolder,years)
 
     

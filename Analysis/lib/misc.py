@@ -129,9 +129,13 @@ def compute_connectivity(adj_mat,coord1,coord2,coords):
 
 
 
-def load_lon_lat_hdf5(finput):
-    dset = h5py.File(finput,"r")
-    lons, lats = dset["lon"][:], dset["lat"][:]
+def load_lon_lat_hdf5():
+    from netCDF4 import Dataset
+    # Load info from original dataset # TODO: this is hard-coded, solve
+    # file = Dataset("../data/Datasets/tas_CMIP6_ssp5_8.5_model_CESM2.nc", "r")
+    with Dataset("../data/Datasets/era5_t2m_1970_2020.nc", "r") as file:
+        lats = file['latitude'][:]
+        lons = file['longitude'][:]
     if max(lons)>=355:  # (0,355) -> (-180, 175)
         lons = lons - 180
     return lons, lats
@@ -139,7 +143,7 @@ def load_lon_lat_hdf5(finput):
 def load_dataset_hdf5(finput,year,index):
     # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
     dset = h5py.File(finput,"r")
-    return dset[str(year)][:,:,index] 
+    return dset["results"][:,:,index] 
 
 
 def sample_fuzzy_network(arr):
