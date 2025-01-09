@@ -67,52 +67,59 @@ def regridding(infolder: str):
         os.system(f"ncks -O --mk_rec_dmn time {fname_output} {fname_output}")
 
 
-def create_date_vector(infile: str):
-
-    cal_name = data["time"].calendar
+def create_date_vector(filename: str):
+    '''
+    Create a datetime variable inside the netcdf file.
     
-    if (cal_name == "365_day") or (cal_name == "noleap"):  # No leap year, as most model are
-        print("Calendar WITHOUT leap years")
-        first_day = data["time"].units.split("days since")[1].strip()
-        first_day = datetime.strptime(first_day, "%Y-%m-%d")
-
-        shift_years = int(data["time"][0]//365)
-        start_date = first_day.replace(year=first_day.year + shift_years)
-        end_date = datetime(year=start_date.year + int(len(data['time'])/365) - 1,
-                            month=12,
-                            day=31)
-
-        date_vec = date_range(start=start_date, end=end_date)
-
-        # Filter out leap year dates
-        date = [date for date in date_vec
-                          if not (date.day == 29 and date.month == 2)]
-
-        date = np.array([item.strftime('%Y-%m-%d') for item in date ])
+    Parameters
+    ----------
+    filename : str
+        Input filename.
         
-    elif (cal_name == "proleptic_gregorian"):
-        print("Calendar WITH leap years")
-
-        first_day = data["time"].units.split("days since")[1].strip()
-        first_day = datetime.strptime(first_day, "%Y-%m-%d")
-
-        start_date = first_day + timedelta(days=data['time'][:][0])
-        end_date = first_day + timedelta(days=data['time'][:][-1])
-
-        date = np.array(date_range(start_date, end_date, freq='D').strftime('%Y-%m-%d'))
-    else:
-        print(f"Calendar {cal_name} (not recognized)")
-        sys.exit()
+    '''
+    with Dataset(filename, "r+") as data:
+        cal_name = data["time"].calendar
+        
+        if (cal_name == "365_day") or (cal_name == "noleap"):  # No leap year, as most model are
+            print("Calendar WITHOUT leap years")
+            first_day = data["time"].units.split("days since")[1].strip()
+            first_day = datetime.strptime(first_day, "%Y-%m-%d")
     
-    if 'date' not in data.variables.keys():
-        data.createVariable("date", str, ("time",))
-        data['date'][:] = date
-    else:
-        print("Date variable already exist!")
-        sys.exit()
-
-
-    data.close()
+            shift_years = int(data["time"][0]//365)
+            start_date = first_day.replace(year=first_day.year + shift_years)
+            end_date = datetime(year=start_date.year + int(len(data['time'])/365) - 1,
+                                month=12,
+                                day=31)
+    
+            date_vec = date_range(start=start_date, end=end_date)
+    
+            # Filter out leap year dates
+            date = [date for date in date_vec
+                              if not (date.day == 29 and date.month == 2)]
+    
+            date = np.array([item.strftime('%Y-%m-%d') for item in date ])
+            
+        elif (cal_name == "proleptic_gregorian"):
+            print("Calendar WITH leap years")
+    
+            first_day = data["time"].units.split("days since")[1].strip()
+            first_day = datetime.strptime(first_day, "%Y-%m-%d")
+    
+            start_date = first_day + timedelta(days=data['time'][:][0])
+            end_date = first_day + timedelta(days=data['time'][:][-1])
+    
+            date = np.array(date_range(start_date, end_date, freq='D').strftime('%Y-%m-%d'))
+        else:
+            print(f"Calendar {cal_name} (not recognized)")
+            sys.exit()
+        
+        if 'date' not in data.variables.keys():
+            data.createVariable("date", str, ("time",))
+            data['date'][:] = date
+        else:
+            print("Date variable already exist!")
+            sys.exit()
+    
 
 def compute_anomalies(ds: xr.Dataset, 
                       var_name: str, 
@@ -157,14 +164,14 @@ if __name__ == "__main__":
         print(infolder)
     else:
         print("Insert a input folder")
-        infolder = "ssp2_4_5_awi_cm_1_1_mr_near_surface_air_temperature"
+        infolder = "pr_ssp5_8.5_awi_cm"
         # exit()
     print(os.getcwd())
-    os.system(f"rm ./Datasets/{infolder}/*.nc")
+    
 
     ##############################
 
-    extract_netcdf(infolder)
+    # extract_netcdf(infolder)
 
     regridding(infolder)
 
@@ -181,8 +188,9 @@ if __name__ == "__main__":
 
 
 
-    data = Dataset(filecombined, "r")
-    var_list = list(data.variables)
+    with Dataset(filecombined, "r") as data:
+        var_list = list(data.variables)
+        
     if 'pr' in var_list:
         var_name = 'pr'
     elif 'tas' in var_list:
