@@ -4,7 +4,7 @@ import matplotlib.colors as colors
 import ast
 
 from lib.plot.plot_earth import PlotterEarth
-from cartopy import crs as ccrs, feature as cfeature
+from cartopy import crs as ccrs
 from itertools import combinations
 from lib.misc import (load_lon_lat_hdf5,
                       generate_coordinates,
@@ -19,6 +19,7 @@ from lib.misc import (load_lon_lat_hdf5,
 class draw_variation_earth_network(PlotterEarth):
 
     def __init__(self,
+                 ax,
                  fnameinput: str,
                  years: np.array,
                  baseline: list,
@@ -27,6 +28,8 @@ class draw_variation_earth_network(PlotterEarth):
         """
         Parameters
         ----------
+        ax: axes
+            Axes to plot
         fnameinput : str
             File path of the results hdf file
         years : np.array
@@ -37,7 +40,7 @@ class draw_variation_earth_network(PlotterEarth):
             If true links represents percentage variations wrt the baseline.
         """
 
-        super().__init__()
+        super().__init__(ax)
         self.fnameinput = fnameinput
         self.resfolder = "./fig/"
         self.years = years
@@ -45,12 +48,18 @@ class draw_variation_earth_network(PlotterEarth):
         self.variat_percnt = variat_percnt
         self.set_title = True
         self.set_colorbar = True
-        self.fnameoutput = self.set_fnameoutput()
+        self.save_fig = False
+        self.linewidth = 20
+        self.fnameoutput = self._set_fnameoutput()
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
-        self.vmin = -0.1
-        self.vmax = 0.1
+        
+        # Set colorbar limits
+        if self.variat_percnt:
+            self.vmin, self.vmax = -0.4, 0.4
+        else:
+            self.vmin, self.vmax = -0.1, 0.1
 
         self.prb_mat = self.load_results(self.fnameinput, self.years, index=2)
         self.prb_mat = np.maximum(self.prb_mat, self.prb_mat.transpose())
@@ -58,12 +67,12 @@ class draw_variation_earth_network(PlotterEarth):
 
         self.draw_variation_network()
 
-    def get_color(self, value):
+    def _get_color(self, value):
         norm_value = np.clip((value - self.vmin) /
                              (self.vmax - self.vmin), 0, 1)
         return self.cmap(norm_value)
 
-    def set_fnameoutput(self):
+    def _set_fnameoutput(self):
         string = "variat_percnt_" if self.variat_percnt else "variat_"
         string += self.fnameinput.split("Output/")[1]
         return f"{self.resfolder}{string}_{self.years[0]}_{self.years[-1]}.png"
@@ -106,22 +115,22 @@ class draw_variation_earth_network(PlotterEarth):
             variat = C2 - C1
 
         # Draw connections between tipping elements
-
         for id1, tip1 in enumerate(self.tipping_points.keys()):
             for id2, tip2 in enumerate(self.tipping_points.keys()):
                 if id1 < id2:
                     _, pos1 = self.tipping_centers[tip1]
                     _, pos2 = self.tipping_centers[tip2]
 
-                    color = self.get_color(variat[id1, id2])
+                    color = self._get_color(variat[id1, id2])
                     self.ax.plot(
                         [pos1[1], pos2[1]], [pos1[0], pos2[0]],
-                        linewidth=np.abs(C1[id1, id2])*30,
+                        linewidth=np.abs(C1[id1, id2])*self.linewidth,
                         color=color, transform=ccrs.PlateCarree())
 
         grid_lon, grid_lat = np.meshgrid(lons, lats)
+        
         # Show grid
-        self.ax.plot(grid_lon, grid_lat, 'k.', markersize=2, alpha=0.50,
+        self.ax.plot(grid_lon, grid_lat, 'k.', markersize=1, alpha=0.35,
                      transform=ccrs.PlateCarree())
 
         # Draw tipping elements positions
@@ -132,19 +141,21 @@ class draw_variation_earth_network(PlotterEarth):
                          transform=ccrs.PlateCarree())
 
         # Set colorbar
-        # if self.set_colorbar:
-        norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
-        sm = plt.cm.ScalarMappable(cmap=self.cmap, norm=norm)
-        cb = plt.colorbar(sm, ax=self.ax, 
-                          orientation='horizontal', shrink = 0.8,
-                          pad = 0.025, aspect = 30)
-        label = ("Percentage " if self.variat_percnt else "") + \
-            "variation respect to baseline"
-        cb.set_label(label, fontsize=20)
+        if self.set_colorbar:
+            norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
+            sm = plt.cm.ScalarMappable(cmap=self.cmap, norm=norm)
+            cb = plt.colorbar(sm, ax=self.ax, 
+                              orientation='horizontal', shrink = 0.8,
+                              pad = 0.025, aspect = 30)
+            label = ("Percentage " if self.variat_percnt else "") + \
+                "variation"
+            cb.set_label(label, fontsize=20)
 
         if self.set_title:
-            self.ax.set_title(f"Years: {self.years[0]} - {self.years[-1]}",
+            self.ax.set_title(f"{self.years[0]} - {self.years[-1]}",
                               fontsize=30, weight='bold')
-        plt.savefig(self.fnameoutput,
-                    dpi=self.params['dpi'],
-                    bbox_inches='tight')
+            
+        if self.save_fig:
+            plt.savefig(self.fnameoutput,
+                        dpi=self.params['dpi'],
+                        bbox_inches='tight')

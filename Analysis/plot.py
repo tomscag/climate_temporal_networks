@@ -7,8 +7,8 @@ from lib.plot.draw_tau_earth_network import draw_tau_earth_network
 from lib.plot.draw_variation_earth_network import draw_variation_earth_network
 from lib.plot.plot_global_variations import plot_global_variations
 
-
-
+import matplotlib.pyplot as plt
+from cartopy import crs as ccrs, feature as cfeature
 ######################################
 ######################################
 ######################################
@@ -17,29 +17,37 @@ from lib.plot.plot_global_variations import plot_global_variations
 
 if __name__ == "__main__":
 
-    # years   = np.arange(2090,2100)
     resfolder  = "./fig/"
     folderinput = "../Output/"
     finput = folderinput + "tas_ssp5_8.5_model_awi_cm_100_surr"
     baseline = np.arange(2022,2042)  # 2022,2042    1970,1990
     
     
-
     savefig = True
-    variat_percnt = False
+    variat_percnt = True
 
     # Analysis per decades
     # init_year = np.array([1970,1980,1990,2000,2010,2020])
     init_year = np.array([2040,2050,2060,2070,2080,2090,2100])
-    # init_year = np.array([1970,1980])
-    for id,yrs in enumerate(init_year[:-1]):
-        print(f"Analyzing years: {init_year[id:id+2]}")
-        years = np.arange(init_year[id]+1,init_year[id+1]+1)
+    # init_year = np.array([2041,2070])
+    fig, axes = plt.subplots(2,3, figsize=(25,10), 
+                             subplot_kw={'projection': ccrs.Robinson()})
+    for idx, ax in enumerate(axes.flat):     #(init_year[:-1]):
+        print(f"Analyzing years: {init_year[idx]}-{init_year[idx+1]}")
+        years = np.arange(init_year[idx]+1, init_year[idx+1]+1)
+        plot = draw_variation_earth_network(ax, 
+                                            finput, years, baseline, variat_percnt)
+        # axes[0,0] = plot.ax
         # draw_connectivity_earth_network(finput,resfolder,years,nsamples)
-        draw_variation_earth_network(finput, years, baseline, variat_percnt)
         # draw_tau_earth_network(finput,resfolder,years)
 
-    
+    # plt.show()
+    plt.savefig(resfolder+f"{finput.split(folderinput)[1]}.png",
+                dpi=300,
+                bbox_inches='tight')
+
+    # plt.show()
+    # 
     # plot_global_variations(finput,resfolder,limit_years=[2040,2100],nsamples,baseline)
 
 
