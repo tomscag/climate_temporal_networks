@@ -19,9 +19,14 @@ if __name__ == "__main__":
 
     resfolder  = "./fig/"
     folderinput = "../Output/"
-    finput = folderinput + "tas_ssp5_8.5_model_awi_cm_100_surr"
+    filelist = ["tas_ssp1_2.6_model_awi_cm_1_1_mr_100_surr",
+                "tas_ssp2_4.5_model_awi_cm_1_1_100_surr",
+                "tas_ssp5_8.5_model_awi_cm_100_surr",
+                "pr_ssp5_2.6_model_awi_cm_1_1_mr_100_surr",
+                "pr_ssp5_8.5_model_awi_cm_100_surr"
+                ]
+    finput = folderinput + filelist[3]
     baseline = np.arange(2022,2042)  # 2022,2042    1970,1990
-    
     
     savefig = True
     variat_percnt = True
@@ -30,6 +35,8 @@ if __name__ == "__main__":
     # init_year = np.array([1970,1980,1990,2000,2010,2020])
     init_year = np.array([2040,2050,2060,2070,2080,2090,2100])
     # init_year = np.array([2041,2070])
+    
+    # Create figure
     fig, axes = plt.subplots(2,3, figsize=(25,10), 
                              subplot_kw={'projection': ccrs.Robinson()})
     for idx, ax in enumerate(axes.flat):     #(init_year[:-1]):
@@ -37,12 +44,15 @@ if __name__ == "__main__":
         years = np.arange(init_year[idx]+1, init_year[idx+1]+1)
         plot = draw_variation_earth_network(ax, 
                                             finput, years, baseline, variat_percnt)
-        # axes[0,0] = plot.ax
         # draw_connectivity_earth_network(finput,resfolder,years,nsamples)
         # draw_tau_earth_network(finput,resfolder,years)
 
     # plt.show()
-    plt.savefig(resfolder+f"{finput.split(folderinput)[1]}.png",
+    
+    # Save figure
+    string = "variat_percnt_" if variat_percnt else "variat_"
+    string += finput.split("Output/")[1]
+    plt.savefig(f"{resfolder}{string}.png",
                 dpi=300,
                 bbox_inches='tight')
 

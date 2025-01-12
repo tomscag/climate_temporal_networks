@@ -57,7 +57,7 @@ class draw_variation_earth_network(PlotterEarth):
         
         # Set colorbar limits
         if self.variat_percnt:
-            self.vmin, self.vmax = -0.4, 0.4
+            self.vmin, self.vmax = -0.4, 0.4    # 0.2 for pr
         else:
             self.vmin, self.vmax = -0.1, 0.1
 
@@ -110,14 +110,18 @@ class draw_variation_earth_network(PlotterEarth):
                     C2[id2, id1] = C2[id1, id2]
 
         if self.variat_percnt:
+            self.thresh = 0.05
             variat = (C2 - C1)/C1
+            variat[ np.abs(variat) < self.thresh] = 0
         else:
+            self.thresh = 0.01
             variat = C2 - C1
+            variat[ np.abs(variat) < self.thresh] = 0
 
         # Draw connections between tipping elements
         for id1, tip1 in enumerate(self.tipping_points.keys()):
             for id2, tip2 in enumerate(self.tipping_points.keys()):
-                if id1 < id2:
+                if (id1 < id2) & (np.abs(variat[id1,id2]) > self.thresh):
                     _, pos1 = self.tipping_centers[tip1]
                     _, pos2 = self.tipping_centers[tip2]
 
@@ -147,8 +151,8 @@ class draw_variation_earth_network(PlotterEarth):
             cb = plt.colorbar(sm, ax=self.ax, 
                               orientation='horizontal', shrink = 0.8,
                               pad = 0.025, aspect = 30)
-            label = ("Percentage " if self.variat_percnt else "") + \
-                "variation"
+            label = ("% " if self.variat_percnt else "") + \
+                "variation wrt baseline"
             cb.set_label(label, fontsize=20)
 
         if self.set_title:
