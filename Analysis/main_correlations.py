@@ -110,7 +110,7 @@ if __name__ == "__main__":
         print("Surrogates directory found!")
         
     # Create output folder
-    outfolder += fileinput.strip(".nc").strip("anomalies_") + f"_{num_surr}_surr"
+    outfolder += fileinput.replace(".nc",'').replace("anomalies_",'') + f"_{num_surr}_surr"
     try:    
         os.makedirs(outfolder)
     except Exception as exc:
