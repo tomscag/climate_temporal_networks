@@ -24,6 +24,7 @@ class draw_variation_earth_network(PlotterEarth):
                  years: np.array,
                  baseline: list,
                  variat_percnt: bool,
+                 lw_connectivity: bool,
                  ):
         """
         Parameters
@@ -38,6 +39,8 @@ class draw_variation_earth_network(PlotterEarth):
             Time window to caclulate the baseline.
         variat_percnt : bool
             If true links represents percentage variations wrt the baseline.
+        lw_connectivity: bool
+            If true the linewidth is link connectivity, else the variation
         """
 
         super().__init__(ax)
@@ -46,10 +49,11 @@ class draw_variation_earth_network(PlotterEarth):
         self.years = years
         self.baseline = baseline
         self.variat_percnt = variat_percnt
+        self.lw_connectivity = lw_connectivity
         self.set_title = True
         self.set_colorbar = True
         self.save_fig = False
-        self.linewidth = 20
+        self.linewidth = 150    # tas 100, pr 150
         self.fnameoutput = self._set_fnameoutput()
 
         # Set colormap parameters
@@ -59,13 +63,13 @@ class draw_variation_earth_network(PlotterEarth):
         if self.variat_percnt:
             self.vmin, self.vmax = -0.4, 0.4    # 0.2 for pr
         else:
-            self.vmin, self.vmax = -0.1, 0.1
+            self.vmin, self.vmax = -0.05, 0.05  # 0.1 for tas - 0.05 pr and era5
 
         self.prb_mat = self.load_results(self.fnameinput, self.years, index=2)
         self.prb_mat = np.maximum(self.prb_mat, self.prb_mat.transpose())
         self.load_tipping_points()
 
-        self.draw_variation_network()
+        self._draw_variation_network()
 
     def _get_color(self, value):
         norm_value = np.clip((value - self.vmin) /
@@ -77,7 +81,7 @@ class draw_variation_earth_network(PlotterEarth):
         string += self.fnameinput.split("Output/")[1]
         return f"{self.resfolder}{string}_{self.years[0]}_{self.years[-1]}.png"
 
-    def draw_variation_network(self):
+    def _draw_variation_network(self):
         """
         # NOTE: we compute connectivity directly from the probability matrix
         #       since sampling is not needed in this case
@@ -85,7 +89,6 @@ class draw_variation_earth_network(PlotterEarth):
 
         lons, lats = load_lon_lat_hdf5()
         coords = generate_coordinates(5, lats, lons)
-        coords = {tuple(val): key for key, val in coords.items()}
 
         self.prb_mat_base = self.load_results(
             self.fnameinput, self.baseline, index=2)
@@ -110,11 +113,11 @@ class draw_variation_earth_network(PlotterEarth):
                     C2[id2, id1] = C2[id1, id2]
 
         if self.variat_percnt:
-            self.thresh = 0.05
+            self.thresh = 0.01
             variat = (C2 - C1)/C1
             variat[ np.abs(variat) < self.thresh] = 0
         else:
-            self.thresh = 0.01
+            self.thresh = 0.00
             variat = C2 - C1
             variat[ np.abs(variat) < self.thresh] = 0
 
@@ -122,13 +125,17 @@ class draw_variation_earth_network(PlotterEarth):
         for id1, tip1 in enumerate(self.tipping_points.keys()):
             for id2, tip2 in enumerate(self.tipping_points.keys()):
                 if (id1 < id2) & (np.abs(variat[id1,id2]) > self.thresh):
+                    if self.lw_connectivity: 
+                        c = C1[id1, id2]/7.5 
+                    else: 
+                        c = variat[id1, id2]
                     _, pos1 = self.tipping_centers[tip1]
                     _, pos2 = self.tipping_centers[tip2]
 
                     color = self._get_color(variat[id1, id2])
                     self.ax.plot(
                         [pos1[1], pos2[1]], [pos1[0], pos2[0]],
-                        linewidth=np.abs(C1[id1, id2])*self.linewidth,
+                        linewidth=np.abs(c)*self.linewidth,
                         color=color, transform=ccrs.PlateCarree())
 
         grid_lon, grid_lat = np.meshgrid(lons, lats)

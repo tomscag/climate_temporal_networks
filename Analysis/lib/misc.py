@@ -96,7 +96,7 @@ def generate_coordinates(sizegrid,lats,lons):
     node = 0
     for lat in lats:
         for lon in lons:
-            coords[node] = [lat,lon]
+            coords[node] = (lat,lon)
             node += 1
     return coords
 
