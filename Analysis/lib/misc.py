@@ -84,8 +84,7 @@ def generate_coordinates(sizegrid,lats,lons):
     '''
     Output:
         coords (dict):
-            key is the node id, value is a list 
-            in the format [lat,lon]
+            key is the tuple (lat,lon), value is the node label 
     '''
     # lats = np.arange(-90,90+sizegrid,sizegrid,dtype=float)  # 37 
     # lons = np.arange(-180,180,sizegrid,dtype=float)         # 72
@@ -98,7 +97,7 @@ def generate_coordinates(sizegrid,lats,lons):
         for lon in lons:
             coords[node] = (lat,lon)
             node += 1
-    return coords
+    return {val: key for key, val in coords.items()}
 
 
 def create_full_network(edgelist):

@@ -63,7 +63,7 @@ class draw_variation_earth_network(PlotterEarth):
         if self.variat_percnt:
             self.vmin, self.vmax = -0.4, 0.4    # 0.2 for pr
         else:
-            self.vmin, self.vmax = -0.05, 0.05  # 0.1 for tas - 0.05 pr and era5
+            self.vmin, self.vmax = -0.03, 0.03  # 0.1 for tas - 0.05 pr and era5
 
         self.prb_mat = self.load_results(self.fnameinput, self.years, index=2)
         self.prb_mat = np.maximum(self.prb_mat, self.prb_mat.transpose())
@@ -89,7 +89,7 @@ class draw_variation_earth_network(PlotterEarth):
 
         lons, lats = load_lon_lat_hdf5()
         coords = generate_coordinates(5, lats, lons)
-
+        
         self.prb_mat_base = self.load_results(
             self.fnameinput, self.baseline, index=2)
         self.prb_mat_base = np.maximum(
