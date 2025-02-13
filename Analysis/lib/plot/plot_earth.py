@@ -2,14 +2,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from cartopy import crs as ccrs, feature as cfeature
+import glob
 import ast
 
 from lib.misc import (
-            create_fuzzy_network, 
-            total_degree_nodes,
-            load_dataset_hdf5,
-            load_lon_lat_hdf5,
-            sample_fuzzy_network
+            create_fuzzy_network,
+            load_dataset_hdf5
             )
 
 
@@ -26,19 +24,20 @@ class PlotterEarth():
         -------
             None
     '''
-    def __init__(self) -> None:
+    def __init__(self, ax) -> None:
         """
             Initialize oject attributes and create figure
         """
-        # self.proj = ccrs.Robinson() # Earth projection "robin"
-        self.proj = ccrs.PlateCarree() # Earth projection "robin"
+        self.proj = ccrs.Robinson() # Earth projection "robin"
+        # self.proj = ccrs.PlateCarree() # Earth projection "robin"
           
         # initialize figure as subplots
-        self.fig = plt.figure(figsize=(11, 8.5))
-        # self.ax = plt.subplot(1, 1, 1, projection=proj)
+        # self.fig = plt.figure(figsize=(11, 8.5))
+        # self.ax = plt.subplot(1, 1, 1, projection=self.proj)
+        self.ax = ax
 
         # Set the axes using the specified map projection
-        self.ax=plt.axes(projection=self.proj)
+        # self.ax=plt.axes(projection=self.proj)
         
         # self.ax.set_title(str(year))
         self.plot_earth_outline()
@@ -53,22 +52,18 @@ class PlotterEarth():
                        } 
 
 
-
     def plot_earth_outline(self):
         '''
             Draw coastlines and meridians/parallel
         '''
         
-        self.ax.coastlines()
-        #self.ax.set_extent([lonW, lonE, latS, latN], crs=projPC)
+        self.ax.add_feature(cfeature.COASTLINE)
+        self.ax.add_feature(cfeature.OCEAN, facecolor=(0.8,0.8,0.8))
+        
         # self.ax.set_facecolor(cfeature.COLORS['water'])
         # self.ax.add_feature(cfeature.LAND)
-        # self.ax.add_feature(cfeature.COASTLINE)
+        
 
-        # self.ax.add_feature(cfeature.BORDERS, linestyle='--')
-        # self.ax.add_feature(cfeature.LAKES, alpha=0.5)
-        # self.ax.add_feature(cfeature.STATES)
-        # self.ax.add_feature(cfeature.RIVERS)
 
     def load_tipping_points(self):
         with open("../data/tipping_elements/tipping_points_positions_5deg.dat", 'r') as file:
@@ -81,11 +76,12 @@ class PlotterEarth():
 
 
     @staticmethod
-    def load_results(fnameinput,years,index):
+    def load_results(folderinput,years,index):
         # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
 
         # Average over the considered period
-        for idx,year in enumerate(years):
+        for idx, year in enumerate(years):
+            fnameinput = glob.glob(folderinput + f"/*_year_{year}_maxlag_150.hdf5")[0]
             if idx==0:
                 mat = load_dataset_hdf5(fnameinput,year,index)
             elif idx>0:
