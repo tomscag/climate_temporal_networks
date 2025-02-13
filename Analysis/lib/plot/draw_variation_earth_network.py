@@ -63,7 +63,7 @@ class draw_variation_earth_network(PlotterEarth):
         if self.variat_percnt:
             self.vmin, self.vmax = -0.4, 0.4    # 0.2 for pr
         else:
-            self.vmin, self.vmax = -0.03, 0.03  # 0.1 for tas - 0.05 pr and era5
+            self.vmin, self.vmax = -0.04, 0.04  # 0.1 for tas - 0.05 pr and era5
 
         self.prb_mat = self.load_results(self.fnameinput, self.years, index=2)
         self.prb_mat = np.maximum(self.prb_mat, self.prb_mat.transpose())
