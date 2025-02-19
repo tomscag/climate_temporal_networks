@@ -9,7 +9,7 @@ from itertools import combinations
 from lib.misc import (load_lon_lat_hdf5,
                       generate_coordinates,
                       compute_connectivity,
-                      sample_fuzzy_network)
+                      compute_total_area)
 
 ##################################
 ##################################
@@ -53,7 +53,7 @@ class draw_variation_earth_network(PlotterEarth):
         self.set_title = True
         self.set_colorbar = True
         self.save_fig = False
-        self.linewidth = 150    # tas 100, pr 150
+        self.linewidth = 150    # tas 100, pr 150 4e5
         self.fnameoutput = self._set_fnameoutput()
 
         # Set colormap parameters
@@ -64,6 +64,7 @@ class draw_variation_earth_network(PlotterEarth):
             self.vmin, self.vmax = -0.4, 0.4    # 0.2 for pr
         else:
             self.vmin, self.vmax = -0.04, 0.04  # 0.1 for tas - 0.05 pr and era5
+            # self.vmin, self.vmax = -1e-5, 1e-5  # 0.1
 
         self.prb_mat = self.load_results(self.fnameinput, self.years, index=2)
         self.prb_mat = np.maximum(self.prb_mat, self.prb_mat.transpose())
@@ -89,6 +90,7 @@ class draw_variation_earth_network(PlotterEarth):
 
         lons, lats = load_lon_lat_hdf5()
         coords = generate_coordinates(5, lats, lons)
+        norm_fact = compute_total_area(coords)
         
         self.prb_mat_base = self.load_results(
             self.fnameinput, self.baseline, index=2)
@@ -106,10 +108,10 @@ class draw_variation_earth_network(PlotterEarth):
                     coord1 = self.tipping_points[tip1]
                     coord2 = self.tipping_points[tip2]
                     C1[id1, id2] = compute_connectivity(
-                        self.prb_mat_base, coord1, coord2, coords)
+                        self.prb_mat_base, norm_fact, coord1, coord2, coords)
                     C1[id2, id1] = C1[id1, id2]
                     C2[id1, id2] = compute_connectivity(
-                        self.prb_mat, coord1, coord2, coords)
+                        self.prb_mat, norm_fact, coord1, coord2, coords)
                     C2[id2, id1] = C2[id1, id2]
 
         if self.variat_percnt:

@@ -95,21 +95,36 @@ def create_full_network(edgelist):
     return G
 
 
+def compute_total_area(coords: dict) -> float:
+    '''
+    Compute the normalization factor for the connectivity 
+    This is proportional to the total area of the Earth
+    '''
+    norm = 0
+    for key, value in coords.items():
+        norm += np.cos(np.deg2rad(key[0]))
+
+    return norm
+    # return norm**2
+
+def compute_connectivity(adj_mat: np.array,
+                         norm: float,
+                         coord1: dict,
+                         coord2: dict,
+                         coords) -> float:
+    '''
+        Compute connectivity between two tipping points
+        correcting for Earth's spherical geometry
+    '''
     
-def compute_connectivity(adj_mat,coord1,coord2,coords):
-    # Compute connectivity considering 
-    # Earth's spherical geometry
-    fact = 2*np.pi/360 # For conversion to rad
-    CC = 0
-    D = 0   # Normalization factor
+    deg2rad = 2*np.pi/360 # For conversion to rad
+    C = 0
     for c1 in coord1:
         label1 = coords[c1]
         for c2 in coord2:
             label2 = coords[c2]
-            CC += adj_mat[label1,label2]*np.cos(c1[0]*fact)*np.cos(c2[0]*fact)
-            D += (np.cos(c1[0]*fact)*np.cos(c2[0]*fact))
-    return CC/D
-
+            C += adj_mat[label1,label2]*np.cos(c1[0]*deg2rad)*np.cos(c2[0]*deg2rad)
+    return C/norm
 
 
 def load_lon_lat_hdf5():
