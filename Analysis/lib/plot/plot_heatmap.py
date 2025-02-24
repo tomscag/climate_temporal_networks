@@ -6,7 +6,6 @@ from lib.plot.plot_earth import PlotterEarth
 from cartopy import crs as ccrs, feature as cfeature
 
 from lib.misc import (
-            create_fuzzy_network, 
             total_degree_nodes,
             load_dataset_hdf5,
             sample_fuzzy_network,

@@ -105,7 +105,7 @@ def compute_total_area(coords: dict) -> float:
         norm += np.cos(np.deg2rad(key[0]))
 
     return norm
-    # return norm**2
+    # return norm**2 (this should be used in principle)
 
 def compute_connectivity(adj_mat: np.array,
                          norm: float,
@@ -145,21 +145,32 @@ def load_dataset_hdf5(finput,year,index):
     return dset["results"][:,:,index] 
 
 
-def sample_fuzzy_network(arr):
-    # arr: matrix of probabilities (upper triangular)
-    # Return the adjacency matrix
+def sample_fuzzy_network(arr: np.array) -> ig.Graph:
+    '''
+    Parameters
+    ----------
+    arr : np.array
+        2D-array of probabilities (upper triangular).
+
+    Returns
+    -------
+    graph : ig.Graph
+        Graph object
+
+    '''
     N = arr.shape[0]
     arrc = arr.copy()
-    arrc[arrc < np.random.random(size=(N,N)) ] = 0    # Sample fuzzy
+    arrc[arrc < np.random.random(size=(N, N))] = 0    # Sample fuzzy
     # return nx.from_numpy_array(arr,edge_attr="weight")
-    graph = ig.Graph.Weighted_Adjacency(arrc,mode="upper")
+    graph = ig.Graph.Weighted_Adjacency(arrc, mode="upper")
     return graph
 
 
 
-def create_fuzzy_network(edgelist,mode="networkx"):
+def create_fuzzy_network(edgelist:pd.DataFrame,
+                         mode="networkx"):
     ''''
-        Generate fuzzy network from edgelist
+        Sample fuzzy network from edgelist (DEPRECATED)
     '''
     
     rnd = np.random.rand(*edgelist['prob'].shape)
@@ -196,29 +207,31 @@ def load_edgelist_csv(name,lag_bounds = [0,10]):
     return df
 
 
-
-def filter_network_by_distance(edgelist,K,filterpoles=False):
+def filter_network_by_distance(edgelist: pd.DataFrame,
+                               K: float = 2000,
+                               filterpoles: bool = False):
     '''
-        Filter edgelist putting to zero links with longer than a threshold
+    Filter edgelist putting to zero links longer than a threshold
 
-        Input:
-            K:   threshold in kilometers
-            filterpoles: if true deletes nodes with abs(latitude) = 90 (north/sud poles) 
+    Parameters
+    ----------
+        K:   threshold in kilometers
+        filterpoles: if true deletes nodes with abs(latitude) = 90 (north/sud poles) 
     '''
-    
+
     coords, lons, lats = generate_coordinates(sizegrid=5)
     if filterpoles:
         edgelist['flag'] = edgelist.apply(lambda x:
-                                            (coords[x.node1][0] > -90) and (coords[x.node1][0] < 90) and 
-                                            (coords[x.node2][0] > -90) and (coords[x.node2][0] < 90), axis=1
-                                        )  
-        edgelist = edgelist.loc[ edgelist.flag == True ]
+                                          (coords[x.node1][0] > -90) and (coords[x.node1][0] < 90) and
+                                          (coords[x.node2][0] > -90) and (coords[x.node2][0] < 90), axis=1
+                                          )
+        edgelist = edgelist.loc[edgelist.flag == True]
 
-    edgelist['dist'] = edgelist.apply(lambda x: 
-                                      haversine_distance( coords[x.node1][0],coords[x.node1][1],
-                                                         coords[x.node2][0],coords[x.node2][1]  ), axis=1
+    edgelist['dist'] = edgelist.apply(lambda x:
+                                      haversine_distance(coords[x.node1][0], coords[x.node1][1],
+                                                         coords[x.node2][0], coords[x.node2][1]), axis=1
                                       )
-    return edgelist.loc[ edgelist.dist > K ]
+    return edgelist.loc[edgelist.dist > K]
 
 
 
