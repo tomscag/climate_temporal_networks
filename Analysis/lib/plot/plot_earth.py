@@ -6,7 +6,6 @@ import glob
 import ast
 
 from lib.misc import (
-            create_fuzzy_network,
             load_dataset_hdf5
             )
 
@@ -104,88 +103,8 @@ class PlotterEarth():
 
 
 
-from lib.misc import (
-                load_edgelist,
-                create_fuzzy_network
-                )
-import networkx as nx
-import igraph as ig
-import os
 
-class PlotterLines():
 
-    def __init__(self,folderinput,resfolder,rows=1,cols=1) -> None:
-        """
-            Initialize oject attributes and create figure
-        """
-        self.folderinput = folderinput
-        self.resfolder = resfolder
-        self.startyear = 1970
-        self.endyear  =  2021
-        self.numyears = self.endyear - self.startyear + 1
 
-        self.numfuzzy = 1  # Number of fuzzy networks to generate
-
-        # misc. figure parameters
-        self.params = {'linewidth': 1,
-                       'mrkrsize': 10,
-                       'opacity': 0.8,
-                       'width': 850,
-                       'length': 700,
-                       'dpi': 300
-                       }        
         
-        # colors
-        self.colors = {'blue':'#377eb8',
-                       'red' : '#e41a1c',
-                       }
-
-        # font for figure labels and legend
-        self.lab_dict = dict(family='Arial',
-                             size=26,
-                             color='black'
-                             )  
-              
-        # font for number labeling on axes
-        self.tick_dict = dict(family='Arial',
-                              size=24,
-                              color='black'
-                              )      
-          
-        # initialize figure as subplots
-        self.fig, self.ax = plt.subplots(nrows=rows,
-                                 ncols=cols, figsize=(20, 10),
-                                 )
-        # self.self.ax.set_title(str(year))
-        # self.load_results()
-
-    def load_results(self,fnameinput):
-
-        df = load_edgelist(fnameinput)
-        return df
-        
-    def get_filename(self, year,filelist):
-        # Return filename of a particular year
-        for file in filelist:
-            if os.path.isfile(self.folderinput+os.sep+file ):
-                if str(year) in file:
-                    return file
-        raise ValueError("FILE NOT FOUND")
-
-
-    def plot_clustering_coefficient(self):
-        filelist = os.listdir(self.folderinput)
-        self.clust = np.empty(self.numyears)
-        for idx, year in enumerate(range(self.startyear,self.endyear+1)):
-            print(f"Load results for year {year}")
-            inputfname = self.get_filename(year,filelist)
-            edgelist = self.load_results(self.folderinput+inputfname)
-            graph = create_fuzzy_network(edgelist)
-            graph = ig.Graph.from_networkx(graph)
-            self.clust[idx]  = graph.transitivity_avglocal_undirected(mode="NaN")
-            # self.clust[idx] = nx.average_clustering(graph)
-            # self.clust[idx] = nx.transitivity(graph)
-    
-        plt.plot(self.clust)
-        plt.savefig("test_clust.png")
 
