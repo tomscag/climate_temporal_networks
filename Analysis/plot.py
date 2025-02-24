@@ -35,7 +35,7 @@ if __name__ == "__main__":
                 "tas_ssp5_8_5_mri_esm2_0_100_surr", # 8
                 "tas_ssp1_2_6_mri_esm2_0_100_surr"
                 ]
-    finput = folderinput + filelist[9]
+    finput = folderinput + filelist[2]
     # baseline = np.arange(1970,1990)  # 2022,2042    1970,1990
     baseline = np.arange(2022,2042)
     
@@ -50,48 +50,42 @@ if __name__ == "__main__":
     #######################
     #%% Network analysis ##
     #######################
-    # mode = "modularity"   # clustering modularity edge_density
-    # resfolder = "./fig_network_analysis/"
-    # years = np.arange(2022,2101)
+    modes = ["clustering","modularity","edge_density"]   # clustering modularity edge_density
+    resfolder = "./fig_network_analysis/"
+    years = np.arange(2022,2101)
+    # years = np.arange(2022,2040)
     
-    # fig, ax = plt.subplots(1,1, figsize=(5,5))
+    fig, axes = plt.subplots(1,len(modes), figsize=(7*len(modes),5))
     
-    # plot = AnalyzeFuzzyNetwork(finput, years)
-    # if mode == "clustering":
-    #     plot.plot_clustering_coefficient(ax, mode="gcc")
-    # elif mode == "modularity":
-    #     plot.plot_modularity(ax)
-    # elif mode == "edge_density":
-    #     plot.plot_edge_density(ax)
-    # else:
-    #     print("Type not recognized")
+    plot = AnalyzeFuzzyNetwork(finput, years, modes)
+    axes = plot.plot(axes)
                 
-    # filename = finput.split("Output/")[1]                  
-    # plt.savefig(f"{resfolder}{mode}_{filename}.pdf",
-    #             bbox_inches='tight')
+    filename = finput.split("Output/")[1]                  
+    plt.savefig(f"{resfolder}{filename}.pdf",
+                bbox_inches='tight')
     
     #%% Create figure 10 years
-    fig, axes = plt.subplots(2,3, figsize=(15,10), 
-                              subplot_kw={'projection': ccrs.Robinson()})
-    for idx, ax in enumerate(axes.flat[0:(len(init_year)-1)]): #(init_year[:-1]):
-        print(f"Analyzing years: {init_year[idx]}-{init_year[idx+1]}")
-        years = np.arange(init_year[idx]+1, init_year[idx+1]+1)
-        plot = draw_variation_earth_network(ax, 
-                                            finput, 
-                                            years, 
-                                            baseline, 
-                                            variat_percnt, 
-                                            lw_connectivity)
-    # fig.delaxes(axes[1, 2])
-    plt.tight_layout()
+    # fig, axes = plt.subplots(2,3, figsize=(15,10), 
+    #                           subplot_kw={'projection': ccrs.Robinson()})
+    # for idx, ax in enumerate(axes.flat[0:(len(init_year)-1)]): #(init_year[:-1]):
+    #     print(f"Analyzing years: {init_year[idx]}-{init_year[idx+1]}")
+    #     years = np.arange(init_year[idx]+1, init_year[idx+1]+1)
+    #     plot = draw_variation_earth_network(ax, 
+    #                                         finput, 
+    #                                         years, 
+    #                                         baseline, 
+    #                                         variat_percnt, 
+    #                                         lw_connectivity)
+    # # fig.delaxes(axes[1, 2])
+    # plt.tight_layout()
     
-    # Save figure
-    filename = "variat_percnt_" if variat_percnt else "variat_"
-    filename += "width_connect_" if lw_connectivity else "width_variat_"
-    filename += finput.split("Output/")[1]
-    plt.savefig(f"{resfolder}{filename}.png",
-                dpi=300,
-                bbox_inches='tight')
+    # # Save figure
+    # filename = "variat_percnt_" if variat_percnt else "variat_"
+    # filename += "width_connect_" if lw_connectivity else "width_variat_"
+    # filename += finput.split("Output/")[1]
+    # plt.savefig(f"{resfolder}{filename}.png",
+    #             dpi=300,
+    #             bbox_inches='tight')
     # #%% Create figures 30 years
     
     # init_year = np.array([2040,2070,2100])
