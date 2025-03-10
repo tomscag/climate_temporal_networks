@@ -50,8 +50,9 @@ class draw_variation_earth_network(PlotterEarth):
         self.baseline = baseline
         self.variat_percnt = variat_percnt
         self.lw_connectivity = lw_connectivity
-        self.set_title = True
-        self.set_colorbar = True
+        self.set_title = False
+        self.set_colorbar = False
+        self.show_grid = False
         self.save_fig = False
         self.linewidth = 150    # tas 100, pr 150 4e5
         self.fnameoutput = self._set_fnameoutput()
@@ -143,8 +144,9 @@ class draw_variation_earth_network(PlotterEarth):
         grid_lon, grid_lat = np.meshgrid(lons, lats)
         
         # Show grid
-        self.ax.plot(grid_lon, grid_lat, 'k.', markersize=1, alpha=0.35,
-                     transform=ccrs.PlateCarree())
+        if self.show_grid:
+            self.ax.plot(grid_lon, grid_lat, 'k.', markersize=1, alpha=0.35,
+                         transform=ccrs.PlateCarree())
 
         # Draw tipping elements positions
         for name, coords in self.tipping_points.items():

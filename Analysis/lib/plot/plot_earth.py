@@ -58,6 +58,7 @@ class PlotterEarth():
         
         self.ax.add_feature(cfeature.COASTLINE)
         self.ax.add_feature(cfeature.OCEAN, facecolor=(0.8,0.8,0.8))
+        self.ax.set_extent([-180, 180, -90, 90])
         
         # self.ax.set_facecolor(cfeature.COLORS['water'])
         # self.ax.add_feature(cfeature.LAND)
