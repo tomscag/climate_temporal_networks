@@ -20,7 +20,7 @@ class draw_variation_earth_network(PlotterEarth):
 
     def __init__(self,
                  ax,
-                 fnameinput: str,
+                 filenames: list,
                  years: np.array,
                  baseline: list,
                  variat_percnt: bool,
@@ -31,8 +31,9 @@ class draw_variation_earth_network(PlotterEarth):
         ----------
         ax: axes
             Axes to plot
-        fnameinput : str
-            File path of the results hdf file
+        filenames : str
+            List of the results' folder paths (hdf files)
+            Each element refers to a different model
         years : np.array
             Time window to create the figure.
         baseline : list
@@ -44,7 +45,7 @@ class draw_variation_earth_network(PlotterEarth):
         """
 
         super().__init__(ax)
-        self.fnameinput = fnameinput
+        self.filenames = filenames
         self.resfolder = "./fig/"
         self.years = years
         self.baseline = baseline
@@ -55,8 +56,7 @@ class draw_variation_earth_network(PlotterEarth):
         self.show_grid = False
         self.save_fig = False
         self.linewidth = 150    # tas 100, pr 150 4e5
-        self.fnameoutput = self._set_fnameoutput()
-
+        self.load_tipping_points()
         # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
         
@@ -67,54 +67,71 @@ class draw_variation_earth_network(PlotterEarth):
             self.vmin, self.vmax = -0.04, 0.04  # 0.1 for tas - 0.05 pr and era5
             # self.vmin, self.vmax = -1e-5, 1e-5  # 0.1
 
-        self.prb_mat = self.load_results(self.fnameinput, self.years, index=2)
-        self.prb_mat = np.maximum(self.prb_mat, self.prb_mat.transpose())
-        self.load_tipping_points()
-
-        self._draw_variation_network()
+        # Average over multiple models
+        count = 0
+        for filename in self.filenames:
+            if count == 0:
+                prb_mat = self.load_results(filename, self.years, index=2)
+                prb_mat = np.maximum(prb_mat, prb_mat.transpose())
+                prb_mat_base = self.load_results(filename, self.baseline, index=2)
+                prb_mat_base = np.maximum(prb_mat_base, prb_mat_base.transpose())
+                variat = self._compute_variation_wrt_baseline(prb_mat, prb_mat_base)
+                count += 1
+            else:
+                prb_mat = self.load_results(filename, self.years, index=2)
+                prb_mat = np.maximum(prb_mat, prb_mat.transpose())
+                prb_mat_base = self.load_results(filename, self.baseline, index=2)
+                prb_mat_base = np.maximum(prb_mat_base, prb_mat_base.transpose())
+                variat += self._compute_variation_wrt_baseline(prb_mat, prb_mat_base)
+                
+        variat = variat/len(self.filenames)
+        
+        string = "variat_percnt_" if self.variat_percnt else "variat_"
+        string += self.filenames[0].split("Output/")[1]
+        self.fnameoutput = f"{self.resfolder}{string}_{self.years[0]}_{self.years[-1]}.png"
+    
+        self._draw_variation_network(variat)
 
     def _get_color(self, value):
         norm_value = np.clip((value - self.vmin) /
                              (self.vmax - self.vmin), 0, 1)
         return self.cmap(norm_value)
-
-    def _set_fnameoutput(self):
-        string = "variat_percnt_" if self.variat_percnt else "variat_"
-        string += self.fnameinput.split("Output/")[1]
-        return f"{self.resfolder}{string}_{self.years[0]}_{self.years[-1]}.png"
-
-    def _draw_variation_network(self):
+    
+    def _compute_variation_wrt_baseline(self, 
+                                        prb_mat: np.array,
+                                        prb_mat_base: np.array,
+                                        ) -> np.array:
         """
-        # NOTE: we compute connectivity directly from the probability matrix
-        #       since sampling is not needed in this case
+        Parameters
+        ----------
+        prb_mat: np.array
+            fuzzy matrix
+        prb_mat_base: np.array
+            fuzzy matrix baseline
         """
-
-        lons, lats = load_lon_lat_hdf5()
-        coords = generate_coordinates(5, lats, lons)
-        norm_fact = compute_total_area(coords)
         
-        self.prb_mat_base = self.load_results(
-            self.fnameinput, self.baseline, index=2)
-        self.prb_mat_base = np.maximum(
-            self.prb_mat_base, self.prb_mat_base.transpose())
+        self.lons, self.lats = load_lon_lat_hdf5()
+        coords = generate_coordinates(5, self.lats, self.lons)
+        norm_fact = compute_total_area(coords)
 
         ntip = len(self.tipping_points.keys())
         C1 = np.zeros(shape=(ntip, ntip))*np.nan
         C2 = np.zeros(shape=(ntip, ntip))*np.nan
 
-        # Draw variation wrt baseline
+        # Compute variation for each tipping point
         for id1, tip1 in enumerate(self.tipping_points.keys()):
             for id2, tip2 in enumerate(self.tipping_points.keys()):
                 if id1 < id2:
                     coord1 = self.tipping_points[tip1]
                     coord2 = self.tipping_points[tip2]
                     C1[id1, id2] = compute_connectivity(
-                        self.prb_mat_base, norm_fact, coord1, coord2, coords)
+                        prb_mat_base, norm_fact, coord1, coord2, coords)
                     C1[id2, id1] = C1[id1, id2]
                     C2[id1, id2] = compute_connectivity(
-                        self.prb_mat, norm_fact, coord1, coord2, coords)
+                        prb_mat, norm_fact, coord1, coord2, coords)
                     C2[id2, id1] = C2[id1, id2]
-
+        self.connectivity = C1
+        
         if self.variat_percnt:
             self.thresh = 0.01
             variat = (C2 - C1)/C1
@@ -123,13 +140,28 @@ class draw_variation_earth_network(PlotterEarth):
             self.thresh = 0.00
             variat = C2 - C1
             variat[ np.abs(variat) < self.thresh] = 0
+        return variat
+        
+
+    def _draw_variation_network(self, variat: np.array):
+        
+        """
+        NOTE: we compute connectivity directly from the probability matrix
+              since sampling is not needed in this case
+        
+        Parameters
+        ----------
+        variat: np.array
+            Tipping points connectivity variations wrt baseline
+    
+        """
 
         # Draw connections between tipping elements
         for id1, tip1 in enumerate(self.tipping_points.keys()):
             for id2, tip2 in enumerate(self.tipping_points.keys()):
                 if (id1 < id2) & (np.abs(variat[id1,id2]) > self.thresh):
                     if self.lw_connectivity: 
-                        c = C1[id1, id2]/7.5 
+                        c = self.connectivity[id1, id2]/7.5 
                     else: 
                         c = variat[id1, id2]
                     _, pos1 = self.tipping_centers[tip1]
@@ -139,12 +171,11 @@ class draw_variation_earth_network(PlotterEarth):
                     self.ax.plot(
                         [pos1[1], pos2[1]], [pos1[0], pos2[0]],
                         linewidth=np.abs(c)*self.linewidth,
-                        color=color, transform=ccrs.PlateCarree())
-
-        grid_lon, grid_lat = np.meshgrid(lons, lats)
+                        color=color, transform=ccrs.PlateCarree())    
         
         # Show grid
         if self.show_grid:
+            grid_lon, grid_lat = np.meshgrid(self.lons, self.lats)
             self.ax.plot(grid_lon, grid_lat, 'k.', markersize=1, alpha=0.35,
                          transform=ccrs.PlateCarree())
 
