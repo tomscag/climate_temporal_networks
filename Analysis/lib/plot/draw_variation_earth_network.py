@@ -51,13 +51,12 @@ class draw_variation_earth_network(PlotterEarth):
         self.baseline = baseline
         self.variat_percnt = variat_percnt
         self.lw_connectivity = lw_connectivity
-        self.set_title = False
+        self.set_title = True
         self.set_colorbar = False
         self.show_grid = False
         self.save_fig = False
         self.linewidth = 150    # tas 100, pr 150 4e5
         self.load_tipping_points()
-        # Set colormap parameters
         self.cmap = plt.get_cmap("RdBu_r")
         
         # Set colorbar limits
@@ -67,30 +66,27 @@ class draw_variation_earth_network(PlotterEarth):
             self.vmin, self.vmax = -0.04, 0.04  # 0.1 for tas - 0.05 pr and era5
             # self.vmin, self.vmax = -1e-5, 1e-5  # 0.1
 
-        # Average over multiple models
-        count = 0
-        for filename in self.filenames:
-            if count == 0:
-                prb_mat = self.load_results(filename, self.years, index=2)
-                prb_mat = np.maximum(prb_mat, prb_mat.transpose())
-                prb_mat_base = self.load_results(filename, self.baseline, index=2)
-                prb_mat_base = np.maximum(prb_mat_base, prb_mat_base.transpose())
-                variat = self._compute_variation_wrt_baseline(prb_mat, prb_mat_base)
-                count += 1
-            else:
-                prb_mat = self.load_results(filename, self.years, index=2)
-                prb_mat = np.maximum(prb_mat, prb_mat.transpose())
-                prb_mat_base = self.load_results(filename, self.baseline, index=2)
-                prb_mat_base = np.maximum(prb_mat_base, prb_mat_base.transpose())
-                variat += self._compute_variation_wrt_baseline(prb_mat, prb_mat_base)
-                
-        variat = variat/len(self.filenames)
+        variat = self._average_over_models()
         
         string = "variat_percnt_" if self.variat_percnt else "variat_"
         string += self.filenames[0].split("Output/")[1]
         self.fnameoutput = f"{self.resfolder}{string}_{self.years[0]}_{self.years[-1]}.png"
     
         self._draw_variation_network(variat)
+        
+        
+    def _average_over_models(self):
+        """Average over multiple models"""
+        variations = [
+            self._compute_variation_wrt_baseline(
+                self.load_results(f, self.years, index=2),
+                self.load_results(f, self.baseline, index=2)
+            )
+            for f in self.filenames
+        ]
+        
+        return sum(variations) / len(self.filenames)
+
 
     def _get_color(self, value):
         norm_value = np.clip((value - self.vmin) /
@@ -137,7 +133,7 @@ class draw_variation_earth_network(PlotterEarth):
             variat = (C2 - C1)/C1
             variat[ np.abs(variat) < self.thresh] = 0
         else:
-            self.thresh = 0.00
+            self.thresh = 0.001
             variat = C2 - C1
             variat[ np.abs(variat) < self.thresh] = 0
         return variat

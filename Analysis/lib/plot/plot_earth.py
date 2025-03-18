@@ -76,7 +76,7 @@ class PlotterEarth():
 
 
     @staticmethod
-    def load_results(folderinput,years,index):
+    def load_results(folderinput,years,index) -> np.array:
         # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
 
         # Average over the considered period
@@ -87,7 +87,8 @@ class PlotterEarth():
             elif idx>0:
                 mat += load_dataset_hdf5(fnameinput,year,index)
         mat /= len(years)
-        return mat
+        mat[np.isnan(mat)] = 0
+        return np.maximum(mat, mat.T)
         
         # if index == 2:
         #     # Create the full network "weighted" with the edge-probabilities
@@ -99,13 +100,4 @@ class PlotterEarth():
         #     return mat
         # else:
         #     print("Load results: index not recognized!")
-
-
-
-
-
-
-
-
-        
 
