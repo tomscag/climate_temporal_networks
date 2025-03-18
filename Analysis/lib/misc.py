@@ -7,6 +7,7 @@ from numba import jit
 import math
 import h5py
 import igraph as ig
+import glob
 
 #############################
 
@@ -124,6 +125,8 @@ def compute_connectivity(adj_mat: np.array,
         for c2 in coord2:
             label2 = coords[c2]
             C += adj_mat[label1,label2]*np.cos(c1[0]*deg2rad)*np.cos(c2[0]*deg2rad)
+    if np.isnan(C):
+        pass
     return C/norm
 
 
@@ -138,6 +141,34 @@ def load_lon_lat_hdf5():
     if max(lons)>=355:  # (0,355) -> (-180, 175)
         lons = lons - 180
     return lons, lats
+
+
+def load_results(folderinput: str, years: np.array, index: int) -> np.array:
+    """
+        Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
+    """
+    # Average over the considered period
+    for idx, year in enumerate(years):
+        fnameinput = glob.glob(folderinput + f"/*_year_{year}_maxlag_150.hdf5")[0]
+        if idx==0:
+            mat = load_dataset_hdf5(fnameinput,year,index)
+        elif idx>0:
+            mat += load_dataset_hdf5(fnameinput,year,index)
+    mat /= len(years)
+    mat[np.isnan(mat)] = 0
+    return np.maximum(mat, mat.T)
+    
+    # if index == 2:
+    #     # Create the full network "weighted" with the edge-probabilities
+    #     graph = sample_fuzzy_network(mat)
+    #     return graph.get_adjacency()
+    # elif index == 1: # tau:
+    #     return mat
+    # elif index == 0: # zscore
+    #     return mat
+    # else:
+    #     print("Load results: index not recognized!")
+
 
 def load_dataset_hdf5(finput,year,index):
     # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability

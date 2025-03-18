@@ -1,12 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
-import ast
 
 from lib.plot.plot_earth import PlotterEarth
 from cartopy import crs as ccrs
 from itertools import combinations
 from lib.misc import (load_lon_lat_hdf5,
+                      load_results,
                       generate_coordinates,
                       compute_connectivity,
                       compute_total_area)
@@ -35,7 +35,7 @@ class draw_variation_earth_network(PlotterEarth):
             List of the results' folder paths (hdf files)
             Each element refers to a different model
         years : np.array
-            Time window to create the figure.
+            Time window to average the results.
         baseline : list
             Time window to caclulate the baseline.
         variat_percnt : bool
@@ -75,12 +75,12 @@ class draw_variation_earth_network(PlotterEarth):
         self._draw_variation_network(variat)
         
         
-    def _average_over_models(self):
+    def _average_over_models(self) -> np.array:
         """Average over multiple models"""
         variations = [
             self._compute_variation_wrt_baseline(
-                self.load_results(f, self.years, index=2),
-                self.load_results(f, self.baseline, index=2)
+                load_results(f, self.years, index=2),
+                load_results(f, self.baseline, index=2)
             )
             for f in self.filenames
         ]
