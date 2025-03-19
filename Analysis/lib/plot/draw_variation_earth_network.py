@@ -7,6 +7,7 @@ from cartopy import crs as ccrs
 from itertools import combinations
 from lib.misc import (load_lon_lat_hdf5,
                       load_results,
+                      load_tipping_points,
                       generate_coordinates,
                       compute_connectivity,
                       compute_total_area)
@@ -56,7 +57,7 @@ class draw_variation_earth_network(PlotterEarth):
         self.show_grid = False
         self.save_fig = False
         self.linewidth = 150    # tas 100, pr 150 4e5
-        self.load_tipping_points()
+        self.tipping_points, self.tipping_centers = load_tipping_points()
         self.cmap = plt.get_cmap("RdBu_r")
         
         # Set colorbar limits

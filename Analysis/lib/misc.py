@@ -8,6 +8,7 @@ import math
 import h5py
 import igraph as ig
 import glob
+import ast
 
 #############################
 
@@ -174,6 +175,16 @@ def load_dataset_hdf5(finput,year,index):
     # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
     dset = h5py.File(finput,"r")
     return dset["results"][:,:,index] 
+
+
+def load_tipping_points():
+    with open("../data/tipping_elements/tipping_points_positions_5deg.dat", 'r') as file:
+        data = file.read()
+    with open("../data/tipping_elements/tipping_points_centers.dat", 'r') as file:
+        cent = file.read()
+    tipping_points = ast.literal_eval(data) 
+    tipping_centers = ast.literal_eval(cent)
+    return tipping_points, tipping_centers
 
 
 def sample_fuzzy_network(arr: np.array) -> ig.Graph:
