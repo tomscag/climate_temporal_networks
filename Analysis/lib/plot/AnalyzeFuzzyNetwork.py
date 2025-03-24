@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 from lib.misc import (
-                load_edgelist,
+                load_results,
                 load_tipping_points,
                 sample_fuzzy_network,
                 load_dataset_hdf5,
@@ -26,7 +26,7 @@ class RankTippingElements:
         self.fnameinputs = fnameinputs
         self.baseline = baseline        
         self.years = years
-        self.models = ["awi_cm_1_1_mr", "mri_esm_2.0", "CESM2"]
+        self.models = ["awi_cm_1_1_mr", "mri_esm_2.0", "CESM2"][0:len(fnameinputs)]
         self.resfolder = "./fig/"
         
         self.tipping_points, self.tipping_centers = load_tipping_points()
@@ -56,11 +56,8 @@ class RankTippingElements:
         
         for (m, fnameinput) in enumerate(self.fnameinputs):
             print(fnameinput)
-            self.prb_mat = self._load_results(fnameinput, self.years, index=2)
-            self.prb_mat_base = self._load_results(
-                fnameinput, self.baseline, index=2)
-            self.prb_mat_base = np.maximum(
-                self.prb_mat_base, self.prb_mat_base.transpose())
+            self.prb_mat = load_results(fnameinput, self.years, index=2)
+            self.prb_mat_base = load_results(fnameinput, self.baseline, index=2)
     
             ntip = len(self.tipping_points.keys())
             C1 = np.zeros(shape=(ntip, ntip))*np.nan
@@ -100,25 +97,11 @@ class RankTippingElements:
         sns.stripplot(data=data, orient="h", ax=ax ,s=6, alpha=0.85)
         sns.boxplot(data=data, orient="h", saturation=0.4, ax=ax)
         ax.set_xlabel("total variation")
-        ax.set_xlim([-1.0,0])
+        ax.set_xlim([-0.50,0])
     
         if savefig:
             plt.savefig("bar_plot.pdf")
-    
-    def _load_results(self, folderinput, years, index):
-        # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
-
-        # Average over the considered period
-        for idx, year in enumerate(years):
-            fnameinput = glob.glob(
-                folderinput + f"/*_year_{year}_maxlag_150.hdf5")[0]
-            if idx == 0:
-                mat = load_dataset_hdf5(fnameinput, year, index)
-            elif idx > 0:
-                mat += load_dataset_hdf5(fnameinput, year, index)
-        mat /= len(years)
-        return mat
-       
+           
     
 
 class PlotterNetworkMetrics:
