@@ -1,7 +1,9 @@
 import numpy as np
+import pandas as pd
 import glob
 import ast
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 from lib.misc import (
                 load_edgelist,
@@ -17,19 +19,31 @@ from lib.misc import (
 
 class RankTippingElements:
     def __init__(self,
-                 fnameinput: str,
+                 fnameinputs: list[str],
                  years: np.array,
                  baseline: np.array) -> None:
         
-        self.fnameinput = fnameinput
+        self.fnameinputs = fnameinputs
         self.baseline = baseline        
         self.years = years
+        self.models = ["awi_cm_1_1_mr", "mri_esm_2.0", "CESM2"]
         self.resfolder = "./fig/"
-        self.prb_mat = self._load_results(fnameinput, years, index=2)
+        
         self.tipping_points, self.tipping_centers = load_tipping_points()
         self.figuresize = (2.33,2.33)
         self.variat_percnt = False
-    
+        
+        self.labels = {'el_nino_basin': 'EL', 'AMOC': 'AM', 
+                       'tibetan_plateau_snow_cover': 'TB', 'coral_reef': 'CR', 
+                       'west_antarctic_ice_sheet': 'WA', 'wilkes_basin': 'WI', 
+                       'SMOC_south': 'SM', 'nodi_amazzonia': 'AZ', 
+                       'boreal_forest': 'BF', 'artic_seaice': 'AS', 
+                        'greenland_ice_sheet': 'GR', 'permafrost': 'PF',
+                       'sahel': 'SH'}
+        
+        self.arr = np.empty(shape=(len(self.tipping_points.keys()),len(fnameinputs)))
+        
+        
     def bar_plot(self, savefig:bool = True):
         fig, ax = plt.subplots(1, 1, figsize=self.figuresize, 
                                tight_layout = {'pad': .3})
@@ -39,44 +53,52 @@ class RankTippingElements:
         coords = generate_coordinates(5, lats, lons)
         norm_fact = compute_total_area(coords)
         
-        self.prb_mat_base = self._load_results(
-            self.fnameinput, self.baseline, index=2)
-        self.prb_mat_base = np.maximum(
-            self.prb_mat_base, self.prb_mat_base.transpose())
-
-        ntip = len(self.tipping_points.keys())
-        C1 = np.zeros(shape=(ntip, ntip))*np.nan
-        C2 = np.zeros(shape=(ntip, ntip))*np.nan
+        
+        for (m, fnameinput) in enumerate(self.fnameinputs):
+            print(fnameinput)
+            self.prb_mat = self._load_results(fnameinput, self.years, index=2)
+            self.prb_mat_base = self._load_results(
+                fnameinput, self.baseline, index=2)
+            self.prb_mat_base = np.maximum(
+                self.prb_mat_base, self.prb_mat_base.transpose())
     
-        # Draw variation wrt baseline
-        for id1, tip1 in enumerate(self.tipping_points.keys()):
-            for id2, tip2 in enumerate(self.tipping_points.keys()):
-                if id1 < id2:
-                    coord1 = self.tipping_points[tip1]
-                    coord2 = self.tipping_points[tip2]
-                    C1[id1, id2] = compute_connectivity(
-                        self.prb_mat_base, norm_fact, coord1, coord2, coords)
-                    C1[id2, id1] = C1[id1, id2]
-                    C2[id1, id2] = compute_connectivity(
-                        self.prb_mat, norm_fact, coord1, coord2, coords)
-                    C2[id2, id1] = C2[id1, id2]
-        if self.variat_percnt:
-            self.thresh = 0.01
-            variat = (C2 - C1)/C1
-            variat[ np.abs(variat) < self.thresh] = 0
-        else:
-            self.thresh = 0.00
-            variat = C2 - C1
-            variat[ np.abs(variat) < self.thresh] = 0
+            ntip = len(self.tipping_points.keys())
+            C1 = np.zeros(shape=(ntip, ntip))*np.nan
+            C2 = np.zeros(shape=(ntip, ntip))*np.nan
+        
+            # Draw variation wrt baseline
+            for id1, tip1 in enumerate(self.tipping_points.keys()):
+                for id2, tip2 in enumerate(self.tipping_points.keys()):
+                    if id1 < id2:
+                        coord1 = self.tipping_points[tip1]
+                        coord2 = self.tipping_points[tip2]
+                        C1[id1, id2] = compute_connectivity(
+                            self.prb_mat_base, norm_fact, coord1, coord2, coords)
+                        C1[id2, id1] = C1[id1, id2]
+                        C2[id1, id2] = compute_connectivity(
+                            self.prb_mat, norm_fact, coord1, coord2, coords)
+                        C2[id2, id1] = C2[id1, id2]
+            if self.variat_percnt:
+                self.thresh = 0.01
+                variat = (C2 - C1)/C1
+                variat[ np.abs(variat) < self.thresh] = 0
+            else:
+                self.thresh = 0.00
+                variat = C2 - C1
+                variat[ np.abs(variat) < self.thresh] = 0
+            self.arr[:,m] = np.nansum(variat,axis=1)
                     
-        # Add bar plot   
-        tot = np.nansum(variat,axis=1)
-        idx = np.argsort(tot)[::-1]
-        labels = np.array([item[0:5] for item in list(self.tipping_points.keys())])
-        ax.barh(labels[idx], 
-                width=tot[idx],
-                height = 0.5
-                )
+        # Add bar plot
+        tot = np.mean(self.arr,axis=1)
+        idx = np.argsort(tot)
+        data = pd.DataFrame(self.arr[idx,:], 
+                            columns=self.models, 
+                            index=np.array(list(self.labels.values()))[idx]
+                            ).T
+        data.index.name = "models"
+
+        sns.stripplot(data=data, orient="h", ax=ax ,s=6, alpha=0.85)
+        sns.boxplot(data=data, orient="h", saturation=0.4, ax=ax)
         ax.set_xlabel("total variation")
         ax.set_xlim([-1.0,0])
     
