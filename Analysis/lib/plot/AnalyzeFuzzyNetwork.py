@@ -1,15 +1,105 @@
 import numpy as np
 import glob
+import ast
 import matplotlib.pyplot as plt
 
 from lib.misc import (
                 load_edgelist,
+                load_tipping_points,
                 sample_fuzzy_network,
-                load_dataset_hdf5
+                load_dataset_hdf5,
+                compute_connectivity,
+                generate_coordinates,
+                compute_total_area,
+                load_lon_lat_hdf5
                 )
 
 
-class AnalyzeFuzzyNetwork():
+class RankTippingElements:
+    def __init__(self,
+                 fnameinput: str,
+                 years: np.array,
+                 baseline: np.array) -> None:
+        
+        self.fnameinput = fnameinput
+        self.baseline = baseline        
+        self.years = years
+        self.resfolder = "./fig/"
+        self.prb_mat = self._load_results(fnameinput, years, index=2)
+        self.tipping_points, self.tipping_centers = load_tipping_points()
+        self.figuresize = (2.33,2.33)
+        self.variat_percnt = False
+    
+    def bar_plot(self, savefig:bool = True):
+        fig, ax = plt.subplots(1, 1, figsize=self.figuresize, 
+                               tight_layout = {'pad': .3})
+    
+    
+        lons, lats = load_lon_lat_hdf5()
+        coords = generate_coordinates(5, lats, lons)
+        norm_fact = compute_total_area(coords)
+        
+        self.prb_mat_base = self._load_results(
+            self.fnameinput, self.baseline, index=2)
+        self.prb_mat_base = np.maximum(
+            self.prb_mat_base, self.prb_mat_base.transpose())
+
+        ntip = len(self.tipping_points.keys())
+        C1 = np.zeros(shape=(ntip, ntip))*np.nan
+        C2 = np.zeros(shape=(ntip, ntip))*np.nan
+    
+        # Draw variation wrt baseline
+        for id1, tip1 in enumerate(self.tipping_points.keys()):
+            for id2, tip2 in enumerate(self.tipping_points.keys()):
+                if id1 < id2:
+                    coord1 = self.tipping_points[tip1]
+                    coord2 = self.tipping_points[tip2]
+                    C1[id1, id2] = compute_connectivity(
+                        self.prb_mat_base, norm_fact, coord1, coord2, coords)
+                    C1[id2, id1] = C1[id1, id2]
+                    C2[id1, id2] = compute_connectivity(
+                        self.prb_mat, norm_fact, coord1, coord2, coords)
+                    C2[id2, id1] = C2[id1, id2]
+        if self.variat_percnt:
+            self.thresh = 0.01
+            variat = (C2 - C1)/C1
+            variat[ np.abs(variat) < self.thresh] = 0
+        else:
+            self.thresh = 0.00
+            variat = C2 - C1
+            variat[ np.abs(variat) < self.thresh] = 0
+                    
+        # Add bar plot   
+        tot = np.nansum(variat,axis=1)
+        idx = np.argsort(tot)[::-1]
+        labels = np.array([item[0:5] for item in list(self.tipping_points.keys())])
+        ax.barh(labels[idx], 
+                width=tot[idx],
+                height = 0.5
+                )
+        ax.set_xlabel("total variation")
+        ax.set_xlim([-1.0,0])
+    
+        if savefig:
+            plt.savefig("bar_plot.pdf")
+    
+    def _load_results(self, folderinput, years, index):
+        # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
+
+        # Average over the considered period
+        for idx, year in enumerate(years):
+            fnameinput = glob.glob(
+                folderinput + f"/*_year_{year}_maxlag_150.hdf5")[0]
+            if idx == 0:
+                mat = load_dataset_hdf5(fnameinput, year, index)
+            elif idx > 0:
+                mat += load_dataset_hdf5(fnameinput, year, index)
+        mat /= len(years)
+        return mat
+       
+    
+
+class PlotterNetworkMetrics:
 
     def __init__(self, 
                  fnameinputs: list[str], 
