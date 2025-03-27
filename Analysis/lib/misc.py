@@ -66,7 +66,7 @@ def haversine_distance(lat1, lon1, lat2, lon2):
     return distance
 
 
-def generate_coordinates(sizegrid,lats,lons):
+def generate_coordinates(sizegrid,lats,lons) -> dict:
     '''
     Output:
         coords (dict):
@@ -132,15 +132,9 @@ def compute_connectivity(adj_mat: np.array,
 
 
 def load_lon_lat_hdf5():
-    from netCDF4 import Dataset
-    # Load info from original dataset # TODO: this is hard-coded, solve
-    # file = Dataset("../data/Datasets/tas_CMIP6_ssp5_8.5_model_CESM2.nc", "r")
-    with Dataset("../data/Datasets/era5_t2m_1970_2020.nc", "r") as file:
-        lats = file['latitude'][:]
-        lons = file['longitude'][:]
-        
-    if max(lons)>=355:  # (0,355) -> (-180, 175)
-        lons = lons - 180
+    
+    lons = np.arange(-180,180,5, dtype=float)
+    lats = np.arange(90, -95, -5, dtype=float)
     return lons, lats
 
 
