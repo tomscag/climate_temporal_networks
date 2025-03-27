@@ -53,20 +53,28 @@ class draw_variation_earth_network(PlotterEarth):
         self.variat_percnt = variat_percnt
         self.lw_connectivity = lw_connectivity
         self.set_title = True
-        self.set_colorbar = False
+        self.set_colorbar = True
         self.show_grid = False
+        self.set_labels = False
         self.save_fig = False
         self.linewidth = 150    # tas 100, pr 150 4e5
         self.tipping_points, self.tipping_centers = load_tipping_points()
         self.cmap = plt.get_cmap("RdBu_r")
         
+        self.labels = {'el_nino_basin': 'EL', 'AMOC': 'AM', 
+                       'tibetan_plateau_snow_cover': 'TB', 'coral_reef': 'CR', 
+                       'west_antarctic_ice_sheet': 'WA', 'wilkes_basin': 'WI', 
+                       'SMOC_south': 'SM', 'nodi_amazzonia': 'AZ', 
+                       'boreal_forest': 'BF', 'artic_seaice': 'AS', 
+                        'greenland_ice_sheet': 'GR', 'permafrost': 'PF',
+                       'sahel': 'SH'}
+        
         # Set colorbar limits
         if self.variat_percnt:
-            self.vmin, self.vmax = -0.4, 0.4    # 0.2 for pr
+            self.vmin, self.vmax = -0.4, 0.4    # 0.2 for pr;  -0.4, 0.4 for tas
         else:
-            self.vmin, self.vmax = -0.04, 0.04  # 0.1 for tas - 0.05 pr and era5
-            # self.vmin, self.vmax = -1e-5, 1e-5  # 0.1
-
+            self.vmin, self.vmax = -0.04, 0.04  # 0.2 for tas - 0.05 pr and era5
+            
         variat = self._average_over_models()
         
         string = "variat_percnt_" if self.variat_percnt else "variat_"
@@ -182,6 +190,14 @@ class draw_variation_earth_network(PlotterEarth):
 
             self.ax.plot(coord[1], coord[0], color=col, marker='o', markersize=10, alpha=0.85,
                          transform=ccrs.PlateCarree())
+            
+        # Write tipping elements labels
+        if self.set_labels:
+            for name, coords in self.labels.items():
+                col, coord = self.tipping_centers[name]
+                self.ax.text(coord[1], coord[0], self.labels[name], 
+                             fontsize=13, color="black", weight='bold', 
+                             transform=ccrs.PlateCarree())
 
         # Set colorbar
         if self.set_colorbar:
