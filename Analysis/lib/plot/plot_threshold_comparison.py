@@ -34,7 +34,6 @@ class plot_threshold_comparison(PlotterEarth):
         self.ax = ax
         self.fnameinput = fnameinput
         self.years = years
-        self.threshold = threshold
         self.vmin, self.vmax = ((-0.7, 0.7) if threshold == 50
                                 else (-0.2, 0.2) if threshold == 95
                                 else (-0.2, 0.2) if threshold == 99
@@ -53,7 +52,7 @@ class plot_threshold_comparison(PlotterEarth):
          
         self.prb_mat = load_results(self.fnameinput, self.years, index=2)
         self.zscore = load_results(self.fnameinput, self.years, index=0)
-        self._filter_zscores()
+        self._filter_zscores(threshold)
         self._plot_threshold_comparison()
     
     def _plot_threshold_comparison(self):
@@ -61,16 +60,13 @@ class plot_threshold_comparison(PlotterEarth):
         self.coords = {value:key  for key, value in self.coords.items()}
         fact = 2*np.pi/360
         cos = [np.cos(value[0]*fact) for key,value in self.coords.items()]
-        A = sum(cos)
-        # cos = np.tile(cos,(self.nn,1))
-        # degree_zsc = np.sum(self.zscore*cos, axis=0)/fact
         
-        degree_zsc = np.sum(self.zscore * cos, axis=1)/A
-        degree_prb = np.sum(self.prb_mat * cos, axis=1)/A
-        
+        # Compute the Area-Weighted connectivity
+        Z = sum(cos)
+        degree_zsc = np.sum(self.thresh_mat * cos, axis=1)/Z
+        degree_prb = np.sum(self.prb_mat * cos, axis=1)/Z
 
         diff = degree_zsc - degree_prb
-        # diff = degree_zsc
         diff = diff.reshape(37,72)
         diff = xr.DataArray(diff, 
                      dims=("latitude", "longitude"), 
@@ -87,9 +83,10 @@ class plot_threshold_comparison(PlotterEarth):
                              cbar_kwargs=cbar_kwargs)
     
     
-    def _filter_zscores(self):
-        percentile = np.percentile(self.zscore, self.threshold)
-        self.zscore = np.where(self.zscore > percentile, 1, 0)
+    def _filter_zscores(self, threshold):
+        """ Threshold the zscore matrix """
+        percentile = np.percentile(self.zscore, threshold)
+        self.thresh_mat = np.where(self.zscore > percentile, 1, 0)
 
 
     def _add_cyclic_point_to_dataset(self, data: xr.DataArray) -> xr.DataArray:

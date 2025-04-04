@@ -274,32 +274,37 @@ def filter_network_by_distance(edgelist: pd.DataFrame,
 
 def total_degree_nodes(G,lons,lats):
     """
-            G:      igraph network
-        Output:
-            ACM:    Area connectivity matrix
-                Each entry is a node position, organized by lat x lon,
-                whose value is the total area to which a node
-                is linked to
-    """
+    Parameters
+    ----------
+    G : ig.graph
+        igraph object.
+    lons : np.array
+        Longitudes.
+    lats : np.array
+        Latitudes.
+
+    Returns
+    -------
+    ACM : np.array
+        Area Weighted Connectivity.
+        The total area a node is connected to, weighted by the surface
+    """     
     sizegrid = 5
     
     coords = generate_coordinates(sizegrid,lons,lats)
-    # Only degree
-    # data_matrix1 = np.array(list(dict(sorted(G.degree())).values())).reshape(len(lats),len(lons))
+    coords = {value:key for key,value in coords.items()}
 
     W = {key:None for key in sorted(G.get_vertex_dataframe().index)} # Weighted connectivity
-
+    fact = 2*np.pi/360
     for node in G.get_vertex_dataframe().index:
-
         w=0
         for item in G.neighbors(node):
-            w += np.abs(np.cos(coords[item][0]*2*np.pi/360)) # cos lat
+            w += np.abs(np.cos(coords[item][0]*fact)) # cos lat
         W[node] = w
 
-    c = 0    # Normalization factor
-    for key,value in coords.items():
-        c += np.abs(np.cos(value[0]*2*np.pi/360))
-
-    W = {key:value/c  for key,value in W.items()}
-    ACM = np.array(list(W.values())).reshape(len(lats),len(lons))
-    return ACM
+    # Normalization
+    Z = sum([np.cos(value[0]*fact) for key,value in coords.items()])
+    
+    W = {key:value/Z  for key,value in W.items()}
+    AWC = np.array(list(W.values())).reshape(len(lats),len(lons))
+    return AWC
