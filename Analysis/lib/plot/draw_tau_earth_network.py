@@ -115,11 +115,12 @@ class draw_tau_earth_network(PlotterEarth):
 
         # Set colorbar
         sm = plt.cm.ScalarMappable(cmap=self.cmap)
-        cb = plt.colorbar(sm, ax=self.ax, orientation='horizontal')
-        cb.set_label("Average lag",fontsize=20)
-        ticks_loc = cb.get_ticks().tolist()
+        cb = plt.colorbar(sm, ax=self.ax, orientation='horizontal', shrink=0.7, pad=0.05)
+        cb.ax.tick_params(labelsize=18)
+        cb.set_label("Lag",fontsize=30)
+        # ticks_loc = cb.get_ticks().tolist()
         cb.set_ticks(cb.get_ticks().tolist())
-        cb.set_ticklabels([str(np.round(item)) for item in cb.get_ticks()*(self.vmax-self.vmin) + self.vmin])
+        cb.set_ticklabels([str(int(np.round(item))) for item in cb.get_ticks()*(self.vmax-self.vmin) + self.vmin])
 
         if self.set_title:
             self.ax.set_title(f"Years {self.years[0]}s",fontsize=30,weight='bold')
