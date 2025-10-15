@@ -33,8 +33,8 @@ class draw_tau_earth_network(PlotterEarth):
 
         # Set colormap parameters
         self.cmap = plt.get_cmap("gist_rainbow") 
-        self.vmin = -20 # Lag minimum and maximum
-        self.vmax = 20
+        self.vmin = 0 # Lag minimum and maximum
+        self.vmax = 100
 
 
         self.prb_mat = load_results(self.fnameinput,self.year,index=2)
@@ -51,12 +51,19 @@ class draw_tau_earth_network(PlotterEarth):
 
     def compute_average_tau(self,coord1,coord2,coords):
         tau = 0
+        count = 0
         for c1 in coord1:
             label1 = coords[c1]
             for c2 in coord2:
                 label2 = coords[c2]
-                tau += self.adj_mat[label1,label2]
-        return tau/(len(coord1)*len(coord2))
+                if self.adj_mat[label1, label2] > 0:
+                    tau += self.tau_mat[label1,label2]
+                    count +=1
+
+        if count > 0:
+            return tau/count
+        else:
+            return np.nan
 
 
 
