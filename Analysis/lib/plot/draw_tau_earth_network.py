@@ -1,17 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import ast
 
 from lib.plot.plot_earth import PlotterEarth
 from cartopy import crs as ccrs, feature as cfeature
-from itertools import product,combinations
 from lib.misc import (load_lon_lat_hdf5,
                       load_results,
                       load_tipping_points,
                       generate_coordinates,
                       compute_connectivity,
-                      compute_total_area,
-                      sample_fuzzy_network
+                      compute_total_area,                      
                       )
 
 ##################################
@@ -21,14 +18,13 @@ from lib.misc import (load_lon_lat_hdf5,
 
 class draw_tau_earth_network(PlotterEarth):
 
-    def __init__(self, ax, fnameinput, resfolder, year, nsamples):
+    def __init__(self, ax, fnameinput, resfolder, years):
 
         super().__init__(ax)
         self.fnameinput = fnameinput
         
         self.resfolder = resfolder
-        self.year = year
-        self.nsamples = nsamples
+        self.years = years
         self.set_title = True
 
         # Set colormap parameters
@@ -37,10 +33,10 @@ class draw_tau_earth_network(PlotterEarth):
         self.vmax = 100
 
 
-        self.prb_mat = load_results(self.fnameinput,self.year,index=2)
-        self.tau_mat = load_results(self.fnameinput,self.year,index=1) # Tau mat
+        self.prb_mat = load_results(self.fnameinput,self.years,index=2)
+        self.tau_mat = load_results(self.fnameinput,self.years,index=1) # Tau mat
         self.tipping_points, self.tipping_centers = load_tipping_points()
-        self.fnameoutput = f"lags_{self.resfolder}_year_{self.year}.png"
+        self.fnameoutput = f"lags_{self.resfolder}_year_{self.years}.png"
         self.draw_tau_network()
 
 
@@ -56,7 +52,7 @@ class draw_tau_earth_network(PlotterEarth):
             label1 = coords[c1]
             for c2 in coord2:
                 label2 = coords[c2]
-                if self.adj_mat[label1, label2] > 0:
+                if self.prb_mat[label1, label2] > 0:
                     tau += self.tau_mat[label1,label2]
                     count +=1
 
@@ -76,27 +72,20 @@ class draw_tau_earth_network(PlotterEarth):
         C = np.zeros(shape=(ntip,ntip))
         tau = np.zeros(shape=(ntip,ntip))
 
-        for sample in range(self.nsamples):
-            print(f"sample {sample}")
-            self.adj_mat = sample_fuzzy_network(self.prb_mat).get_adjacency()
-            for id1, tip1 in enumerate(self.tipping_points.keys()):
-                for id2, tip2 in enumerate(self.tipping_points.keys()):
-                    if id1 < id2:
-                        _,pos1 = self.tipping_centers[tip1]
-                        _,pos2 = self.tipping_centers[tip2]
-                        coord1 = self.tipping_points[tip1]
-                        coord2 = self.tipping_points[tip2]
+        for id1, tip1 in enumerate(self.tipping_points.keys()):
+            for id2, tip2 in enumerate(self.tipping_points.keys()):
+                if id1 < id2:
+                    _,pos1 = self.tipping_centers[tip1]
+                    _,pos2 = self.tipping_centers[tip2]
+                    coord1 = self.tipping_points[tip1]
+                    coord2 = self.tipping_points[tip2]
 
-                        tau[id1,id2] += self.compute_average_tau(coord1,coord2,coords)
-                        C[id1,id2] += compute_connectivity(self.adj_mat,
-                                                           norm_fact,
-                                                           coord1,
-                                                           coord2,
-                                                           coords)
-                        # print(C)
-
-        C /= self.nsamples 
-        tau /= self.nsamples 
+                    tau[id1,id2] += self.compute_average_tau(coord1,coord2,coords)
+                    C[id1,id2] += compute_connectivity(self.prb_mat,
+                                                       norm_fact,
+                                                       coord1,
+                                                       coord2,
+                                                       coords)
 
         # Draw connections between tipping elements
         for id1, tip1 in enumerate(self.tipping_points.keys()):
@@ -133,7 +122,7 @@ class draw_tau_earth_network(PlotterEarth):
         cb.set_ticklabels([str(np.round(item)) for item in cb.get_ticks()*(self.vmax-self.vmin) + self.vmin])
 
         if self.set_title:
-            self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
+            self.ax.set_title(f"Years {self.years[0]}s",fontsize=30,weight='bold')
 
         
 
