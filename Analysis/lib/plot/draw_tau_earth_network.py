@@ -6,9 +6,13 @@ from lib.plot.plot_earth import PlotterEarth
 from cartopy import crs as ccrs, feature as cfeature
 from itertools import product,combinations
 from lib.misc import (load_lon_lat_hdf5,
+                      load_results,
+                      load_tipping_points,
                       generate_coordinates,
                       compute_connectivity,
-                      sample_fuzzy_network)
+                      compute_total_area,
+                      sample_fuzzy_network
+                      )
 
 ##################################
 ##################################
@@ -17,11 +21,11 @@ from lib.misc import (load_lon_lat_hdf5,
 
 class draw_tau_earth_network(PlotterEarth):
 
-    def __init__(self,fnameinput, resfolder,year,nsamples):
+    def __init__(self, ax, fnameinput, resfolder, year, nsamples):
 
-        super().__init__()
+        super().__init__(ax)
         self.fnameinput = fnameinput
-        self.fnameoutput = "lags_" + fnameinput.split("Results_")[1]
+        
         self.resfolder = resfolder
         self.year = year
         self.nsamples = nsamples
@@ -33,10 +37,10 @@ class draw_tau_earth_network(PlotterEarth):
         self.vmax = 20
 
 
-        self.prb_mat = self.load_results(self.fnameinput,self.year,index=2)
-        self.tau_mat = self.load_results(self.fnameinput,self.year,index=1) # Tau mat
-        self.load_tipping_points()
-
+        self.prb_mat = load_results(self.fnameinput,self.year,index=2)
+        self.tau_mat = load_results(self.fnameinput,self.year,index=1) # Tau mat
+        self.tipping_points, self.tipping_centers = load_tipping_points()
+        self.fnameoutput = f"lags_{self.resfolder}_year_{self.year}.png"
         self.draw_tau_network()
 
 
@@ -57,10 +61,9 @@ class draw_tau_earth_network(PlotterEarth):
 
 
     def draw_tau_network(self):
-        lons, lats = load_lon_lat_hdf5(self.fnameinput)
+        lons, lats = load_lon_lat_hdf5()
         coords = generate_coordinates(5,lats,lons)
-        coords = {tuple(val):key for key,val in coords.items()}
-        
+        norm_fact = compute_total_area(coords)
 
         ntip = len(self.tipping_points.keys())
         C = np.zeros(shape=(ntip,ntip))
@@ -78,7 +81,11 @@ class draw_tau_earth_network(PlotterEarth):
                         coord2 = self.tipping_points[tip2]
 
                         tau[id1,id2] += self.compute_average_tau(coord1,coord2,coords)
-                        C[id1,id2] += compute_connectivity(self.adj_mat,coord1,coord2,coords)
+                        C[id1,id2] += compute_connectivity(self.adj_mat,
+                                                           norm_fact,
+                                                           coord1,
+                                                           coord2,
+                                                           coords)
                         # print(C)
 
         C /= self.nsamples 
@@ -112,7 +119,7 @@ class draw_tau_earth_network(PlotterEarth):
 
         # Set colorbar
         sm = plt.cm.ScalarMappable(cmap=self.cmap)
-        cb = plt.colorbar(sm,orientation='horizontal')
+        cb = plt.colorbar(sm, ax=self.ax, orientation='horizontal')
         cb.set_label("Average lag",fontsize=20)
         ticks_loc = cb.get_ticks().tolist()
         cb.set_ticks(cb.get_ticks().tolist())
@@ -121,5 +128,5 @@ class draw_tau_earth_network(PlotterEarth):
         if self.set_title:
             self.ax.set_title(f"Years {self.year[0]}s",fontsize=30,weight='bold')
 
-        plt.savefig(f"{self.resfolder}{self.fnameoutput}_{self.year[0]}_{self.year[-1]}.png",dpi=self.params['dpi'])
+        
 
