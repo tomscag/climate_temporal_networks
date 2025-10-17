@@ -93,7 +93,7 @@ def posterior_link_probability_iaaft(
     # --- Compute empirical cross-correlation and its peak
     cross_corr = cross_correlation(x, y, max_lag, normalize=False)
     crossmax   = max(np.abs(cross_corr))
-    peak_lag = np.abs(cross_corr).argmax() - (max_lag + 1)
+    peak_lag = np.abs(cross_corr).argmax() - max_lag 
 
 
 
