@@ -129,13 +129,13 @@ class plot_lag_analysis(PlotterEarth):
     
         import seaborn as sns
         
-        self.labels = {'el_nino_basin': 'EL', 'AMOC': 'AM', 
-                       'tibetan_plateau_snow_cover': 'TB', 'coral_reef': 'CR', 
-                       'west_antarctic_ice_sheet': 'WA', 'wilkes_basin': 'WI', 
-                       'SMOC_south': 'SM', 'nodi_amazzonia': 'AZ', 
-                       'boreal_forest': 'BF', 'artic_seaice': 'AS', 
-                        'greenland_ice_sheet': 'GR', 'permafrost': 'PF',
-                       'sahel': 'SH'}
+        self.labels = {'El Nino': 'EL', 'AMOC': 'AM', 
+                       'Tibetan Plateau': 'TB', 'Coral Reef': 'CR', 
+                       'West Antarctic': 'WA', 'Wilkes Basin': 'WI', 
+                       'SMOC': 'SM', 'Amazzonia': 'AZ', 
+                       'Boreal Forest': 'BF', 'Artic Sea': 'AS', 
+                       'Greenland': 'GR', 'Permafrost': 'PF',
+                       'Sahel': 'SH'}
         
         lons, lats = load_lon_lat_hdf5()
         coords = generate_coordinates(5,lats,lons)
@@ -157,7 +157,7 @@ class plot_lag_analysis(PlotterEarth):
                     vmax=self.vmax, 
                     cmap="Reds", 
                     annot=True,
-                    yticklabels=self.labels.values(),
+                    yticklabels=self.labels.keys(),
                     xticklabels=self.labels.values(),
                     annot_kws={"fontsize":14})
 
