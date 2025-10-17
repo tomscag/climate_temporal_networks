@@ -140,30 +140,48 @@ def load_lon_lat_hdf5():
 
 def load_results(folderinput: str, years: np.array, index: int) -> np.array:
     """
-        Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
+    Load and average result matrices over a list of years.
+
+    Each file is expected to have the pattern:
+        *_year_<year>_maxlag_150.hdf5
+        
+    Parameters
+    ----------
+    folderinput : str
+        Path to the folder containing HDF5 result files.
+    years : np.ndarray
+        Array of years to include in the averaging.
+    index : int
+        Dataset index: 0 = z-score, 1 = lag (tau), 2 = probability.
     """
+    
+    mat = None
+    
     # Average over the considered period
     for idx, year in enumerate(years):
-        fnameinput = glob.glob(folderinput + f"/*_year_{year}_maxlag_150.hdf5")[0]
-        if idx==0:
-            mat = load_dataset_hdf5(fnameinput,year,index)
-        elif idx>0:
-            mat += load_dataset_hdf5(fnameinput,year,index)
+        fnameinput = glob.glob(folderinput + f"/*_year_{year}_maxlag_150.hdf5")
+        
+        # Check if file exists and take the first match
+        if not fnameinput:
+            raise FileNotFoundError(f"No matching file found for year {year} in '{folderinput}'.")
+        fnameinput = fnameinput[0]
+
+        #Load 
+        data = load_dataset_hdf5(fnameinput,year,index)
+        
+        # Accumulate
+        mat = data if mat is None else mat + data
+        
     mat /= len(years)
     mat[np.isnan(mat)] = 0
-    return np.maximum(mat, mat.T)
     
-    # if index == 2:
-    #     # Create the full network "weighted" with the edge-probabilities
-    #     graph = sample_fuzzy_network(mat)
-    #     return graph.get_adjacency()
-    # elif index == 1: # tau:
-    #     return mat
-    # elif index == 0: # zscore
-    #     return mat
-    # else:
-    #     print("Load results: index not recognized!")
-
+    if index == 0:
+        return np.maximum(mat, mat.T)
+    elif index == 1:
+        return np.triu(mat) + np.triu(mat).T
+    elif index == 2:
+        return np.maximum(mat, mat.T)
+    
 
 def load_dataset_hdf5(finput,year,index):
     # Index 0 is the zscore matrix, 1 for the tau, 2 for the probability
