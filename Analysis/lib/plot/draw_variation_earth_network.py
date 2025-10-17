@@ -22,7 +22,7 @@ class draw_variation_earth_network(PlotterEarth):
     def __init__(self,
                  ax,
                  filenames: list,
-                 years: np.array,
+                 years: np.ndarray,
                  baseline: list,
                  variat_percnt: bool,
                  lw_connectivity: bool,
@@ -35,7 +35,7 @@ class draw_variation_earth_network(PlotterEarth):
         filenames : str
             List of the results' folder paths (hdf files)
             Each element refers to a different model
-        years : np.array
+        years : np.ndarray
             Time window to average the results.
         baseline : list
             Time window to caclulate the baseline.
@@ -84,7 +84,7 @@ class draw_variation_earth_network(PlotterEarth):
         self._draw_variation_network(variat)
         
         
-    def _average_over_models(self) -> np.array:
+    def _average_over_models(self) -> np.ndarray:
         """Average over multiple models"""
         variations = [
             self._compute_variation_wrt_baseline(
@@ -103,15 +103,15 @@ class draw_variation_earth_network(PlotterEarth):
         return self.cmap(norm_value)
     
     def _compute_variation_wrt_baseline(self, 
-                                        prb_mat: np.array,
-                                        prb_mat_base: np.array,
-                                        ) -> np.array:
+                                        prb_mat: np.ndarray,
+                                        prb_mat_base: np.ndarray,
+                                        ) -> np.ndarray:
         """
         Parameters
         ----------
-        prb_mat: np.array
+        prb_mat: np.ndarray
             fuzzy matrix
-        prb_mat_base: np.array
+        prb_mat_base: np.ndarray
             fuzzy matrix baseline
         """
         
@@ -148,7 +148,7 @@ class draw_variation_earth_network(PlotterEarth):
         return variat
         
 
-    def _draw_variation_network(self, variat: np.array):
+    def _draw_variation_network(self, variat: np.ndarray):
         
         """
         NOTE: we compute connectivity directly from the probability matrix
@@ -156,7 +156,7 @@ class draw_variation_earth_network(PlotterEarth):
         
         Parameters
         ----------
-        variat: np.array
+        variat: np.ndarray
             Tipping points connectivity variations wrt baseline
     
         """
