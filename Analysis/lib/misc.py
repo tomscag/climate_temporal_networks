@@ -289,9 +289,8 @@ def total_degree_nodes(G,lons,lats):
         Area Weighted Connectivity.
         The total area a node is connected to, weighted by the surface
     """     
-    sizegrid = 5
     
-    coords = generate_coordinates(sizegrid,lons,lats)
+    coords = generate_coordinates(5, lats, lons)
     coords = {value:key for key,value in coords.items()}
 
     W = {key:None for key in sorted(G.get_vertex_dataframe().index)} # Weighted connectivity
