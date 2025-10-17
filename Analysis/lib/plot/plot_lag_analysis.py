@@ -18,23 +18,32 @@ from lib.misc import (load_lon_lat_hdf5,
 
 class plot_lag_analysis(PlotterEarth):
 
-    def __init__(self, fnameinput, resfolder, years):
+    def __init__(self, filenames: list, resfolder, years):
         
-        self.fnameinput = fnameinput        
+        self.filenames = filenames        
         self.resfolder = resfolder
         self.years = years
         self.set_title = True
 
         # Set colormap parameters
-        self.cmap = plt.get_cmap("gist_rainbow") 
-        self.vmin = 0 # Lag minimum and maximum
-        self.vmax = 100
+        self.cmap = plt.get_cmap("RdBu_r")  
+        self.vmin = -50 # Lag minimum and maximum
+        self.vmax = 50
 
-        self.prb_mat = load_results(self.fnameinput,self.years,index=2)
-        self.tau_mat = load_results(self.fnameinput,self.years,index=1) # Tau mat
+        self.prb_mat = self._average_over_models(index = 2)
+        self.tau_mat = self._average_over_models(index = 1)
         self.tipping_points, self.tipping_centers = load_tipping_points()
         self.fnameoutput = f"lags_{self.resfolder}_year_{self.years}.png"
 
+
+    def _average_over_models(self, index:int) -> np.ndarray:
+        """Average over multiple models"""
+        array_list = [
+            load_results(f, self.years, index=index) 
+            for f in self.filenames
+        ]
+        
+        return sum(array_list) / len(self.filenames)
 
     def _get_color_tau(self,value):      
         norm_value = np.clip((value - self.vmin) / (self.vmax - self.vmin), 0, 1)
@@ -128,6 +137,7 @@ class plot_lag_analysis(PlotterEarth):
     def plot_heatmap(self, ax):
     
         import seaborn as sns
+        self.set_matplotlib_params()
         
         self.labels = {'El Nino': 'EL', 'AMOC': 'AM', 
                        'Tibetan Plateau': 'TB', 'Coral Reef': 'CR', 
@@ -151,15 +161,41 @@ class plot_lag_analysis(PlotterEarth):
                     coord2 = self.tipping_points[tip2]
 
                     tau[id1,id2] += self._compute_average_tau(coord1,coord2,coords)
-                    
-        sns.heatmap(tau, 
+                 
+    
+        # Generate a mask for the upper triangle
+        mask = np.triu(np.ones_like(tau, dtype=bool))
+                 
+        sns.heatmap(tau.T, 
                     vmin=self.vmin, 
                     vmax=self.vmax, 
-                    cmap="Reds", 
+                    cmap="RdBu_r", 
                     annot=True,
+                    mask=mask,
                     yticklabels=self.labels.keys(),
                     xticklabels=self.labels.values(),
-                    annot_kws={"fontsize":14})
+                    annot_kws={"fontsize":16},
+                    cbar_kws={'label': 'Lag (days)'})
 
         sns.set(font_scale=2)
+        
+        
+        
+    def set_matplotlib_params(self):
+        """ Set default matplotlib parameters """
+        font = {'family' : 'arial', 'weight' :'normal'}
+    
+        plt.rc('font', **font)
+        
+        SMALL_SIZE = 20
+        MEDIUM_SIZE = 25
+        BIGGER_SIZE = 30
+        
+        plt.rc('font', size=SMALL_SIZE)          # controls default text sizes
+        plt.rc('axes', titlesize=MEDIUM_SIZE)     # fontsize of the axes title
+        plt.rc('axes', labelsize=MEDIUM_SIZE)    # fontsize of the x and y labels
+        plt.rc('xtick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+        plt.rc('ytick', labelsize=SMALL_SIZE)    # fontsize of the tick labels
+        plt.rc('legend', fontsize=SMALL_SIZE)    # legend fontsize
+        plt.rc('figure', titlesize=SMALL_SIZE)  # fontsize of the figure title
 
